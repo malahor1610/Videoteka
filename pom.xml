@@ -74,7 +74,14 @@
 				<configuration>
 					<image>
 						<name>docker.io/malahor1610/${project.artifactId}:latest</name>
+						<publish>true</publish>
 					</image>
+					<docker>
+						<publishRegistry>
+							<username>${env.DOCKER_USERNAME}</username>
+							<password>${env.DOCKER_PASSWORD}</password>
+						</publishRegistry>
+					</docker>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
