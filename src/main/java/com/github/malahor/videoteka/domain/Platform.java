@@ -1,4 +1,4 @@
-package com.github.malahor.cataloguer.domain;
+package com.github.malahor.videoteka.domain;
 
 import lombok.Getter;
 

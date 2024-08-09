@@ -3,18 +3,18 @@ services:
     image: 'postgres:latest'
     container_name: postgres
     environment:
-      - POSTGRES_DB=catalogue
+      - POSTGRES_DB=videoteka
       - POSTGRES_PASSWORD=password
       - POSTGRES_USER=postgres
     ports:
       - 5432:5432
-  catalogue:
-    image: 'malahor1610/cataloguer:latest'
-    container_name: catalogue
+  videoteka:
+    image: 'malahor1610/videoteka:latest'
+    container_name: videoteka
     depends_on:
       - postgres
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/catalogue
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/videoteka
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=password
       - SPRING_JPA_HIBERNATE_DDL_AUTO=create

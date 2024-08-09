@@ -1,2 +1,2 @@
-# Cataloguer
+# Videoteka
 Learning project

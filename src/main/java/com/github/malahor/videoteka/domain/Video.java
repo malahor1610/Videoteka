@@ -1,4 +1,4 @@
-package com.github.malahor.cataloguer.domain;
+package com.github.malahor.videoteka.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -13,7 +13,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Video {
 
-  @Id @GeneratedValue private long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private long id;
 
   private String title;
   private int position;
