@@ -1,17 +1,16 @@
 package com.github.malahor.videoteka.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 @Getter
 public enum Platform {
-  NETFLIX("Netflix"),
-  MAX("Max"),
-  DISNEY("Disney+"),
-  PRIME("Amazon Prime");
-
-  private final String description;
-
-  Platform(String description) {
-    this.description = description;
-  }
+  @JsonProperty("Netflix")
+  NETFLIX,
+  @JsonProperty("Max")
+  MAX,
+  @JsonProperty("Disney+")
+  DISNEY,
+  @JsonProperty("Amazon Prime")
+  PRIME;
 }
