@@ -1,35 +1,28 @@
+import { useState, useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import React, { Component } from 'react';
 
-class App extends Component {
-  state = {
-    videos: []
-  };
+export default function App() {
+  const [videos, setVideos] = useState([]);
+  useEffect(() => {
+    fetch("/videos")
+      .then(result => result.json())
+      .then(result => setVideos(result._embedded.videos));
+  }, []);
 
-  async componentDidMount() {
-    const response = await fetch('/videos');
-    const body = await response.json();
-    this.setState({videos: body._embedded.videos});
-  }
-
-  render() {
-    const {videos} = this.state;
-    return (
-        <div className="App">
-          <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <div className="App-intro">
-              <h2>In queue</h2>
-              {videos.map(video =>
-                  <div key={video.id}>
-                    {video.title} ({video.type}) - {video.platform}
-                  </div>
-              )}
+  return (
+    <div className="App">
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <div className="App-intro">
+          <h2>In queue</h2>
+          {videos.map(video =>
+            <div key={video.id}>
+              {video.title} ({video.type}) - {video.platform}
             </div>
-          </header>
+          )}
         </div>
-    );
-  }
+      </header>
+    </div>
+  );
 }
-export default App;
