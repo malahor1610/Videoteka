@@ -28,6 +28,8 @@ public class Show {
 
   private double popularity;
 
+  private SearchType type;
+
 
   public void setReleaseDate(String releaseDate) {
     if (releaseDate == null || releaseDate.isEmpty()) this.releaseDate = "Unknown";

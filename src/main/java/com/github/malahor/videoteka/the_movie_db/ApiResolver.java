@@ -25,6 +25,15 @@ public class ApiResolver {
     return URI.create(query);
   }
 
+  public URI details(long id, SearchType type) {
+    var query =
+        String.format(
+            api() + "/%s/%d?append_to_response=watch/providers&language=pl-PL",
+            type.getApiPath(),
+            id);
+    return URI.create(query);
+  }
+
   private String api() {
     return "https://api.themoviedb.org/3";
   }
