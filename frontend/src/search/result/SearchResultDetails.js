@@ -43,7 +43,7 @@ export default function SearchResultDetails({ show, poster, modal, setModal }) {
         <SearchResultDetailsProvider text="To buy on:" providers={show.watchProviders?.buy} />
       </ModalBody>
       <ModalFooter>
-        <Button color="primary" onClick={() => setModal(!modal)}>
+        <Button color="primary" onClick={() => addToWatchlist()}>
           Add to watchlist
         </Button>
       </ModalFooter>

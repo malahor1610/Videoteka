@@ -2,6 +2,9 @@ package com.github.malahor.videoteka.the_movie_db;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.databind.JsonNode;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import lombok.*;
 
@@ -32,6 +35,14 @@ public class ShowDetails {
 
   @JsonAlias("watch/providers")
   private WatchProviders watchProviders;
+
+  public void setReleaseDate(String releaseDate) {
+    if (releaseDate == null || releaseDate.isEmpty()) this.releaseDate = "Unknown";
+    else {
+      var date = LocalDate.parse(releaseDate, DateTimeFormatter.ISO_DATE);
+      this.releaseDate = String.valueOf(date.getYear());
+    }
+  }
 
   public void setPoster(String poster) {
     this.poster = "http://image.tmdb.org/t/p/w185" + poster;
