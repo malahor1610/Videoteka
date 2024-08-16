@@ -33,4 +33,4 @@ build/
 .vscode/
 
 ### Custom ###
-api.txt
+**/api.txt
