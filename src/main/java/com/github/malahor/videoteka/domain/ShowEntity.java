@@ -12,7 +12,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Video {
+@Table(name = "show")
+public class ShowEntity {
 
   @Id private long id;
   private String title;
