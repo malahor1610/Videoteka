@@ -18,7 +18,7 @@ export default function SearchBar({ setShows }) {
     }).toString();
     fetch("/search?" + searchParams)
       .then(result => result.json())
-      .then(result => setShows(result.results));
+      .then(result => setShows(result));
   }
 
   return (

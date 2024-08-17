@@ -1,6 +1,5 @@
 package com.github.malahor.videoteka.domain;
 
-import com.github.malahor.videoteka.the_movie_db.SearchType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,7 +21,7 @@ public class ShowEntity {
   private String poster;
 
   @Enumerated(EnumType.STRING)
-  private SearchType type;
+  private ShowType type;
 
   private int position;
 }

@@ -5,7 +5,7 @@ import SearchResultDetailsProvider from './SearchResultDetailsProvider';
 export default function SearchResultDetails({ show, poster, modal, setModal }) {
 
   function addToWatchlist() {
-    fetch('/videos', {
+    fetch('/shows', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -38,7 +38,7 @@ export default function SearchResultDetails({ show, poster, modal, setModal }) {
           <Badge className='me-1'>{genre}</Badge>
         )}
         </p>
-        <SearchResultDetailsProvider text="Available on:" providers={show.watchProviders?.flatrate} />
+        <SearchResultDetailsProvider text="Available on:" providers={show.watchProviders?.available} />
         <SearchResultDetailsProvider text="To rent on:" providers={show.watchProviders?.rent} />
         <SearchResultDetailsProvider text="To buy on:" providers={show.watchProviders?.buy} />
       </ModalBody>
