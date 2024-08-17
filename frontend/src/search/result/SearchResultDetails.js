@@ -16,6 +16,7 @@ export default function SearchResultDetails({ show, poster, modal, setModal }) {
         originalTitle: show.originalTitle,
         releaseDate: show.releaseDate,
         poster: poster,
+        duration: show.duration,
         type: show.type
       }),
     })
@@ -30,7 +31,12 @@ export default function SearchResultDetails({ show, poster, modal, setModal }) {
       isOpen={modal}
       toggle={() => setModal(!modal)}
     >
-      <ModalHeader toggle={() => setModal(!modal)}>{show.title} ({show.originalTitle})</ModalHeader>
+      <ModalHeader toggle={() => setModal(!modal)}>
+        {show.title} ({show.originalTitle})
+        <p className='fs-6 fw-normal mb-0'>
+         <small>{show.duration}</small>
+        </p>
+        </ModalHeader>
       <ModalBody>
         {show.overview}
         <p>

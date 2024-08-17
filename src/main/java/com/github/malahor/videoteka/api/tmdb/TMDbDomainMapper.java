@@ -55,12 +55,22 @@ public class TMDbDomainMapper implements DomainMapper {
       showDetails.setTitle(details.getTitle());
       showDetails.setOriginalTitle(details.getOriginalTitle());
       showDetails.setOverview(details.getOverview());
+      showDetails.setDuration(durationOf(details.getRuntime(), type));
       showDetails.setGenres(details.getGenres());
       showDetails.setWatchProviders(mapWatchProviders(details.getWatchProviders()));
       showDetails.setType(type);
       return showDetails;
     }
     return null;
+  }
+
+  private String durationOf(int duration, ShowType type) {
+    return duration
+        + " "
+        + switch (type) {
+          case MOVIE -> "minutes";
+          case SERIES -> "episodes";
+        };
   }
 
   private WatchProviders mapWatchProviders(TMDbWatchProviders tmdbWatchProviders) {

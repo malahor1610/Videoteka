@@ -19,6 +19,7 @@ public class ShowEntity {
   private String originalTitle;
   private String releaseDate;
   private String poster;
+  private String duration;
 
   @Enumerated(EnumType.STRING)
   private ShowType type;

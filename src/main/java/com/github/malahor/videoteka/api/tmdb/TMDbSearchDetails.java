@@ -2,13 +2,9 @@ package com.github.malahor.videoteka.api.tmdb;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.databind.JsonNode;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-
 import com.github.malahor.videoteka.api.SearchDetails;
 import com.github.malahor.videoteka.domain.ShowType;
+import java.util.List;
 import lombok.*;
 
 @NoArgsConstructor
@@ -26,6 +22,9 @@ public class TMDbSearchDetails implements SearchDetails {
 
   private String overview;
 
+  @JsonAlias("number_of_episodes")
+  private int runtime;
+
   private ShowType type;
 
   private List<String> genres;
@@ -36,5 +35,4 @@ public class TMDbSearchDetails implements SearchDetails {
   public void setGenres(List<JsonNode> genres) {
     this.genres = genres.stream().map(genre -> genre.get("name").asText()).toList();
   }
-
 }
