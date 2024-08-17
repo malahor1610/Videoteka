@@ -10,8 +10,10 @@ public class ShowDetails {
   private String originalTitle;
   private String title;
   private String overview;
+  private String releaseDate;
   private String duration;
   private ShowType type;
   private List<String> genres;
   private WatchProviders watchProviders;
+
 }

@@ -5,11 +5,12 @@ import com.github.malahor.videoteka.domain.ShowType;
 import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 @RepositoryRestResource(collectionResourceRel = "shows", path = "shows")
-public interface ShowRepository extends CrudRepository<ShowEntity, Long> {
+public interface ShowRepository extends CrudRepository<ShowEntity, Long>, PagingAndSortingRepository<ShowEntity, Long> {
 
   @RestResource(path = "byType", rel = "byType")
   List<ShowEntity> findByType(ShowType type);

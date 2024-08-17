@@ -22,6 +22,9 @@ public class TMDbSearchDetails implements SearchDetails {
 
   private String overview;
 
+  @JsonAlias("release_date")
+  private String releaseDate;
+
   @JsonAlias("number_of_episodes")
   private int runtime;
 

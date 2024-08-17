@@ -42,11 +42,6 @@ public class TMDbDomainMapper implements DomainMapper {
     return show;
   }
 
-  private String yearOf(String releaseDate) {
-    if (releaseDate == null || releaseDate.isEmpty()) return "Unknown";
-    else return String.valueOf(LocalDate.parse(releaseDate, DateTimeFormatter.ISO_DATE).getYear());
-  }
-
   @Override
   public ShowDetails mapSearchDetails(SearchDetails searchDetails, ShowType type) {
     if (searchDetails instanceof TMDbSearchDetails details) {
@@ -55,6 +50,7 @@ public class TMDbDomainMapper implements DomainMapper {
       showDetails.setTitle(details.getTitle());
       showDetails.setOriginalTitle(details.getOriginalTitle());
       showDetails.setOverview(details.getOverview());
+      showDetails.setReleaseDate(yearOf(details.getReleaseDate()));
       showDetails.setDuration(durationOf(details.getRuntime(), type));
       showDetails.setGenres(details.getGenres());
       showDetails.setWatchProviders(mapWatchProviders(details.getWatchProviders()));
@@ -62,6 +58,14 @@ public class TMDbDomainMapper implements DomainMapper {
       return showDetails;
     }
     return null;
+  }
+
+  private WatchProviders mapWatchProviders(TMDbWatchProviders tmdbWatchProviders) {
+    var watchProviders = new WatchProviders();
+    watchProviders.setAvailable(tmdbWatchProviders.getFlatrate());
+    watchProviders.setRent(tmdbWatchProviders.getRent());
+    watchProviders.setBuy(tmdbWatchProviders.getBuy());
+    return watchProviders;
   }
 
   private String durationOf(int duration, ShowType type) {
@@ -73,11 +77,8 @@ public class TMDbDomainMapper implements DomainMapper {
         };
   }
 
-  private WatchProviders mapWatchProviders(TMDbWatchProviders tmdbWatchProviders) {
-    var watchProviders = new WatchProviders();
-    watchProviders.setAvailable(tmdbWatchProviders.getFlatrate());
-    watchProviders.setRent(tmdbWatchProviders.getRent());
-    watchProviders.setBuy(tmdbWatchProviders.getBuy());
-    return watchProviders;
+  private String yearOf(String releaseDate) {
+    if (releaseDate == null || releaseDate.isEmpty()) return "Unknown";
+    else return String.valueOf(LocalDate.parse(releaseDate, DateTimeFormatter.ISO_DATE).getYear());
   }
 }

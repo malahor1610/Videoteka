@@ -1,6 +1,7 @@
 import { Badge, Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import '../../App.css';
 import SearchResultDetailsProvider from './SearchResultDetailsProvider';
+import SearchResultDetailsDuration from './SearchResultDetailsDuration';
 
 export default function SearchResultDetails({ show, poster, modal, setModal }) {
 
@@ -33,9 +34,7 @@ export default function SearchResultDetails({ show, poster, modal, setModal }) {
     >
       <ModalHeader toggle={() => setModal(!modal)}>
         {show.title} ({show.originalTitle})
-        <p className='fs-6 fw-normal mb-0'>
-         <small>{show.duration}</small>
-        </p>
+        <SearchResultDetailsDuration duration={show.duration}/>
         </ModalHeader>
       <ModalBody>
         {show.overview}
