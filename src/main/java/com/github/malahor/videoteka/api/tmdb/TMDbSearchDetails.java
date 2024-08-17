@@ -28,8 +28,6 @@ public class TMDbSearchDetails implements SearchDetails {
   @JsonAlias("number_of_episodes")
   private int runtime;
 
-  private ShowType type;
-
   private List<String> genres;
 
   @JsonAlias("watch/providers")

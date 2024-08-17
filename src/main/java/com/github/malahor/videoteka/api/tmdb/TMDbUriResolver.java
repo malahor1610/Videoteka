@@ -12,7 +12,7 @@ public class TMDbUriResolver implements UriResolver {
 
   public URI search(String title, ShowType type) {
     var query =
-        String.format(API_URI + "/search/%s?query=%s&include_adult=true", typePath(type), title);
+        String.format(API_URI + "/search/%s?query=%s&include_adult=true", typePath(type), title.replaceAll("\\s", "%20"));
     return URI.create(query);
   }
 

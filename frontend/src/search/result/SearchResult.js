@@ -1,11 +1,11 @@
+import { useState } from 'react';
 import { Button, Col } from 'reactstrap';
 import '../../App.css';
+import SearchResultDetails from './SearchResultDetails';
 import SearchResultImage from './SearchResultImage';
 import SearchResultTitle from './SearchResultTitle';
-import { useEffect, useState } from 'react';
-import SearchResultDetails from './SearchResultDetails';
 
-export default function SearchResult({ show }) {
+export default function SearchResult({ show, size }) {
 
   const [modal, setModal] = useState(false);
   const [details, setDetails] = useState([]);
@@ -21,7 +21,7 @@ export default function SearchResult({ show }) {
   }
 
   return (
-    <Col xs='3' className='my-2' key={show.id}>
+    <Col xs={size} className='my-2' key={show.id}>
       <Button onClick={() => openModal()}>
         <SearchResultImage poster={show.poster} />
         <SearchResultTitle show={show} />
