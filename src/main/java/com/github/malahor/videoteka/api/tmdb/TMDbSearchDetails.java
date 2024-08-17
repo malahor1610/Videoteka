@@ -26,12 +26,6 @@ public class TMDbSearchDetails implements SearchDetails {
 
   private String overview;
 
-  @JsonAlias("poster_path")
-  private String poster;
-
-  @JsonAlias({"first_air_date", "release_date"})
-  private String releaseDate;
-
   private ShowType type;
 
   private List<String> genres;

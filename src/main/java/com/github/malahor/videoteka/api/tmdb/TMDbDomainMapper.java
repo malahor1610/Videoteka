@@ -42,6 +42,11 @@ public class TMDbDomainMapper implements DomainMapper {
     return show;
   }
 
+  private String yearOf(String releaseDate) {
+    if (releaseDate == null || releaseDate.isEmpty()) return "Unknown";
+    else return String.valueOf(LocalDate.parse(releaseDate, DateTimeFormatter.ISO_DATE).getYear());
+  }
+
   @Override
   public ShowDetails mapSearchDetails(SearchDetails searchDetails, ShowType type) {
     if (searchDetails instanceof TMDbSearchDetails details) {
@@ -50,8 +55,6 @@ public class TMDbDomainMapper implements DomainMapper {
       showDetails.setTitle(details.getTitle());
       showDetails.setOriginalTitle(details.getOriginalTitle());
       showDetails.setOverview(details.getOverview());
-      showDetails.setReleaseDate(yearOf(details.getReleaseDate()));
-      showDetails.setPoster(POSTER_URI + details.getPoster());
       showDetails.setGenres(details.getGenres());
       showDetails.setWatchProviders(mapWatchProviders(details.getWatchProviders()));
       showDetails.setType(type);
@@ -66,10 +69,5 @@ public class TMDbDomainMapper implements DomainMapper {
     watchProviders.setRent(tmdbWatchProviders.getRent());
     watchProviders.setBuy(tmdbWatchProviders.getBuy());
     return watchProviders;
-  }
-
-  private String yearOf(String releaseDate) {
-    if (releaseDate == null || releaseDate.isEmpty()) return "Unknown";
-    else return String.valueOf(LocalDate.parse(releaseDate, DateTimeFormatter.ISO_DATE).getYear());
   }
 }

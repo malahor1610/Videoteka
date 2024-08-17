@@ -10,8 +10,6 @@ public class ShowDetails {
   private String originalTitle;
   private String title;
   private String overview;
-  private String poster;
-  private String releaseDate;
   private ShowType type;
   private List<String> genres;
   private WatchProviders watchProviders;
