@@ -6,7 +6,7 @@ export default function Genres({ genres }) {
   return (
     <p>
       {genres?.map(genre =>
-        <Badge className='me-1'>{genre}</Badge>
+        <Badge key={genre} className='me-1'>{genre}</Badge>
       )}
     </p>
   );

@@ -1,20 +1,35 @@
-import { Card, CardBody, CardSubtitle, CardTitle, Col, Container, Row } from 'reactstrap';
+import { useState } from 'react';
+import { Button, Card, CardBody, CardSubtitle, CardTitle, Col, Container, Row } from 'reactstrap';
 import '../App.css';
 import Duration from '../show/Duration';
 import Poster from '../show/Poster';
 import Title from '../show/Title';
-import WatchProviders from '../show/WatchProviders';
+import WatchlistElementDetails from './WatchlistElementDetails';
+import WatchlistElementDrag from './WatchlistElementDrag';
 
-export default function WatchlistElement({ show }) {
+export default function WatchlistElement({ show, orderable }) {
+
+  const [modal, setModal] = useState(false);
+  const [details, setDetails] = useState([]);
+
+  function openModal() {
+    const searchParams = new URLSearchParams({
+      type: show.type
+    }).toString();
+    fetch("/search/" + show.id + "?" + searchParams)
+      .then(result => result.json())
+      .then(result => setDetails(result));
+    setModal(!modal);
+  }
 
   return (
-    <Container key={show.id} className='mb-2' style={{ 'max-width': '500px' }}>
+    <Container className='mb-2' style={{ 'maxWidth': '500px' }}>
       <Card color="dark" inverse>
         <Row>
           <Col xs='3'>
-            <Poster image={show.poster} />
+            <Poster image={show.poster} small />
           </Col>
-          <Col>
+          <Button className='col' color='dark' onClick={() => openModal()}>
             <CardBody>
               <CardTitle tag="h4">
                 <Title show={show} />
@@ -23,12 +38,11 @@ export default function WatchlistElement({ show }) {
                 <Duration duration={show.duration} />
               </CardSubtitle>
             </CardBody>
-          </Col>
-          <Col xs='1' className='ps-1 align-content-center border-start border-secondary border-2 rounded'>
-              <i class="bi bi-grip-vertical fs-4 align-text-bottom text-secondary"></i>
-          </Col>
+          </Button>
+          {orderable ? <WatchlistElementDrag /> : <></>}
         </Row>
       </Card>
+      <WatchlistElementDetails show={details} modal={modal} setModal={setModal} />
     </Container>
   );
 }

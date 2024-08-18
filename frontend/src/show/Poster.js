@@ -1,8 +1,20 @@
 import '../App.css';
 
-export default function Poster({ image }) {
+export default function Poster({ image, small }) {
 
   return (
-    <img className='d-block img-fluid img-thumbnail' src={image} />
+    small ? Small(image = { image }) : Big(image = { image })
+  );
+}
+
+function Small({ image }) {
+  return (
+    <img className='d-block img-fluid border border-secondary border-2 rounded' src={image} />
+  );
+}
+
+function Big({ image }) {
+  return (
+    <img className='d-block img-fluid border border-3 rounded' src={image} />
   );
 }

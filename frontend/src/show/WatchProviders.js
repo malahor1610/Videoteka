@@ -8,7 +8,7 @@ export default function WatchProviders({ type, providers }) {
       {type}
       <Row>
         {providers?.map(provider =>
-          <img className='col-lg-1 col-2 my-1 ' src={provider} />
+          <img key={provider} className='col-lg-1 col-2 my-1 ' src={provider} />
         )}
       </Row>
     </div>

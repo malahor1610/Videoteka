@@ -1,32 +1,35 @@
 import { useEffect, useState } from 'react';
 import '../App.css';
-import WatchlistElement from './WatchlistElement';
+import WatchlistOrderable from './WatchlistOrderable';
 
-export default function Watchlist({ type }) {
+export default function Watchlist() {
   const [shows, setShows] = useState([]);
 
-
-  let searchParams = new URLSearchParams({
+  const searchParams = new URLSearchParams({
     sort: "position"
   }).toString();
-  let uri = "/shows?";
-  if (type !== "ALL") {
-    searchParams = new URLSearchParams({
-      type: type
-    }).toString();
-    uri = "/shows/search/byType?";
-  }
   useEffect(() => {
-    fetch(uri + searchParams)
+    fetch("/shows?" + searchParams)
       .then(result => result.json())
       .then(result => setShows(result._embedded.shows));
   }, []);
 
+
+  function updatePositions(list) {
+    fetch('/shows/positions', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(list)
+    })
+      .then(response => response.json())
+      .then(data => setShows(data))
+      .catch(error => console.error('Error updating show:', error));
+  }
+
+
   return (
-    <div className='mt-5 pt-5'>
-      {shows.map(show =>
-        <WatchlistElement show={show} />
-      )}
-    </div>
+    <WatchlistOrderable shows={shows} setOrder={updatePositions} />
   );
 }
