@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Col } from 'reactstrap';
+import { Button, Col, Toast, ToastBody, ToastHeader } from 'reactstrap';
 import '../../App.css';
 import SearchResultDetails from './SearchResultDetails';
 import Poster from '../../show/Poster';
@@ -9,6 +9,7 @@ export default function SearchResult({ show, size }) {
 
   const [modal, setModal] = useState(false);
   const [details, setDetails] = useState([]);
+  const [error, setError] = useState('');
 
   function openModal() {
     const searchParams = new URLSearchParams({
@@ -26,7 +27,15 @@ export default function SearchResult({ show, size }) {
         <Poster image={show.poster} />
         <Title show={show} />
       </Button>
-      <SearchResultDetails show={details} poster={show.poster} modal={modal} setModal={setModal} />
+      <SearchResultDetails show={details} poster={show.poster} modal={modal} setModal={setModal} error={error} setError={setError} />
+      <Toast className="position-fixed bottom-0 end-0 p-2" isOpen={error}>
+        <ToastHeader icon='danger' toggle={()=> setError(!error)}>
+          Error
+        </ToastHeader>
+        <ToastBody className='bg-danger '>
+          {error}
+        </ToastBody>
+      </Toast>
     </Col>
   );
 }

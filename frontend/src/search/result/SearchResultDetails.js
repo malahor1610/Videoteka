@@ -1,11 +1,12 @@
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader, Toast, ToastBody, ToastHeader } from 'reactstrap';
 import '../../App.css';
 import Duration from '../../show/Duration';
 import Genres from '../../show/Genres';
 import Title from '../../show/Title';
 import WatchProviders from '../../show/WatchProviders';
+import { useState } from 'react';
 
-export default function SearchResultDetails({ show, poster, modal, setModal }) {
+export default function SearchResultDetails({ show, poster, modal, setModal, error, setError }) {
 
   function addToWatchlist() {
     fetch('/api/shows', {
@@ -24,9 +25,16 @@ export default function SearchResultDetails({ show, poster, modal, setModal }) {
       }),
     })
       .then(response => response.json())
-      .then(data => console.log('Show added:', data))
-      .catch(error => console.error('Error adding show:', error));
-    setModal(!modal);
+      .then(data => {
+        if (data.status === 400) {
+          console.error(data.message);
+          setError(data.message);
+        } else {
+          console.log('Show added:', data);
+          setModal(!modal);
+        }
+      });
+    
   }
 
   return (
