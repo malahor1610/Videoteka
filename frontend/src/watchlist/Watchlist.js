@@ -5,10 +5,10 @@ import WatchlistOrderable from './WatchlistOrderable';
 export default function Watchlist() {
   const [shows, setShows] = useState([]);
 
-  const searchParams = new URLSearchParams({
-    sort: "position"
-  }).toString();
   useEffect(() => {
+    const searchParams = new URLSearchParams({
+      sort: "position"
+    }).toString();
     fetch("/shows?" + searchParams)
       .then(result => result.json())
       .then(result => setShows(result._embedded.shows));

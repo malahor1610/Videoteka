@@ -1,9 +1,9 @@
-import { Badge, Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import '../../App.css';
-import WatchProviders from '../../show/WatchProviders';
 import Duration from '../../show/Duration';
-import Title from '../../show/Title';
 import Genres from '../../show/Genres';
+import Title from '../../show/Title';
+import WatchProviders from '../../show/WatchProviders';
 
 export default function SearchResultDetails({ show, poster, modal, setModal }) {
 
