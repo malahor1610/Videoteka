@@ -14,6 +14,7 @@ import java.util.Comparator;
 import java.util.List;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 @Component
 @ConditionalOnProperty(value = "api.used", havingValue = "tmdb")
@@ -78,7 +79,7 @@ public class TMDbDomainMapper implements DomainMapper {
   }
 
   private String yearOf(String releaseDate) {
-    if (releaseDate == null || releaseDate.isEmpty()) return "Unknown";
+    if (releaseDate == null || releaseDate.isEmpty()) return "";
     else return String.valueOf(LocalDate.parse(releaseDate, DateTimeFormatter.ISO_DATE).getYear());
   }
 }

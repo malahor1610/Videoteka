@@ -1,6 +1,6 @@
-import '../../App.css';
+import '../App.css';
 
-export default function SearchResultDetailsDuration({ duration }) {
+export default function Duration({ duration }) {
 
 
   return (

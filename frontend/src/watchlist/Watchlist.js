@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import '../App.css';
-import SearchResultDetailsDuration from '../search/result/SearchResultDetailsDuration';
+import Duration from '../show/Duration';
 import { Card, CardBody, CardSubtitle, CardTitle, Col, Container, Row } from 'reactstrap';
+import Poster from '../show/Poster';
+import Title from '../show/Title';
 
 export default function Watchlist({ type }) {
   const [shows, setShows] = useState([]);
@@ -22,15 +24,15 @@ export default function Watchlist({ type }) {
           <Card color="dark" inverse>
             <Row>
               <Col xs='3'>
-                <img className='d-block img-fluid img-thumbnail' src={show.poster} />
+                <Poster image={show.poster}/>
               </Col>
               <Col>
                 <CardBody>
-                  <CardTitle tag="h5">
-                    {show.title} ({show.originalTitle}) ({show.releaseDate})
+                  <CardTitle tag="h4">
+                    <Title show={show}/>
                   </CardTitle>
                   <CardSubtitle>
-                    <SearchResultDetailsDuration duration={show.duration} />
+                    <Duration duration={show.duration} />
                   </CardSubtitle>
                 </CardBody>
               </Col>

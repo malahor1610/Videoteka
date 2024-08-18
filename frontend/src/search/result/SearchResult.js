@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { Button, Col } from 'reactstrap';
 import '../../App.css';
 import SearchResultDetails from './SearchResultDetails';
-import SearchResultImage from './SearchResultImage';
-import SearchResultTitle from './SearchResultTitle';
+import Poster from '../../show/Poster';
+import Title from '../../show/Title';
 
 export default function SearchResult({ show, size }) {
 
@@ -23,8 +23,8 @@ export default function SearchResult({ show, size }) {
   return (
     <Col xs={size} className='my-2' key={show.id}>
       <Button onClick={() => openModal()}>
-        <SearchResultImage poster={show.poster} />
-        <SearchResultTitle show={show} />
+        <Poster image={show.poster} />
+        <Title show={show} />
       </Button>
       <SearchResultDetails show={details} poster={show.poster} modal={modal} setModal={setModal} />
     </Col>

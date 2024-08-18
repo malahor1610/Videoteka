@@ -1,7 +1,9 @@
 import { Badge, Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import '../../App.css';
-import SearchResultDetailsProvider from './SearchResultDetailsProvider';
-import SearchResultDetailsDuration from './SearchResultDetailsDuration';
+import WatchProviders from '../../show/WatchProviders';
+import Duration from '../../show/Duration';
+import Title from '../../show/Title';
+import Genres from '../../show/Genres';
 
 export default function SearchResultDetails({ show, poster, modal, setModal }) {
 
@@ -21,31 +23,24 @@ export default function SearchResultDetails({ show, poster, modal, setModal }) {
         type: show.type
       }),
     })
-    .then(response => response.json())
-    .then(data => console.log('Show added:', data))
-    .catch(error => console.error('Error adding show:', error));
+      .then(response => response.json())
+      .then(data => console.log('Show added:', data))
+      .catch(error => console.error('Error adding show:', error));
     setModal(!modal);
   }
 
   return (
-    <Modal size='lg'
-      isOpen={modal}
-      toggle={() => setModal(!modal)}
-    >
+    <Modal size='lg' isOpen={modal} toggle={() => setModal(!modal)}>
       <ModalHeader toggle={() => setModal(!modal)}>
-        {show.title} ({show.originalTitle})
-        <SearchResultDetailsDuration duration={show.duration}/>
-        </ModalHeader>
+        <Title show={show} />
+        <Duration duration={show.duration} />
+      </ModalHeader>
       <ModalBody>
         {show.overview}
-        <p>
-          {show.genres?.map(genre =>
-          <Badge className='me-1'>{genre}</Badge>
-        )}
-        </p>
-        <SearchResultDetailsProvider text="Available on:" providers={show.watchProviders?.available} />
-        <SearchResultDetailsProvider text="To rent on:" providers={show.watchProviders?.rent} />
-        <SearchResultDetailsProvider text="To buy on:" providers={show.watchProviders?.buy} />
+        <Genres genres={show.genres} />
+        <WatchProviders type="Available on:" providers={show.watchProviders?.available} />
+        <WatchProviders type="To rent on:" providers={show.watchProviders?.rent} />
+        <WatchProviders type="To buy on:" providers={show.watchProviders?.buy} />
       </ModalBody>
       <ModalFooter>
         <Button color="primary" onClick={() => addToWatchlist()}>
