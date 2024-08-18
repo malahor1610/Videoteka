@@ -2,18 +2,17 @@ package com.github.malahor.videoteka;
 
 import com.github.malahor.videoteka.api.ApiService;
 import com.github.malahor.videoteka.api.DomainMapper;
+import com.github.malahor.videoteka.api.tmdb.*;
 import com.github.malahor.videoteka.domain.Show;
 import com.github.malahor.videoteka.domain.ShowDetails;
 import com.github.malahor.videoteka.domain.ShowType;
-import com.github.malahor.videoteka.api.tmdb.*;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/search")
+@RequestMapping("/api/search")
 @RequiredArgsConstructor
 public class SearchController {
 

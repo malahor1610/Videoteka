@@ -7,7 +7,7 @@ import { Form } from 'reactstrap';
 
 export default function SearchBar({ setShows }) {
 
-  const [title, setTitle] = useState('matrix');
+  const [title, setTitle] = useState('');
   const [type, setType] = useState('MOVIE');
 
   function handleSubmit(e) {
@@ -16,7 +16,7 @@ export default function SearchBar({ setShows }) {
       title: title,
       type: type
     }).toString();
-    fetch("/search?" + searchParams)
+    fetch("/api/search?" + searchParams)
       .then(result => result.json())
       .then(result => setShows(result));
   }

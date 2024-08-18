@@ -16,7 +16,7 @@ export default function WatchlistElement({ show, orderable }) {
     const searchParams = new URLSearchParams({
       type: show.type
     }).toString();
-    fetch("/search/" + show.id + "?" + searchParams)
+    fetch("/api/search/" + show.id + "?" + searchParams)
       .then(result => result.json())
       .then(result => setDetails(result));
     setModal(!modal);

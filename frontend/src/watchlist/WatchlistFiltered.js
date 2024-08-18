@@ -9,7 +9,7 @@ export default function WatchlistFiltered({ type }) {
     const searchParams = new URLSearchParams({
       type: type
     }).toString();
-    fetch("/shows/search/byType?" + searchParams)
+    fetch("/api/shows/search/byType?" + searchParams)
       .then(result => result.json())
       .then(result => setShows(result._embedded.shows));
   }, [type]);

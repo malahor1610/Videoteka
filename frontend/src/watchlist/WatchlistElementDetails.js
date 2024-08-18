@@ -8,7 +8,7 @@ import Duration from '../show/Duration';
 export default function WatchlistElementDetails({ show, modal, setModal }) {
 
   function removeFromWatchlist() {
-    fetch('/shows/' + show.id, {
+    fetch('/api/shows/' + show.id, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

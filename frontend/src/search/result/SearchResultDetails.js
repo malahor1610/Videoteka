@@ -8,7 +8,7 @@ import WatchProviders from '../../show/WatchProviders';
 export default function SearchResultDetails({ show, poster, modal, setModal }) {
 
   function addToWatchlist() {
-    fetch('/shows', {
+    fetch('/api/shows', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

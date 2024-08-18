@@ -9,14 +9,15 @@ export default function Watchlist() {
     const searchParams = new URLSearchParams({
       sort: "position"
     }).toString();
-    fetch("/shows?" + searchParams)
+    fetch("/api/shows?" + searchParams)
       .then(result => result.json())
       .then(result => setShows(result._embedded.shows));
   }, []);
 
 
   function updatePositions(list) {
-    fetch('/shows/positions', {
+    setShows(list);
+    fetch('/api/shows/positions', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
