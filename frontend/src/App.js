@@ -8,8 +8,8 @@ export default function App() {
   return (
     <div className="App App-header">
       <Routes>
+        <Route path='/' element={<Watchlist type="ALL" />} />
         <Route path='/search' element={<Search />} />
-        <Route path='/all' element={<Watchlist type="ALL" />} />
         <Route path='/movies' element={<Watchlist type="MOVIE" />} />
         <Route path='/series' element={<Watchlist type="SERIES" />} />
       </Routes>

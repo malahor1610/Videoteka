@@ -9,7 +9,7 @@ export default function NavWatchlist() {
       </DropdownToggle>
       <DropdownMenu right dark>
         <DropdownItem>
-          <NavLink href="/all">All</NavLink>
+          <NavLink href="/">All</NavLink>
         </DropdownItem>
         <DropdownItem>
           <NavLink href="/movies">Movies</NavLink>

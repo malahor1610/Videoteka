@@ -13,7 +13,7 @@ import org.springframework.data.rest.core.annotation.RestResource;
 public interface ShowRepository extends CrudRepository<ShowEntity, Long>, PagingAndSortingRepository<ShowEntity, Long> {
 
   @RestResource(path = "byType", rel = "byType")
-  List<ShowEntity> findByType(ShowType type);
+  List<ShowEntity> findByTypeOrderByPosition(ShowType type);
 
   @Query(value = "SELECT MAX(s.position) FROM ShowEntity s")
   int findMaxPosition();
