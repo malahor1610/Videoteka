@@ -18,5 +18,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=password
       - SPRING_JPA_HIBERNATE_DDL_AUTO=create
+      - VIDEOTEKA_API=tmdb
+      - VIDEOTEKA_API_KEY=your-own-api-key
     ports:
       - 8080:8080

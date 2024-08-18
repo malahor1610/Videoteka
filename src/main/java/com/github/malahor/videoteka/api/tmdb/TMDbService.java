@@ -1,7 +1,6 @@
 package com.github.malahor.videoteka.api.tmdb;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.malahor.videoteka.api.ApiKeyResolver;
 import com.github.malahor.videoteka.api.ApiService;
 import com.github.malahor.videoteka.domain.ShowType;
 import java.io.IOException;
@@ -10,6 +9,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
@@ -18,19 +18,21 @@ import org.springframework.stereotype.Service;
 @ConditionalOnProperty(value = "api.used", havingValue = "tmdb")
 public class TMDbService implements ApiService {
 
-  private final ApiKeyResolver apiKeyResolver;
+  @Value("${api.key}")
+  private String apiKey;
+
   private final TMDbUriResolver uriResolver;
   private final ObjectMapper mapper;
 
   public TMDbSearchResult search(String title, ShowType type) {
-    return this.get(uriResolver.search(title, type), apiKeyResolver.apiKey(), TMDbSearchResult.class);
+    return this.get(uriResolver.search(title, type), TMDbSearchResult.class);
   }
 
   public TMDbSearchDetails details(long id, ShowType type) {
-    return this.get(uriResolver.details(id, type), apiKeyResolver.apiKey(), TMDbSearchDetails.class);
+    return this.get(uriResolver.details(id, type), TMDbSearchDetails.class);
   }
 
-  private <T> T get(URI uri, String apiKey, Class<T> resultType) {
+  private <T> T get(URI uri, Class<T> resultType) {
     var request =
         HttpRequest.newBuilder()
             .uri(uri)
