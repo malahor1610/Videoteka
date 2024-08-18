@@ -14,7 +14,6 @@ import java.util.Comparator;
 import java.util.List;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 @Component
 @ConditionalOnProperty(value = "api.used", havingValue = "tmdb")
@@ -62,6 +61,7 @@ public class TMDbDomainMapper implements DomainMapper {
   }
 
   private WatchProviders mapWatchProviders(TMDbWatchProviders tmdbWatchProviders) {
+    if (tmdbWatchProviders == null) return WatchProviders.noProviders();
     var watchProviders = new WatchProviders();
     watchProviders.setAvailable(tmdbWatchProviders.getFlatrate());
     watchProviders.setRent(tmdbWatchProviders.getRent());
