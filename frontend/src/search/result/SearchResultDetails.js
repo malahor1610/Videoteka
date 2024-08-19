@@ -1,10 +1,9 @@
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader, Toast, ToastBody, ToastHeader } from 'reactstrap';
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import '../../App.css';
 import Duration from '../../show/Duration';
 import Genres from '../../show/Genres';
 import Title from '../../show/Title';
 import WatchProviders from '../../show/WatchProviders';
-import { useState } from 'react';
 
 export default function SearchResultDetails({ show, poster, modal, setModal, error, setError }) {
 
