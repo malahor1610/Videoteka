@@ -3,6 +3,7 @@ package com.github.malahor.videoteka.repository;
 import com.github.malahor.videoteka.domain.ShowEntity;
 import com.github.malahor.videoteka.domain.ShowType;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -19,7 +20,7 @@ public interface ShowRepository extends CrudRepository<ShowEntity, Long>, Paging
   List<ShowEntity> findByTypeOrderByPosition(ShowType type);
 
   @Query(value = "SELECT MAX(s.position) FROM ShowEntity s")
-  int findMaxPosition();
+  Optional<Integer> findMaxPosition();
 
   @Transactional
   @Modifying
