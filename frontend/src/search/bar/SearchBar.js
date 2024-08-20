@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import '../../App.css';
-import SearchType from './SearchType';
-import SearchInput from './SearchInput';
-import SearchButton from './SearchButton';
 import { Form } from 'reactstrap';
+import '../../App.css';
+import Type from '../../show/Type';
+import SearchButton from './SearchButton';
+import SearchInput from './SearchInput';
 
 export default function SearchBar({ setShows }) {
 
@@ -23,7 +23,7 @@ export default function SearchBar({ setShows }) {
 
   return (
     <Form className='row justify-content-center my-3' onSubmit={handleSubmit}>
-      <SearchType type={type} setType={setType} />
+      <Type type={type} setType={setType} />
       <SearchInput title={title} setTitle={setTitle} />
       <SearchButton/>
     </Form>

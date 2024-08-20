@@ -1,7 +1,7 @@
 import { Button, ButtonGroup } from 'reactstrap';
-import '../../App.css';
+import '../App.css';
 
-export default function SearchType({type, setType}) {
+export default function Type({type, setType}) {
 
   return (
     <ButtonGroup className='col-auto'>
