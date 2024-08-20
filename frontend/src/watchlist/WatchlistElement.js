@@ -23,7 +23,7 @@ export default function WatchlistElement({ show, orderable }) {
   }
 
   return (
-    <Container className='mb-2' style={{ 'maxWidth': '500px' }}>
+    <Container className='mb-2' style={{ 'maxWidth': '666px' }}>
       <Card color="dark" inverse>
         <Row>
           <Col xs='3'>

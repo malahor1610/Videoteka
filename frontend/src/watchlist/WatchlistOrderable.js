@@ -24,8 +24,8 @@ export default function WatchlistOrderable({ shows, setOrder }) {
     <DragDropContext onDragEnd={({ destination, source }) => handleDragEnd(destination, source)}>
       <Droppable droppableId="droppable">
         {(provided) => (
-          <div ref={provided.innerRef} {...provided.droppableProps}>
-            <div className='mt-5 pt-5'>
+          <div className='w-100' ref={provided.innerRef} {...provided.droppableProps}>
+            <div className='mt-5 pt-5 w-100'>
               {shows.map((show, index) =>
                 <Draggable
                   key={show.position}

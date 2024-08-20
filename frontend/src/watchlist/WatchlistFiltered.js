@@ -15,7 +15,7 @@ export default function WatchlistFiltered({ type }) {
   }, [type]);
 
   return (
-    <div className='mt-5 pt-5'>
+    <div className='mt-5 pt-5 w-100'>
       {shows.map((show) =>
         <WatchlistElement key={show.id} show={show} />
       )}
