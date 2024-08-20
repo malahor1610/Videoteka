@@ -1,26 +1,26 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { Row } from 'reactstrap';
 import '../App.css';
 import RandomBar from './RandomBar';
 import RandomElement from './RandomElement';
-import { Row } from 'reactstrap';
 import RandomPicked from './RandomPicked';
 
 export default function Random() {
   const [type, setType] = useState('MOVIE');
   const [shows, setShows] = useState([]);
 
-  useEffect(() => {
-    fetchShows();
-  }, [type]);
-
-  function fetchShows() {
+  const fetchShows = useCallback(() => {
     const searchParams = new URLSearchParams({
       type: type
     }).toString();
     fetch("/api/shows/search/byType?" + searchParams)
       .then(result => result.json())
       .then(result => setShows(result._embedded.shows));
-  }
+  }, [type])
+
+  useEffect(() => {
+    fetchShows();
+  }, [fetchShows]);
 
   function handleSubmit() {
     const result = Array.from(shows);
@@ -34,7 +34,7 @@ export default function Random() {
     setShows(result);
   }
 
-  return shows.length <= 1 ?
+  return shows.length === 1 ?
     (<Row className='mt-5 pt-5 w-100'>
       <RandomBar type={type} setType={setType} handleSubmit={handleSubmit} fetchShows={fetchShows} pickDisabled />
       <RandomPicked show={shows[0]} />
