@@ -1,6 +1,6 @@
 import { Col, Container } from 'reactstrap';
 import '../App.css';
-import SearchResult from './SearchResult';
+import Tile from '../show/Tile';
 
 export default function SearchResults({ shows, setError }) {
 
@@ -8,7 +8,7 @@ export default function SearchResults({ shows, setError }) {
     <Container className='row text-center'>
       {shows.map(show =>
         <Col xs='2' className='my-2' key={show.id}>
-          <SearchResult show={show} setError={setError} />
+          <Tile show={show} search setError={setError}/>
         </Col>
       )}
     </Container>

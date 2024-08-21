@@ -1,5 +1,5 @@
 import { Toast, ToastBody, ToastHeader } from 'reactstrap';
-import './App.css';
+import '../App.css';
 
 export default function Error({ error, setError }) {
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import '../App.css';
-import WatchlistElement from './WatchlistElement';
+import Page from '../shell/Page';
+import Tile from '../show/Tile';
 
 export default function WatchlistFiltered({ type }) {
   const [shows, setShows] = useState([]);
@@ -15,10 +16,12 @@ export default function WatchlistFiltered({ type }) {
   }, [type]);
 
   return (
-    <div className='mt-5 pt-5 w-100'>
-      {shows.map((show) =>
-        <WatchlistElement key={show.id} show={show} />
-      )}
-    </div>
+    <Page content={(<>
+      <div className='w-100'>
+        {shows.map((show) =>
+          <Tile key={show.id} show={show} />
+        )}
+      </div>
+    </>)} />
   );
 }

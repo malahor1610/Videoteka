@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Button, Row } from 'reactstrap';
+import { Button } from 'reactstrap';
 import '../App.css';
+import Bar from '../shell/Bar';
 import Type from '../show/Type';
 
 export default function RandomBar({ shows, setShows, pickDisabled }) {
@@ -26,10 +27,10 @@ export default function RandomBar({ shows, setShows, pickDisabled }) {
   }
 
   return (
-    <Row className='justify-content-center mb-3'>
+    <Bar content={(<>
       <Type type={type} setType={setType} />
       <Button color="primary" className='col-auto mx-3' disabled={pickDisabled} onClick={handleSubmit}>Pick random</Button>
       <Button color="danger" className='col-auto mx-3' onClick={fetchShows}>Reset</Button>
-    </Row>
+    </>)} />
   );
 }

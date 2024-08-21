@@ -1,7 +1,8 @@
+import { useState } from 'react';
 import { Button, Form, Input } from 'reactstrap';
 import '../App.css';
+import Bar from '../shell/Bar';
 import Type from '../show/Type';
-import { useState } from 'react';
 
 export default function SearchBar({ setShows }) {
   const [title, setTitle] = useState('');
@@ -19,14 +20,16 @@ export default function SearchBar({ setShows }) {
   }
 
   return (
-    <Form className='row justify-content-center my-3' onSubmit={search}>
-      <Type type={type} setType={setType} />
-      <Input
-        className='w-auto col-auto'
-        value={title}
-        placeholder="Search for title..."
-        onChange={(e) => setTitle(e.target.value)} />
-      <Button color="primary" className='col-auto mx-3'>Search</Button>
+    <Form onSubmit={search}>
+      <Bar content={(<>
+        <Type type={type} setType={setType} />
+        <Input
+          className='w-auto col-auto'
+          value={title}
+          placeholder="Search for title..."
+          onChange={(e) => setTitle(e.target.value)} />
+        <Button color="primary" className='col-auto mx-3'>Search</Button>
+      </>)} />
     </Form>
   );
 }
