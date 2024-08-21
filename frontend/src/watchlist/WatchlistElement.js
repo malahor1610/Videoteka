@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Button, Card, CardBody, CardSubtitle, CardTitle, Col, Container, Row } from 'reactstrap';
 import '../App.css';
+import Details from '../show/Details';
 import Duration from '../show/Duration';
 import Poster from '../show/Poster';
 import Title from '../show/Title';
-import WatchlistElementDetails from './WatchlistElementDetails';
 import WatchlistElementDrag from './WatchlistElementDrag';
 
 export default function WatchlistElement({ show, orderable }) {
@@ -21,6 +21,26 @@ export default function WatchlistElement({ show, orderable }) {
       .then(result => setDetails(result));
     setModal(!modal);
   }
+
+  function removeFromWatchlist() {
+    fetch('/api/shows/' + show.id, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+      .then(response => response.json())
+      .then(data => console.log('Show removed:', data))
+      .catch(error => console.error('Error removing show:', error));
+    setModal(!modal);
+    window.location.reload();
+  }
+
+  const removeButton = (
+    <Button color="primary" onClick={() => removeFromWatchlist()}>
+      Remove from watchlist
+    </Button>
+  );
 
   return (
     <Container className='mb-2' style={{ 'maxWidth': '666px' }}>
@@ -42,7 +62,7 @@ export default function WatchlistElement({ show, orderable }) {
           {orderable ? <WatchlistElementDrag /> : <></>}
         </Row>
       </Card>
-      <WatchlistElementDetails show={details} modal={modal} setModal={setModal} />
+      <Details show={details} modal={modal} setModal={setModal} button={removeButton} />
     </Container>
   );
 }

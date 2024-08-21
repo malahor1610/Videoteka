@@ -14,23 +14,7 @@ export default function Watchlist() {
       .then(result => setShows(result._embedded.shows));
   }, []);
 
-
-  function updatePositions(list) {
-    setShows(list);
-    fetch('/api/shows/positions', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(list)
-    })
-      .then(response => response.json())
-      .then(data => setShows(data))
-      .catch(error => console.error('Error updating show:', error));
-  }
-
-
   return (
-    <WatchlistOrderable shows={shows} setOrder={updatePositions} />
+    <WatchlistOrderable shows={shows} setShows={setShows} />
   );
 }

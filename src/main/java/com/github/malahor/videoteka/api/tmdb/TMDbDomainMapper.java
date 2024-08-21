@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 @ConditionalOnProperty(value = "api.used", havingValue = "tmdb")
 public class TMDbDomainMapper implements DomainMapper {
 
-  private static final String POSTER_URI = "http://image.tmdb.org/t/p/w185";
+  private static final String POSTER_URI = "http://image.tmdb.org/t/p/w342";
 
   @Override
   public List<Show> mapSearchResult(SearchResult searchResult, ShowType type) {

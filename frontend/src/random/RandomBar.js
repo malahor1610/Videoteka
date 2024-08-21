@@ -1,8 +1,29 @@
+import { useCallback, useEffect, useState } from 'react';
 import { Button, Row } from 'reactstrap';
 import '../App.css';
 import Type from '../show/Type';
 
-export default function RandomBar({ type, setType, handleSubmit, fetchShows, pickDisabled }) {
+export default function RandomBar({ shows, setShows, pickDisabled }) {
+  const [type, setType] = useState('MOVIE');
+
+  const fetchShows = useCallback(() => {
+    const searchParams = new URLSearchParams({
+      type: type
+    }).toString();
+    fetch("/api/shows/search/byType?" + searchParams)
+      .then(result => result.json())
+      .then(result => setShows(result._embedded.shows));
+  }, [type])
+
+  useEffect(() => {
+    fetchShows();
+  }, [fetchShows]);
+
+  function handleSubmit() {
+    const result = Array.from(shows);
+    const random = result[Math.floor(Math.random() * result.length)];
+    setShows(Array.of(random));
+  }
 
   return (
     <Row className='justify-content-center mb-3'>

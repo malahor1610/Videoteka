@@ -15,6 +15,6 @@ function Small({ image }) {
 
 function Big({ image }) {
   return (
-    <img className='d-block img-fluid border border-3 rounded' src={image} alt='No poster available'/>
+    <img className='d-block img-fluid border border-3 rounded w-100' src={image} alt='No poster available'/>
   );
 }

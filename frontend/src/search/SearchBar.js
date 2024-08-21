@@ -1,16 +1,13 @@
+import { Button, Form, Input } from 'reactstrap';
+import '../App.css';
+import Type from '../show/Type';
 import { useState } from 'react';
-import { Form } from 'reactstrap';
-import '../../App.css';
-import Type from '../../show/Type';
-import SearchButton from './SearchButton';
-import SearchInput from './SearchInput';
 
 export default function SearchBar({ setShows }) {
-
   const [title, setTitle] = useState('');
   const [type, setType] = useState('MOVIE');
 
-  function handleSubmit(e) {
+  function search(e) {
     e.preventDefault();
     const searchParams = new URLSearchParams({
       title: title,
@@ -22,10 +19,14 @@ export default function SearchBar({ setShows }) {
   }
 
   return (
-    <Form className='row justify-content-center my-3' onSubmit={handleSubmit}>
+    <Form className='row justify-content-center my-3' onSubmit={search}>
       <Type type={type} setType={setType} />
-      <SearchInput title={title} setTitle={setTitle} />
-      <SearchButton/>
+      <Input
+        className='w-auto col-auto'
+        value={title}
+        placeholder="Search for title..."
+        onChange={(e) => setTitle(e.target.value)} />
+      <Button color="primary" className='col-auto mx-3'>Search</Button>
     </Form>
   );
 }

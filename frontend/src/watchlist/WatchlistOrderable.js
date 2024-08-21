@@ -2,7 +2,7 @@ import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import '../App.css';
 import WatchlistElement from './WatchlistElement';
 
-export default function WatchlistOrderable({ shows, setOrder }) {
+export default function WatchlistOrderable({ shows, setShows }) {
 
   function handleDragEnd(destination, source) {
     if (!destination) return;
@@ -10,7 +10,7 @@ export default function WatchlistOrderable({ shows, setOrder }) {
     list.forEach(element => {
       element.position = list.indexOf(element) + 1;
     });
-    setOrder(list);
+    updatePositions(list);
   };
 
   function reorder(list, startIndex, endIndex) {
@@ -19,6 +19,20 @@ export default function WatchlistOrderable({ shows, setOrder }) {
     result.splice(endIndex, 0, removed);
     return result;
   };
+
+  function updatePositions(list) {
+    setShows(list);
+    fetch('/api/shows/positions', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(list)
+    })
+      .then(response => response.json())
+      .then(data => setShows(data))
+      .catch(error => console.error('Error updating show:', error));
+  }
 
   return (
     <DragDropContext onDragEnd={({ destination, source }) => handleDragEnd(destination, source)}>
