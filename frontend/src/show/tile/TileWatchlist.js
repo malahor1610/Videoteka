@@ -8,8 +8,8 @@ export default function TileWatchlist({ show, openModal, orderable }) {
 
   const draggable = (
     <Col xs='1' className='px-1 align-content-center border-start border-secondary border-2 rounded'>
-      <i className="bi bi-grip-vertical d-block d-sm-none fs-6 align-text-bottom text-secondary"></i>
-      <i className="bi bi-grip-vertical d-none d-sm-block fs-4 align-text-bottom text-secondary"></i>
+      <i className="bi bi-grip-vertical d-flex d-sm-none justify-content-center fs-6 text-secondary"></i>
+      <i className="bi bi-grip-vertical d-none d-sm-flex justify-content-center fs-4 text-secondary"></i>
     </Col>
   );
 
