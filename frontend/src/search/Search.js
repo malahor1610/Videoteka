@@ -1,20 +1,19 @@
 import { useState } from 'react';
-import { Row } from 'reactstrap';
 import '../App.css';
-import Error from '../shell/Error';
+import Notification, { hide } from '../shell/Notification';
+import Page from '../shell/Page';
 import SearchBar from './SearchBar';
 import SearchResults from './SearchResults';
-import Page from '../shell/Page';
 
 export default function Search() {
   const [shows, setShows] = useState([]);
-  const [error, setError] = useState('');
+  const [message, setMessage] = useState(hide());
 
   return (
     <Page content={(<>
-      <SearchBar setShows={setShows} />
-      <SearchResults shows={shows} setError={setError} />
-      <Error error={error} setError={setError} />
+      <SearchBar setShows={setShows} setMessage={setMessage} />
+      <SearchResults shows={shows} setMessage={setMessage} />
+      <Notification message={message.message} type={message.type} setMessage={setMessage} />
     </>
     )} />
   );

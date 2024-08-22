@@ -2,9 +2,10 @@ import { useState } from 'react';
 import { Button, Form, Input } from 'reactstrap';
 import '../App.css';
 import Bar from '../shell/Bar';
+import { error } from '../shell/Notification';
 import Type from '../show/Type';
 
-export default function SearchBar({ setShows }) {
+export default function SearchBar({ setShows, setMessage }) {
   const [title, setTitle] = useState('');
   const [type, setType] = useState('MOVIE');
 
@@ -16,7 +17,10 @@ export default function SearchBar({ setShows }) {
     }).toString();
     fetch("/api/search?" + searchParams)
       .then(result => result.json())
-      .then(result => setShows(result));
+      .then(result => {
+        if (result.status >= 400) setMessage(error(result.message));
+        else setShows(result);
+      });
   }
 
   return (

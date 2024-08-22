@@ -7,6 +7,8 @@ import com.github.malahor.videoteka.domain.Show;
 import com.github.malahor.videoteka.domain.ShowDetails;
 import com.github.malahor.videoteka.domain.ShowType;
 import java.util.List;
+
+import com.github.malahor.videoteka.exception.ShowsNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +26,7 @@ public class SearchController {
       @RequestParam("title") String title, @RequestParam("type") ShowType type) {
     var result = service.search(title, type);
     var shows = mapper.mapSearchResult(result, type);
+    if (shows.isEmpty()) throw new ShowsNotFoundException();
     return ResponseEntity.ok(shows);
   }
 

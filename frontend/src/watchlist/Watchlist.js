@@ -1,20 +1,26 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import '../App.css';
+import Notification, { hide } from '../shell/Notification';
 import Page from '../shell/Page';
 import Tile from '../show/tile/Tile';
 
 export default function Watchlist() {
   const [shows, setShows] = useState([]);
+  const [message, setMessage] = useState(hide());
 
-  useEffect(() => {
+  const fetchShows = useCallback(() => {
     const searchParams = new URLSearchParams({
       sort: "position"
     }).toString();
     fetch("/api/shows?" + searchParams)
       .then(result => result.json())
       .then(result => setShows(result._embedded.shows));
-  }, []);
+  }, [])
+
+  useEffect(() => {
+    fetchShows();
+  }, [fetchShows]);
 
   function handleDragEnd(destination, source) {
     if (!destination) return;
@@ -64,7 +70,7 @@ export default function Watchlist() {
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
                     >
-                      <Tile show={show} orderable />
+                      <Tile show={show} setMessage={setMessage} orderable fetchShows={fetchShows} />
                     </div>
                   )}
                 </Draggable>
@@ -73,6 +79,7 @@ export default function Watchlist() {
           )}
         </Droppable>
       </DragDropContext>
+      <Notification message={message.message} type={message.type} setMessage={setMessage} />
     </>)} />
   );
 }

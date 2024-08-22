@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { Button } from 'reactstrap';
 import '../../App.css';
+import { error, success } from '../../shell/Notification';
 import Details from '../Details';
 import TileRandom from './TileRandom';
 import TileSearch from './TileSearch';
 import TileWatchlist from './TileWatchlist';
 
-export default function Tile({ show, search, random, disabled, orderable, setError }) {
+export default function Tile({ show, search, random, disabled, orderable, setMessage, fetchShows }) {
 
   const [modal, setModal] = useState(false);
   const [details, setDetails] = useState([]);
@@ -37,11 +38,10 @@ export default function Tile({ show, search, random, disabled, orderable, setErr
         type: details.type
       }),
     })
-      .then(response => response.json())
-      .then(data => {
-        if (data.status >= 400) {
-          setError(data.message);
-        }
+      .then(result => result.json())
+      .then(result => {
+        if (result.status >= 400) setMessage(error(result.message));
+        else setMessage(success('Show added successfully'))
         setModal(!modal);
       });
   }
@@ -53,11 +53,12 @@ export default function Tile({ show, search, random, disabled, orderable, setErr
         'Content-Type': 'application/json',
       }
     })
-      .then(response => response.json())
-      .then(data => console.log('Show removed:', data))
-      .catch(error => console.error('Error removing show:', error));
-    setModal(!modal);
-    window.location.reload();
+      .then(result => result.json())
+      .then(result => {
+        setMessage(success('Show removed from watchlist'));
+        setModal(!modal);
+        fetchShows();
+      });
   }
 
   const addButton = (
@@ -67,7 +68,7 @@ export default function Tile({ show, search, random, disabled, orderable, setErr
   );
 
   const removeButton = (
-    <Button color="primary" onClick={() => removeFromWatchlist()}>
+    <Button color="primary" onClick={removeFromWatchlist}>
       Remove from watchlist
     </Button>
   );
@@ -81,8 +82,8 @@ export default function Tile({ show, search, random, disabled, orderable, setErr
     <Details show={details} modal={modal} setModal={setModal} />
   </>)
   else return (<>
-    <TileWatchlist show={show} openModal={openModal} orderable={orderable} button={removeButton} />
-    <Details show={details} modal={modal} setModal={setModal} />
+    <TileWatchlist show={show} openModal={openModal} orderable={orderable} />
+    <Details show={details} modal={modal} setModal={setModal} button={removeButton} />
   </>
   );
 }
