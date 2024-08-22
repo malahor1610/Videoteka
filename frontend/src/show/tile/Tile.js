@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Button } from 'reactstrap';
-import '../App.css';
-import Details from './Details';
+import '../../App.css';
+import Details from '../Details';
 import TileRandom from './TileRandom';
 import TileSearch from './TileSearch';
 import TileWatchlist from './TileWatchlist';

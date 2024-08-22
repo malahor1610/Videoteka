@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import '../App.css';
 import Page from '../shell/Page';
-import Tile from '../show/Tile';
+import Tile from '../show/tile/Tile';
 
 export default function Watchlist() {
   const [shows, setShows] = useState([]);

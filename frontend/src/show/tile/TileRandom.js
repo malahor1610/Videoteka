@@ -1,7 +1,7 @@
 import { Button } from 'reactstrap';
-import '../App.css';
-import Poster from './Poster';
-import Title from './Title';
+import '../../App.css';
+import Poster from '../Poster';
+import Title from '../Title';
 
 export default function TileRandom({ show, openModal, disabled }) {
 

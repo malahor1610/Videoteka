@@ -1,6 +1,6 @@
 import { Col, Container } from 'reactstrap';
 import '../App.css';
-import Tile from '../show/Tile';
+import Tile from '../show/tile/Tile';
 
 export default function SearchResults({ shows, setError }) {
 

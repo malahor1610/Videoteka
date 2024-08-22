@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import '../App.css';
 import Page from '../shell/Page';
-import Tile from '../show/Tile';
+import Tile from '../show/tile/Tile';
 
 export default function WatchlistFiltered({ type }) {
   const [shows, setShows] = useState([]);

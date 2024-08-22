@@ -1,8 +1,8 @@
 import { Button, Card, CardBody, CardSubtitle, CardTitle, Col, Container, Row } from 'reactstrap';
-import '../App.css';
-import Duration from './Duration';
-import Poster from './Poster';
-import Title from './Title';
+import '../../App.css';
+import Duration from '../Duration';
+import Poster from '../Poster';
+import Title from '../Title';
 
 export default function TileWatchlist({ show, openModal, orderable }) {
 
