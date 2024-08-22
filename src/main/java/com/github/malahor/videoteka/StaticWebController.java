@@ -22,4 +22,9 @@ public class StaticWebController {
   public ModelAndView seriesPage() {
     return new ModelAndView("forward:/");
   }
+
+  @GetMapping("/random")
+  public ModelAndView randomPage() {
+    return new ModelAndView("forward:/");
+  }
 }
