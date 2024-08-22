@@ -55,9 +55,9 @@ export default function Watchlist() {
   return (
     <Page content={(<>
       <DragDropContext onDragEnd={({ destination, source }) => handleDragEnd(destination, source)}>
-        <Droppable droppableId="droppable">
+        <Droppable droppableId="droppable" >
           {(provided) => (
-            <div className='w-100' ref={provided.innerRef} {...provided.droppableProps}>
+            <div className='px-1' style={{ 'width': 'fit-content' }} ref={provided.innerRef} {...provided.droppableProps}>
               {shows.map((show, index) =>
                 <Draggable
                   key={show.position}

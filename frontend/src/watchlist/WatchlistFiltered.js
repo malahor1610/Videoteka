@@ -23,7 +23,7 @@ export default function WatchlistFiltered({ type }) {
 
   return (
     <Page content={(<>
-      <div className='w-100'>
+      <div className='w-100 p-0'>
         {shows.map((show) =>
           <Tile key={show.id} show={show} setMessage={setMessage} fetchShows={fetchShows} />
         )}

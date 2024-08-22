@@ -28,11 +28,11 @@ export default function SearchBar({ setShows, setMessage }) {
       <Bar content={(<>
         <Type type={type} setType={setType} />
         <Input
-          className='w-auto col-auto'
+          className='my-1 w-auto col-auto'
           value={title}
           placeholder="Search for title..."
           onChange={(e) => setTitle(e.target.value)} />
-        <Button color="primary" className='col-auto mx-3'>Search</Button>
+        <Button color="primary" className='col-auto mx-3 my-1'>Search</Button>
       </>)} />
     </Form>
   );

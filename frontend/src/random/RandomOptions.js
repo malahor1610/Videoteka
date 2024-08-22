@@ -12,7 +12,7 @@ export default function RandomOptions({ shows, setShows }) {
 
   return (<>
     {shows.map((show, index) =>
-      <Col xs='2' className='my-2' key={show.id}>
+      <Col xs='6' sm='6' md='4' lg='3' xxl='2' className='my-2' key={show.id}>
         <Tile show={show} random disabled />
         <Row className='my-1 justify-content-center'>
           <Button className='bg-danger btn-close' onClick={(e) => excludeShow(e, index)} />

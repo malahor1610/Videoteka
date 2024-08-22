@@ -7,7 +7,7 @@ export default function NavWatchlist() {
       <DropdownToggle nav caret>
         Watchlist
       </DropdownToggle>
-      <DropdownMenu end dark>
+      <DropdownMenu dark>
         <DropdownItem>
           <NavLink href="/">All</NavLink>
         </DropdownItem>

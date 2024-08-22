@@ -4,7 +4,7 @@ import '../App.css';
 export default function Type({type, setType}) {
 
   return (
-    <ButtonGroup className='col-auto'>
+    <ButtonGroup className='col-auto my-1'>
       <Button color="primary"
           outline
           onClick={() => setType("MOVIE")}

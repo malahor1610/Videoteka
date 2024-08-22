@@ -14,7 +14,7 @@ export default function RandomBar({ shows, setShows, pickDisabled }) {
     fetch("/api/shows/search/byType?" + searchParams)
       .then(result => result.json())
       .then(result => setShows(result._embedded.shows));
-  }, [type])
+  }, [type, setShows])
 
   useEffect(() => {
     fetchShows();
@@ -29,8 +29,8 @@ export default function RandomBar({ shows, setShows, pickDisabled }) {
   return (
     <Bar content={(<>
       <Type type={type} setType={setType} />
-      <Button color="primary" className='col-auto mx-3' disabled={pickDisabled} onClick={handleSubmit}>Pick random</Button>
-      <Button color="danger" className='col-auto mx-3' onClick={fetchShows}>Reset</Button>
+      <Button color="primary" className='col-auto mx-3 my-1' disabled={pickDisabled} onClick={handleSubmit}>Pick random</Button>
+      <Button color="danger" className='col-auto mx-3 my-1' onClick={fetchShows}>Reset</Button>
     </>)} />
   );
 }
