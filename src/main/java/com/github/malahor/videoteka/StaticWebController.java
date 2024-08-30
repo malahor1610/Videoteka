@@ -6,6 +6,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin
 public class StaticWebController {
 
   @GetMapping("/search")
