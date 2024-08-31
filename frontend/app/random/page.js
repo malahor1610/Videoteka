@@ -54,7 +54,7 @@ export default function Random() {
   );
 
   const pickOptions = (
-    <>
+    <Row>
       {shows.map((show, index) => (
         <Col xs="6" sm="6" md="4" lg="3" xxl="2" className="my-2" key={show.id}>
           <TileRandom show={show} random disabled />
@@ -66,7 +66,7 @@ export default function Random() {
           </Row>
         </Col>
       ))}
-    </>
+    </Row>
   );
 
   return shows.length === 1 ? (

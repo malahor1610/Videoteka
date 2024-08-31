@@ -4,16 +4,19 @@ import { Button, Col, Container, Form, Input, Row } from "reactstrap";
 import Type from "../ui/type";
 import { fetchSearch } from "../lib/data";
 import TileSearch from "../ui/tileSearch";
+import Notification, { error, hide } from "../ui/notification";
 
 export default function Search() {
   const [shows, setShows] = useState([]);
   const [title, setTitle] = useState("");
   const [type, setType] = useState("MOVIE");
+  const [message, setMessage] = useState(hide());
 
   async function search(e) {
     e.preventDefault();
     let result = await fetchSearch(title, type);
-    setShows(result);
+    if (result.status === 400) setMessage(error(result.message));
+    else setShows(result);
   }
 
   return (
@@ -32,7 +35,7 @@ export default function Search() {
           </Button>
         </Row>
       </Form>
-      <Container className="row text-center">
+      <Row className="text-center">
         {shows.map((show) => (
           <Col
             xs="6"
@@ -43,10 +46,15 @@ export default function Search() {
             className="my-2"
             key={show.id}
           >
-            <TileSearch show={show} search />
+            <TileSearch show={show} setMessage={setMessage} />
           </Col>
         ))}
-      </Container>
+      </Row>
+      <Notification
+        message={message.message}
+        type={message.type}
+        setMessage={setMessage}
+      />
     </>
   );
 }

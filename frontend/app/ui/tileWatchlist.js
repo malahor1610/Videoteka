@@ -16,8 +16,9 @@ import Title from "./title";
 import { useState } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { success } from "./notification";
 
-export default function TileWatchlist({ id, show, orderable, fetchShows }) {
+export default function TileWatchlist({ id, show, orderable, fetchShows, setMessage }) {
   const [modal, setModal] = useState(false);
   const [details, setDetails] = useState([]);
 
@@ -29,13 +30,14 @@ export default function TileWatchlist({ id, show, orderable, fetchShows }) {
 
   async function removeFromWatchlist() {
     let result = await deleteShow(show.id);
+    setMessage(success('Usunięto pozycję z listy'));
     setModal(!modal);
     fetchShows();
   }
 
   const removeButton = (
     <Button color="primary" onClick={removeFromWatchlist}>
-      Remove from watchlist
+      Usuń z listy
     </Button>
   );
 

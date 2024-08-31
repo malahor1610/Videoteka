@@ -14,11 +14,12 @@ import {
 } from "@dnd-kit/sortable";
 import { useCallback, useEffect, useState } from "react";
 import { fetchAllShows, updateShows } from "../lib/data";
-import { SortableItem } from "../ui/sortableItem";
+import Notification, { hide } from "../ui/notification";
 import TileWatchlist from "../ui/tileWatchlist";
 
 export default function Watchlist() {
   const [shows, setShows] = useState([]);
+  const [message, setMessage] = useState(hide());
 
   const getShows = useCallback(async () => {
     let res = await fetchAllShows();
@@ -55,16 +56,30 @@ export default function Watchlist() {
   const sensors = useSensors(useSensor(PointerSensor), useSensor(TouchSensor));
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCorners}
-      onDragEnd={handleDragEnd}
-    >
-      <SortableContext items={shows} strategy={verticalListSortingStrategy}>
-        {shows.map((show) => (
-            <TileWatchlist  key={show.id} id={show.id} show={show} orderable fetchShows={getShows} />
-        ))}
-      </SortableContext>
-    </DndContext>
+    <>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCorners}
+        onDragEnd={handleDragEnd}
+      >
+        <SortableContext items={shows} strategy={verticalListSortingStrategy}>
+          {shows.map((show) => (
+            <TileWatchlist
+              key={show.id}
+              id={show.id}
+              show={show}
+              orderable
+              fetchShows={getShows}
+              setMessage={setMessage}
+            />
+          ))}
+        </SortableContext>
+      </DndContext>
+      <Notification
+        message={message.message}
+        type={message.type}
+        setMessage={setMessage}
+      />
+    </>
   );
 }
