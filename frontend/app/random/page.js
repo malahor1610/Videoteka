@@ -11,7 +11,7 @@ export default function Random() {
 
   const getShows = useCallback(async () => {
     let res = await fetchShows(type);
-    setShows(res._embedded.shows);
+    setShows(res);
   }, [type, setShows]);
 
   useEffect(() => {

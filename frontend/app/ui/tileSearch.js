@@ -17,7 +17,7 @@ export default function TileSearch({ show, setMessage }) {
   }
 
   async function addToWatchlist() {
-    let result = await postShow(show);
+    let result = await postShow(details, show.poster);
     if (result.status === 400) setMessage(error(result.message));
     else setMessage(success('Pomyślnie dodano do listy'))
     setModal(!modal);

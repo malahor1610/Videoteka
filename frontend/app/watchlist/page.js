@@ -23,7 +23,7 @@ export default function Watchlist() {
 
   const getShows = useCallback(async () => {
     let res = await fetchAllShows();
-    setShows(res._embedded.shows);
+    setShows(res);
   }, []);
 
   useEffect(() => {

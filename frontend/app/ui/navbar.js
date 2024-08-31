@@ -1,8 +1,8 @@
 'use client'
-import { Nav, Navbar, NavbarText, NavItem, NavLink } from "reactstrap";
+import { Button, Nav, Navbar, NavbarText, NavItem, NavLink } from "reactstrap";
 import NavWatchlist from "./navwatchlist";
 
-export function NavBar() {
+export function NavBar({signOut, user}) {
     return (
       <Navbar color='dark' dark expand fixed='top'>
         <Nav className="me-auto" navbar>
@@ -14,7 +14,8 @@ export function NavBar() {
             <NavLink href="/search">Szukaj</NavLink>
           </NavItem>
         </Nav>
-        <NavbarText>Videoteka</NavbarText>
+        <NavbarText className="mx-3">Witaj, {user?.username}</NavbarText>
+        <Button onClick={signOut}>Wyloguj</Button>
       </Navbar>
     );
   }
