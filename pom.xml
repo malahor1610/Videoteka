@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.malahor.videoteka.aws</groupId>
-    <artifactId>VideotekaAWS</artifactId>
+    <artifactId>Videoteka</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
     <modules>

@@ -14,7 +14,7 @@ export function NavBar({signOut, user}) {
             <NavLink href="/search">Szukaj</NavLink>
           </NavItem>
         </Nav>
-        <NavbarText className="mx-3">Witaj, {user?.username}</NavbarText>
+        <NavbarText className="mx-3">Witaj, {user?.signInDetails?.loginId}</NavbarText>
         <Button onClick={signOut}>Wyloguj</Button>
       </Navbar>
     );

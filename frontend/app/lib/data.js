@@ -21,7 +21,7 @@ export async function updateShows(list) {
   return await execute(
     "updateShowsFunction",
     {
-      list,
+      shows: list,
     }
   );
 }
