@@ -1,2 +1,0 @@
-# Videoteka
-Learning project
