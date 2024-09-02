@@ -1,22 +1,26 @@
 "use client";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Button, Col, Container, Form, Input, Row } from "reactstrap";
 import Type from "../ui/type";
 import { fetchSearch } from "../lib/data";
 import TileSearch from "../ui/tileSearch";
 import Notification, { error, hide } from "../ui/notification";
+import { LoadingContext } from "../layout";
 
 export default function Search() {
   const [shows, setShows] = useState([]);
   const [title, setTitle] = useState("");
   const [type, setType] = useState("MOVIE");
   const [message, setMessage] = useState(hide());
+  const { loading, setLoading } = useContext(LoadingContext);
 
   async function search(e) {
     e.preventDefault();
+    setLoading(true);
     let result = await fetchSearch(title, type);
     if (result.status === 400) setMessage(error(result.message));
     else setShows(result);
+    setLoading(false);
   }
 
   return (

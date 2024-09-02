@@ -1,17 +1,21 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { Button, Col, Row } from "reactstrap";
 import { fetchShows } from "../lib/data";
 import TileRandom from "../ui/tileRandom";
 import Type from "../ui/type";
+import { LoadingContext } from "../layout";
 
 export default function Random() {
   const [shows, setShows] = useState([]);
   const [type, setType] = useState("MOVIE");
+  const { loading, setLoading } = useContext(LoadingContext);
 
   const getShows = useCallback(async () => {
+    setLoading(true);
     let res = await fetchShows(type);
     setShows(res);
+    setLoading(false);
   }, [type, setShows]);
 
   useEffect(() => {

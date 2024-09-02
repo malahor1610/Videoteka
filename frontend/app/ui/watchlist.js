@@ -1,16 +1,20 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { fetchShows } from "../lib/data";
 import TileWatchlist from "./tileWatchlist";
 import Notification, { hide } from "./notification";
+import { LoadingContext } from "../layout";
 
 export default function WatchlistFiltered({ type }) {
   const [shows, setShows] = useState([]);
   const [message, setMessage] = useState(hide());
+  const { loading, setLoading } = useContext(LoadingContext);
 
   const getShows = useCallback(async () => {
+    setLoading(true);
     let res = await fetchShows(type);
     setShows(res);
+    setLoading(false);
   }, [type, setShows]);
 
   useEffect(() => {

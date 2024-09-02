@@ -12,18 +12,22 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { fetchAllShows, updateShows } from "../lib/data";
 import Notification, { hide } from "../ui/notification";
 import TileWatchlist from "../ui/tileWatchlist";
+import { LoadingContext } from "../layout";
 
 export default function Watchlist() {
   const [shows, setShows] = useState([]);
   const [message, setMessage] = useState(hide());
+  const { loading, setLoading } = useContext(LoadingContext);
 
   const getShows = useCallback(async () => {
+    setLoading(true);
     let res = await fetchAllShows();
     setShows(res);
+    setLoading(false);
   }, []);
 
   useEffect(() => {
@@ -31,8 +35,10 @@ export default function Watchlist() {
   }, [getShows]);
 
   async function updatePositions() {
+    setLoading(true);
     let res = await updateShows(shows);
     setShows(res);
+    setLoading(false);
   }
 
   function handleDragEnd(event) {
