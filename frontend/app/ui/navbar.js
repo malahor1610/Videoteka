@@ -1,10 +1,17 @@
-'use client'
-import { Button, Nav, Navbar, NavbarText, NavItem, NavLink } from "reactstrap";
+"use client";
+import { Button, Collapse, Nav, Navbar, NavbarBrand, NavbarText, NavbarToggler, NavItem, NavLink } from "reactstrap";
 import NavWatchlist from "./navwatchlist";
+import { useState } from "react";
 
-export function NavBar({signOut, user}) {
-    return (
-      <Navbar color='dark' dark expand fixed='top'>
+export function NavBar({ signOut, user }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggle = () => setIsOpen(!isOpen);
+  return (
+    <Navbar color="dark" dark expand="sm" fixed="top">
+      <NavbarBrand href="/">Videoteka</NavbarBrand>
+      <NavbarToggler onClick={toggle} />
+      <Collapse isOpen={isOpen} navbar>
         <Nav className="me-auto" navbar>
           <NavWatchlist />
           <NavItem>
@@ -14,9 +21,11 @@ export function NavBar({signOut, user}) {
             <NavLink href="/search">Szukaj</NavLink>
           </NavItem>
         </Nav>
-        <NavbarText className="mx-3">Witaj, {user?.signInDetails?.loginId}</NavbarText>
+        <NavbarText className="mx-3">
+          {user?.signInDetails?.loginId}
+        </NavbarText>
         <Button onClick={signOut}>Wyloguj</Button>
-      </Navbar>
-    );
-  }
-  
+      </Collapse>
+    </Navbar>
+  );
+}

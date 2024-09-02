@@ -59,7 +59,7 @@ export default function Watchlist() {
     }
   }
 
-  const sensors = useSensors(useSensor(PointerSensor), useSensor(TouchSensor));
+  const sensors = useSensors(useSensor(PointerSensor));
 
   return (
     <>

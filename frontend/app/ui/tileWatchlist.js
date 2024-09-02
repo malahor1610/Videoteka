@@ -57,6 +57,7 @@ export default function TileWatchlist({ id, show, orderable, fetchShows, setMess
 
   const draggable = (
     <Col
+      style={{touchAction: 'none'}}
       {...listeners}
       {...attributes}
       xs="1"
