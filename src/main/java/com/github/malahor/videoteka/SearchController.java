@@ -2,7 +2,6 @@ package com.github.malahor.videoteka;
 
 import com.github.malahor.videoteka.api.ApiService;
 import com.github.malahor.videoteka.api.DomainMapper;
-import com.github.malahor.videoteka.api.tmdb.*;
 import com.github.malahor.videoteka.domain.Show;
 import com.github.malahor.videoteka.domain.ShowDetails;
 import com.github.malahor.videoteka.domain.ShowType;

@@ -1,4 +1,4 @@
-package com.github.malahor.videoteka.api.tmdb;
+package com.github.malahor.videoteka.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import java.util.Collections;
@@ -7,7 +7,7 @@ import java.util.Optional;
 import lombok.Getter;
 
 @Getter
-class TMDbWatchProviders {
+class SearchWatchProviders {
   private List<String> flatrate;
   private List<String> rent;
   private List<String> buy;

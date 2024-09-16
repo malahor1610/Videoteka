@@ -1,17 +1,14 @@
-package com.github.malahor.videoteka.api.tmdb;
+package com.github.malahor.videoteka.api;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class TMDbSearchResultShow {
+public class SearchResultShow {
 
   private long id;
 
@@ -27,5 +24,4 @@ public class TMDbSearchResultShow {
   private String poster;
 
   private double popularity;
-
 }
