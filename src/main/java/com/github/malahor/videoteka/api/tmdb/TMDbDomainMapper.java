@@ -38,7 +38,7 @@ public class TMDbDomainMapper implements DomainMapper {
     show.setReleaseDate(yearOf(result.getReleaseDate()));
     show.setPoster(POSTER_URI + result.getPoster());
     show.setPopularity(result.getPopularity());
-    show.setType(type);
+    show.setShowType(type);
     return show;
   }
 
@@ -54,7 +54,7 @@ public class TMDbDomainMapper implements DomainMapper {
       showDetails.setDuration(durationOf(details.getRuntime(), type));
       showDetails.setGenres(details.getGenres());
       showDetails.setWatchProviders(mapWatchProviders(details.getWatchProviders()));
-      showDetails.setType(type);
+      showDetails.setShowType(type);
       return showDetails;
     }
     return null;

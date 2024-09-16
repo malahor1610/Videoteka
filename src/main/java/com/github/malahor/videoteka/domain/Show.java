@@ -10,5 +10,5 @@ public class Show {
   private String releaseDate;
   private String poster;
   private double popularity;
-  private ShowType type;
+  private ShowType showType;
 }

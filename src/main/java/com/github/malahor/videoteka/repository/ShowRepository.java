@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public interface ShowRepository extends CrudRepository<ShowEntity, Long>, PagingAndSortingRepository<ShowEntity, Long> {
 
   @RestResource(path = "byType", rel = "byType")
-  List<ShowEntity> findByTypeOrderByPosition(ShowType type);
+  List<ShowEntity> findByShowTypeOrderByPosition(ShowType type);
 
   @Query(value = "SELECT MAX(s.position) FROM ShowEntity s")
   Optional<Integer> findMaxPosition();

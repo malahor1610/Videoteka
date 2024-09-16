@@ -22,7 +22,8 @@ public class ShowEntity {
   private String duration;
 
   @Enumerated(EnumType.STRING)
-  private ShowType type;
+  @Column(name = "type")
+  private ShowType showType;
 
   private int position;
 }

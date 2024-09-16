@@ -12,7 +12,7 @@ public class ShowDetails {
   private String overview;
   private String releaseDate;
   private String duration;
-  private ShowType type;
+  private ShowType showType;
   private List<String> genres;
   private WatchProviders watchProviders;
 
