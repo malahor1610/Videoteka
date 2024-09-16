@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class ShowsNotFoundException extends RuntimeException {
 
   public ShowsNotFoundException() {
-    super("No shows found for given title");
+    super("Brak wyników dla podanego tytułu");
   }
 }

@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class ShowPresentOnWatchlistException extends RuntimeException {
 
   public ShowPresentOnWatchlistException() {
-    super("The show is already on the watchlist");
+    super("Pozycja jest już na liście");
   }
 }

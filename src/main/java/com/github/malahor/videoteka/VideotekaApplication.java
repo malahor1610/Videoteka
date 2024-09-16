@@ -22,7 +22,7 @@ public class VideotekaApplication {
     return new WebMvcConfigurer() {
       @Override
       public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/api/**").allowedOrigins(origin).allowedMethods("GET", "PUT");
+        registry.addMapping("/api/**").allowedOrigins(origin).allowedMethods("GET", "POST", "DELETE", "PUT");
       }
     };
   }

@@ -5,9 +5,8 @@ import com.github.malahor.videoteka.api.DomainMapper;
 import com.github.malahor.videoteka.domain.Show;
 import com.github.malahor.videoteka.domain.ShowDetails;
 import com.github.malahor.videoteka.domain.ShowType;
-import java.util.List;
-
 import com.github.malahor.videoteka.exception.ShowsNotFoundException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

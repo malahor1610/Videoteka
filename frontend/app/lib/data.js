@@ -47,16 +47,12 @@ export async function deleteShow(show) {
     }
   );
   checkStatus(res);
-  return await res.json();
 }
 
 export async function fetchAllShows() {
-  // checkToken();
-  const searchParams = new URLSearchParams({
-    sort: "position",
-  }).toString();
+  checkToken();
   let res = await fetch(
-    process.env.NEXT_PUBLIC_HOST + "/api/shows?" + searchParams,
+    process.env.NEXT_PUBLIC_HOST + "/api/shows",
     {
       method: "GET",
       headers: {
@@ -65,17 +61,13 @@ export async function fetchAllShows() {
     }
   );
   checkStatus(res);
-  res = await res.json();
-  return res._embedded.shows;
+  return await res.json();
 }
 
 export async function fetchShows(type) {
   checkToken();
-  const searchParams = new URLSearchParams({
-    type: type,
-  }).toString();
   let res = await fetch(
-    process.env.NEXT_PUBLIC_HOST + "/api/shows/search/byType?" + searchParams,
+    process.env.NEXT_PUBLIC_HOST + "/api/shows/type/" + type,
     {
       method: "GET",
       headers: {
@@ -84,8 +76,7 @@ export async function fetchShows(type) {
     }
   );
   checkStatus(res);
-  res = await res.json();
-  return res._embedded.shows;
+  return await res.json();
 }
 
 export async function fetchSearch(title, type) {

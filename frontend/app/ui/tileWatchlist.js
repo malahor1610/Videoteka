@@ -34,7 +34,7 @@ export default function TileWatchlist({ id, show, orderable, fetchShows, setMess
 
   async function removeFromWatchlist() {
     setLoading(true);
-    let result = await deleteShow(show);
+    await deleteShow(show);
     setMessage(success('Usunięto pozycję z listy'));
     setModal(!modal);
     fetchShows();
