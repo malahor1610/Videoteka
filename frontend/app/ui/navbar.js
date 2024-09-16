@@ -1,12 +1,37 @@
 "use client";
-import { Button, Collapse, Nav, Navbar, NavbarBrand, NavbarText, NavbarToggler, NavItem, NavLink } from "reactstrap";
+import {
+  Button,
+  Collapse,
+  Nav,
+  Navbar,
+  NavbarBrand,
+  NavbarText,
+  NavbarToggler,
+  NavItem,
+  NavLink,
+} from "reactstrap";
 import NavWatchlist from "./navwatchlist";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { logout, parseJwt } from "../lib/data";
 
-export function NavBar() {
+export function NavBar({ user }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [username, setUsername] = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem("idToken");
+    if (token) {
+      const decodedToken = parseJwt(token);
+      if (decodedToken) {
+        setUsername(decodedToken["cognito:username"] || decodedToken["email"]);
+      }
+    }
+  }, []);
 
   const toggle = () => setIsOpen(!isOpen);
+  function signOut() {
+    logout();
+  }
   return (
     <Navbar color="dark" dark expand="sm" fixed="top">
       <NavbarBrand href="/">Videoteka</NavbarBrand>
@@ -21,6 +46,8 @@ export function NavBar() {
             <NavLink href="/search">Szukaj</NavLink>
           </NavItem>
         </Nav>
+        <NavbarText className="mx-3">{username}</NavbarText>
+        <Button onClick={signOut}>Wyloguj</Button>
       </Collapse>
     </Navbar>
   );
