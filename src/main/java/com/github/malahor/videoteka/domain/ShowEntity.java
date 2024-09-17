@@ -1,29 +1,27 @@
 package com.github.malahor.videoteka.domain;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
 
-@Entity
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Table(name = "show")
+@DynamoDbBean
 public class ShowEntity {
 
-  @Id private long id;
+  @Getter(onMethod_ = {@DynamoDbPartitionKey})
+  private long id;
+
+  @Getter(onMethod_ = {@DynamoDbSortKey})
+  private String userId;
+
   private String title;
   private String originalTitle;
   private String releaseDate;
   private String poster;
   private String duration;
-
-  @Enumerated(EnumType.STRING)
-  @Column(name = "type")
   private ShowType showType;
-
   private int position;
 }

@@ -1,4 +1,4 @@
-package com.github.malahor.videoteka;
+package com.github.malahor.videoteka.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
