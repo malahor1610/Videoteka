@@ -60,6 +60,9 @@
 					<image>
 						<name>docker.io/malahor1610/${project.artifactId}:latest</name>
 						<publish>true</publish>
+						<env>
+							<BP_JVM_VERSION>${java.version}</BP_JVM_VERSION>
+						</env>
 					</image>
 					<docker>
 						<publishRegistry>
