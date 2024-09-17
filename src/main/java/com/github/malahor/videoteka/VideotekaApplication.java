@@ -4,6 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.aop.AopAutoConfiguration;
 import org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration;
+import org.springframework.boot.autoconfigure.sql.init.SqlInitializationAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.client.RestClientAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.client.RestTemplateAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.MultipartAutoConfiguration;
@@ -19,6 +20,7 @@ import org.springframework.boot.autoconfigure.websocket.servlet.WebSocketServlet
       RestClientAutoConfiguration.class,
       ErrorMvcAutoConfiguration.class,
       WebSocketServletAutoConfiguration.class,
+      SqlInitializationAutoConfiguration.class,
     })
 public class VideotekaApplication {
 
