@@ -24,4 +24,4 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Build and publish image with Maven to Docker Hub
-        run: mvn spring-boot:build-image -Denv.DOCKER_USERNAME=${{ secrets.DOCKERHUB_USERNAME }} -Denv.DOCKER_PASSWORD=${{ secrets.DOCKERHUB_PASSWORD }} -Dspring-boot.build-image.environment.BPE_JVM_HEAP_SIZE=${{ secrets:BPE_JVM_HEAP_SIZE }}
+        run: mvn spring-boot:build-image -Denv.DOCKER_USERNAME=${{ secrets.DOCKERHUB_USERNAME }} -Denv.DOCKER_PASSWORD=${{ secrets.DOCKERHUB_PASSWORD }} -Dspring-boot.build-image.environment.BPE_JVM_HEAP_SIZE=${{ secrets.BPE_JVM_HEAP_SIZE }}
