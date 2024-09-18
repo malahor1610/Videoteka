@@ -34,7 +34,7 @@ export function NavBar({ user }) {
   }
   return (
     <Navbar color="dark" dark expand="sm" fixed="top">
-      <NavbarBrand href="/">Videoteka</NavbarBrand>
+      <NavbarBrand href="/watchlist">Videoteka</NavbarBrand>
       <NavbarToggler onClick={toggle} />
       <Collapse isOpen={isOpen} navbar>
         <Nav className="me-auto" navbar>

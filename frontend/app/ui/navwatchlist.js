@@ -14,7 +14,7 @@ export default function NavWatchlist() {
       </DropdownToggle>
       <DropdownMenu dark>
         <DropdownItem>
-          <NavLink href="/">Wszystko</NavLink>
+          <NavLink href="/watchlist">Wszystko</NavLink>
         </DropdownItem>
         <DropdownItem>
           <NavLink href="/watchlist/movies">Filmy</NavLink>

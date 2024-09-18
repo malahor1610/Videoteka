@@ -21,7 +21,8 @@ public class ShowController {
   private final ShowRepository repository;
 
   @PostMapping
-  public ResponseEntity<ShowEntity> save(@AuthenticationPrincipal Jwt jwt, @RequestBody ShowEntity show) {
+  public ResponseEntity<ShowEntity> save(
+      @AuthenticationPrincipal Jwt jwt, @RequestBody ShowEntity show) {
     var username = getUserId(jwt);
     var shows = repository.findAll(username);
     if (shows.stream().map(ShowEntity::getId).anyMatch(s -> s.equals(show.getId())))
