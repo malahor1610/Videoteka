@@ -15,7 +15,7 @@ function Short({ show }) {
 
 function Long({ show }) {
   return (
-    <span className='small'>{show.title} {!show.originalTitle ? '' : '(' +show.originalTitle+')'} {!show.releaseDate ? '' : '(' +show.releaseDate+')'}</span>
+    <span className='small'>{show.title} {!show.originalTitle ? '' : '(' +show.originalTitle+')'} {!show.predictReleaseDate ? (!show.releaseDate ? '' : '(' +show.releaseDate+')') : '(' + show.predictReleaseDate + ')' }</span>
   );
 
 }

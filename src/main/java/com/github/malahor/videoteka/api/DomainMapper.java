@@ -7,8 +7,10 @@ import com.github.malahor.videoteka.domain.WatchProviders;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @ApplicationScoped
 public class DomainMapper {
@@ -39,7 +41,8 @@ public class DomainMapper {
     showDetails.setTitle(details.getTitle());
     showDetails.setOriginalTitle(details.getOriginalTitle());
     showDetails.setOverview(details.getOverview());
-    showDetails.setReleaseDate(yearOf(details.getReleaseDate()));
+    showDetails.setReleaseDate(yearOf(details));
+    showDetails.setPredictReleaseDate(predictionInfo(details, type));
     showDetails.setDuration(durationOf(details.getRuntime(), type));
     showDetails.setGenres(details.getGenres());
     showDetails.setWatchProviders(mapWatchProviders(details.getWatchProviders()));
@@ -68,5 +71,34 @@ public class DomainMapper {
   private String yearOf(String releaseDate) {
     if (releaseDate == null || releaseDate.isEmpty()) return "";
     else return String.valueOf(LocalDate.parse(releaseDate, DateTimeFormatter.ISO_DATE).getYear());
+  }
+
+  private String yearOf(SearchDetails details) {
+    var releaseDate =
+            Optional.ofNullable(details.getReleaseDate())
+                    .or(() -> Optional.ofNullable(details.getPredictDate()));
+    if (releaseDate.isEmpty() || releaseDate.get().isEmpty()) return "";
+    else
+      return String.valueOf(
+              LocalDate.parse(releaseDate.get(), DateTimeFormatter.ISO_DATE).getYear());
+  }
+
+  private String predictionInfo(SearchDetails details, ShowType type) {
+    if (Boolean.FALSE.equals(details.getInProduction())) return "";
+    var releaseDate = details.getPredictDate();
+    if (releaseDate == null || releaseDate.isEmpty())
+      return type.equals(ShowType.SERIES) ? "Data powrotu nieznana" : "Data wydania nieznana";
+    else {
+      var date = LocalDate.parse(releaseDate, DateTimeFormatter.ISO_DATE);
+      if (!date.isAfter(LocalDate.now())) return "";
+      else
+        return (type.equals(ShowType.SERIES) ? "Powraca " : "Premiera ")
+            + reformatDate(releaseDate);
+    }
+  }
+
+  private String reformatDate(String releaseDate) {
+    return LocalDate.parse(releaseDate, DateTimeFormatter.ISO_DATE)
+        .format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM));
   }
 }
