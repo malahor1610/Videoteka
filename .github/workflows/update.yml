@@ -27,6 +27,12 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Build and publish image with Maven to Docker Hub
+        env:
+          NEXT_PUBLIC_HOST: ${{ secrets.NEXT_PUBLIC_HOST }}
+          NEXT_PUBLIC_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_CLIENT_ID }}
+          NEXT_PUBLIC_HOSTED_UI_DOMAIN: ${{ secrets.NEXT_PUBLIC_HOSTED_UI_DOMAIN }}
+          NEXT_PUBLIC_CALLBACK: ${{ secrets.NEXT_PUBLIC_CALLBACK }}
+          NEXT_PUBLIC_SIGN_OUT: ${{ secrets.NEXT_PUBLIC_SIGN_OUT }}
         run: mvn clean package -Denv.DOCKER_USERNAME=${{ secrets.DOCKERHUB_USERNAME }} -Denv.DOCKER_PASSWORD=${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Deploy on render
