@@ -8,6 +8,7 @@ import { LoadingContext } from "../layout";
 
 export default function Random() {
   const [shows, setShows] = useState([]);
+  const [excluded, setExcluded] = useState([]);
   const [type, setType] = useState("MOVIE");
   const { loading, setLoading } = useContext(LoadingContext);
 
@@ -15,6 +16,7 @@ export default function Random() {
     setLoading(true);
     let res = await fetchShows(type);
     setShows(res);
+    setExcluded([]);
     setLoading(false);
   }, [type, setShows]);
 
@@ -30,7 +32,17 @@ export default function Random() {
 
   function excludeShow(e, show) {
     const result = Array.from(shows);
-    result.splice(show, 1);
+    const excludedShows = Array.from(excluded);
+    excludedShows.push(result.splice(show, 1)[0]);
+    setExcluded(excludedShows);
+    setShows(result);
+  }
+
+  function includeShow(e, show) {
+    const result = Array.from(shows);
+    const excludedShows = Array.from(excluded);
+    result.push(excludedShows.splice(show, 1)[0]);
+    setExcluded(excludedShows);
     setShows(result);
   }
 
@@ -64,9 +76,24 @@ export default function Random() {
           <TileRandom show={show} random disabled />
           <Row className="my-1 justify-content-center">
             <Button
-              className="bg-danger btn-close"
+              className="btn btn-link link-danger col-auto p-0"
               onClick={(e) => excludeShow(e, index)}
-            />
+            >
+              <i className="bi bi-x-square-fill danger p-2 fs-4"></i>
+            </Button>
+          </Row>
+        </Col>
+      ))}
+      {excluded.map((ex, index) => (
+        <Col xs="6" sm="6" md="4" lg="3" xxl="2" className="my-2" key={ex.id}>
+          <TileRandom show={ex} random disabled excluded />
+          <Row className="w-auto my-1 justify-content-center">
+            <Button
+              className="btn btn-link link-success col-auto p-0"
+              onClick={(e) => includeShow(e, index)}
+            >
+              <i className="bi bi-check-square-fill success p-2 fs-4"></i>
+            </Button>
           </Row>
         </Col>
       ))}

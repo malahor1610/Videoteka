@@ -6,7 +6,7 @@ import Poster from "./poster";
 import Title from "./title";
 import { LoadingContext } from "../layout";
 
-export default function TileRandom({ show, disabled }) {
+export default function TileRandom({ show, disabled, excluded }) {
   const [modal, setModal] = useState(false);
   const [details, setDetails] = useState([]);
   const { loading, setLoading } = useContext(LoadingContext);
@@ -22,7 +22,7 @@ export default function TileRandom({ show, disabled }) {
   return (
     <>
       <Button
-        className="opacity-100 p-0 p-sm-2"
+        className={excluded ? "opacity-25 p-0 p-sm-2" : "opacity-100 p-0 p-sm-2"}
         disabled={disabled}
         onClick={openModal}
       >

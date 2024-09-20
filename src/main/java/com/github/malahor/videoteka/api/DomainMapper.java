@@ -87,7 +87,7 @@ public class DomainMapper {
     if (Boolean.FALSE.equals(details.getInProduction())) return "";
     var releaseDate = details.getPredictDate();
     if (releaseDate == null || releaseDate.isEmpty())
-      return type.equals(ShowType.SERIES) ? "Data powrotu nieznana" : "Data wydania nieznana";
+      return type.equals(ShowType.SERIES) ? "Wraca wkrótce" : "Data premiery nieznana";
     else {
       var date = LocalDate.parse(releaseDate, DateTimeFormatter.ISO_DATE);
       if (!date.isAfter(LocalDate.now())) return "";
