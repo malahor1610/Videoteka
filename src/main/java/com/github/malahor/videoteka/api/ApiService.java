@@ -2,23 +2,24 @@ package com.github.malahor.videoteka.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.malahor.videoteka.domain.ShowType;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-@Service
-@RequiredArgsConstructor
+@ApplicationScoped
 public class ApiService {
 
-  private final UriResolver uriResolver;
-  private final ObjectMapper mapper;
+  @Inject private UriResolver uriResolver;
 
-  @Value("${api.key}")
+  @Inject private ObjectMapper mapper;
+
+  @Inject
+  @ConfigProperty(name = "api.key")
   private String apiKey;
 
   public SearchResult search(String title, ShowType type) {

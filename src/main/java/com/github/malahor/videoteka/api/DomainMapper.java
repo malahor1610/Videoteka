@@ -4,13 +4,13 @@ import com.github.malahor.videoteka.domain.Show;
 import com.github.malahor.videoteka.domain.ShowDetails;
 import com.github.malahor.videoteka.domain.ShowType;
 import com.github.malahor.videoteka.domain.WatchProviders;
+import jakarta.enterprise.context.ApplicationScoped;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
-import org.springframework.stereotype.Component;
 
-@Component
+@ApplicationScoped
 public class DomainMapper {
 
   private static final String POSTER_URI = "http://image.tmdb.org/t/p/w342";

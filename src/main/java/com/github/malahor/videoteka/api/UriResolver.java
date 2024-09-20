@@ -1,10 +1,10 @@
 package com.github.malahor.videoteka.api;
 
 import com.github.malahor.videoteka.domain.ShowType;
+import jakarta.enterprise.context.ApplicationScoped;
 import java.net.URI;
-import org.springframework.stereotype.Component;
 
-@Component
+@ApplicationScoped
 public class UriResolver {
 
   private static final String API_URI = "https://api.themoviedb.org/3";

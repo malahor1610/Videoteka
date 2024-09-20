@@ -1,38 +1,61 @@
 package com.github.malahor.videoteka;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import java.io.InputStream;
 
-@Controller
+@Path("")
 public class StaticWebController {
 
-  @GetMapping("/")
-  public String home() {
-    return "index.html";
+  @GET
+  @Path("/")
+  @Produces(MediaType.TEXT_HTML)
+  public Response home() {
+    return getResource("META-INF/resources/index.html");
   }
 
-  @GetMapping("/watchlist")
-  public String watchlist() {
-    return "watchlist.html";
+  @GET
+  @Path("/watchlist")
+  @Produces(MediaType.TEXT_HTML)
+  public Response watchlist() {
+    return getResource("META-INF/resources/watchlist.html");
   }
 
-  @GetMapping("/search")
-  public String searchPage() {
-    return "search.html";
+  @GET
+  @Path("/search")
+  @Produces(MediaType.TEXT_HTML)
+  public Response searchPage() {
+    return getResource("META-INF/resources/search.html");
   }
 
-  @GetMapping("/watchlist/movies")
-  public String moviesPage() {
-    return "movies.html";
+  @GET
+  @Path("/watchlist/movies")
+  @Produces(MediaType.TEXT_HTML)
+  public Response moviesPage() {
+    return getResource("META-INF/resources/watchlist/movies.html");
   }
 
-  @GetMapping("/watchlist/series")
-  public String seriesPage() {
-    return "series.html";
+  @GET
+  @Path("/watchlist/series")
+  @Produces(MediaType.TEXT_HTML)
+  public Response seriesPage() {
+    return getResource("META-INF/resources/watchlist/series.html");
   }
 
-  @GetMapping("/random")
-  public String randomPage() {
-    return "random.html";
+  @GET
+  @Path("/random")
+  @Produces(MediaType.TEXT_HTML)
+  public Response randomPage() {
+    return getResource("META-INF/resources/random.html");
+  }
+
+  private Response getResource(String name) {
+    InputStream resource = getClass().getClassLoader().getResourceAsStream(name);
+    return null == resource
+            ? Response.status(Response.Status.NOT_FOUND).build()
+            : Response.ok(resource).build();
   }
 }

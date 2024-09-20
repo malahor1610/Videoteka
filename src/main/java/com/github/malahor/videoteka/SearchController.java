@@ -2,37 +2,35 @@ package com.github.malahor.videoteka;
 
 import com.github.malahor.videoteka.api.ApiService;
 import com.github.malahor.videoteka.api.DomainMapper;
-import com.github.malahor.videoteka.domain.Show;
-import com.github.malahor.videoteka.domain.ShowDetails;
 import com.github.malahor.videoteka.domain.ShowType;
 import com.github.malahor.videoteka.exception.ShowsNotFoundException;
-import java.util.List;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.Response;
 
-@RestController
-@RequestMapping("/api/search")
-@RequiredArgsConstructor
+@Path("/api/search")
 public class SearchController {
 
-  private final ApiService service;
-  private final DomainMapper mapper;
+  @Inject private ApiService service;
 
-  @GetMapping
-  public ResponseEntity<List<Show>> searchFor(
-      @RequestParam("title") String title, @RequestParam("type") ShowType type) {
+  @Inject private DomainMapper mapper;
+
+  @GET
+  public Response searchFor(@QueryParam("title") String title, @QueryParam("type") ShowType type) {
     var result = service.search(title, type);
     var shows = mapper.mapSearchResult(result, type);
     if (shows.isEmpty()) throw new ShowsNotFoundException();
-    return ResponseEntity.ok(shows);
+    return Response.ok(shows).build();
   }
 
-  @GetMapping("/{id}")
-  public ResponseEntity<ShowDetails> searchDetails(
-      @PathVariable("id") long id, @RequestParam("type") ShowType type) {
+  @GET
+  @Path("/{id}")
+  public Response searchDetails(@PathParam("id") long id, @QueryParam("type") ShowType type) {
     var result = service.details(id, type);
     var details = mapper.mapSearchDetails(result, type);
-    return ResponseEntity.ok(details);
+    return Response.ok(details).build();
   }
 }

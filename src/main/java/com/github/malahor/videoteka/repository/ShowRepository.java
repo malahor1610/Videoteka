@@ -2,24 +2,24 @@ package com.github.malahor.videoteka.repository;
 
 import com.github.malahor.videoteka.domain.ShowEntity;
 import com.github.malahor.videoteka.domain.ShowType;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import software.amazon.awssdk.enhanced.dynamodb.*;
-import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 
-@Repository
+@ApplicationScoped
 public class ShowRepository {
 
   private final DynamoDbTable<ShowEntity> showTable;
 
-  public ShowRepository(@Autowired DynamoDbClient dynamoDbClient) {
-    var enhancedClient = DynamoDbEnhancedClient.builder().dynamoDbClient(dynamoDbClient).build();
-    this.showTable = enhancedClient.table("ShowEntity", TableSchema.fromClass(ShowEntity.class));
+  @Inject
+  public ShowRepository(DynamoDbEnhancedClient dynamoDbEnhancedClient) {
+    this.showTable =
+        dynamoDbEnhancedClient.table("ShowEntity", TableSchema.fromClass(ShowEntity.class));
   }
 
   public void save(ShowEntity show) {

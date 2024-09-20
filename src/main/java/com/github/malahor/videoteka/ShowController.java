@@ -4,26 +4,29 @@ import com.github.malahor.videoteka.domain.ShowEntity;
 import com.github.malahor.videoteka.domain.ShowType;
 import com.github.malahor.videoteka.exception.ShowPresentOnWatchlistException;
 import com.github.malahor.videoteka.repository.ShowRepository;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.web.bind.annotation.*;
+import lombok.extern.slf4j.Slf4j;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 
-@RestController
-@RequestMapping("/api/shows")
-@RequiredArgsConstructor
+@RequestScoped
+@Path("/api/shows")
+@Slf4j
 public class ShowController {
 
-  private final ShowRepository repository;
+  @Inject private ShowRepository repository;
 
-  @PostMapping
-  public ResponseEntity<ShowEntity> save(
-      @AuthenticationPrincipal Jwt jwt, @RequestBody ShowEntity show) {
-    var username = getUserId(jwt);
+  @Inject private JsonWebToken jwt;
+
+  @POST
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response save(ShowEntity show) {
+    var username = getUserId();
     var shows = repository.findAll(username);
     if (shows.stream().map(ShowEntity::getId).anyMatch(s -> s.equals(show.getId())))
       throw new ShowPresentOnWatchlistException();
@@ -32,51 +35,60 @@ public class ShowController {
     show.setPosition(maxPosition);
     show.setUserId(username);
     repository.save(show);
-    return ResponseEntity.ok(show);
+    return Response.ok(show).build();
   }
 
-  @PutMapping("/positions")
-  public ResponseEntity<List<ShowEntity>> updatePositions(
-      @AuthenticationPrincipal Jwt jwt, @RequestBody List<ShowEntity> shows) {
-    var username = getUserId(jwt);
+  @PUT
+  @Path("/positions")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response updatePositions(List<ShowEntity> shows) {
+    var username = getUserId();
     var dbShows = repository.findAll(username);
     dbShows.forEach(dbShow -> updatePosition(dbShow, shows));
-    dbShows.forEach(repository::update);
     dbShows.sort(Comparator.comparingInt(ShowEntity::getPosition));
-    return ResponseEntity.ok(dbShows);
+    return Response.ok(dbShows).build();
   }
 
   private void updatePosition(ShowEntity dbShow, List<ShowEntity> shows) {
     shows.stream()
         .filter(show -> show.getId() == dbShow.getId())
         .findFirst()
-        .ifPresent(show -> dbShow.setPosition(show.getPosition()));
+        .map(ShowEntity::getPosition)
+        .ifPresent(
+            position -> {
+              if (dbShow.getPosition() != position) {
+                dbShow.setPosition(position);
+                repository.update(dbShow);
+              }
+            });
   }
 
-  @DeleteMapping("/{id}")
-  public ResponseEntity<Void> delete(@AuthenticationPrincipal Jwt jwt, @PathVariable Long id) {
-    var username = getUserId(jwt);
+  @DELETE
+  @Path("/{id}")
+  public Response delete(@PathParam("id") Long id) {
+    var username = getUserId();
     repository.delete(id, username);
-    return ResponseEntity.ok().build();
+    return Response.ok().build();
   }
 
-  @GetMapping
-  public ResponseEntity<List<ShowEntity>> getAll(@AuthenticationPrincipal Jwt jwt) {
-    var username = getUserId(jwt);
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getAll() {
+    var username = getUserId();
     var dbShows = (List<ShowEntity>) repository.findAll(username);
-    return ResponseEntity.ok(dbShows);
+    return Response.ok(dbShows).build();
   }
 
-  @GetMapping("/type/{type}")
-  public ResponseEntity<List<ShowEntity>> getByType(
-      @AuthenticationPrincipal Jwt jwt, @PathVariable ShowType type) {
-    var username = getUserId(jwt);
+  @GET
+  @Path("/type/{type}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getByType(@PathParam("type") ShowType type) {
+    var username = getUserId();
     var dbShows = (List<ShowEntity>) repository.findByType(type, username);
-    return ResponseEntity.ok(dbShows);
+    return Response.ok(dbShows).build();
   }
 
-  private String getUserId(Jwt jwt) {
-    return Optional.ofNullable(jwt.getClaimAsString("cognito:username"))
-        .orElseGet(() -> jwt.getClaimAsString("email"));
+  private String getUserId() {
+    return (String) jwt.claim("cognito:username").orElseGet(() -> jwt.getClaim("email"));
   }
 }
