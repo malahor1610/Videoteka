@@ -37,6 +37,9 @@ public class SearchDetails {
   @JsonAlias("watch/providers")
   private SearchWatchProviders watchProviders;
 
+  @JsonAlias("belongs_to_collection")
+  private SearchCollection collection;
+
   public void setPredictDate(JsonNode episodeOrDate) {
     if (episodeOrDate == null || episodeOrDate.isNull()) this.predictDate = null;
     else if (episodeOrDate.isTextual()) this.predictDate = episodeOrDate.asText();

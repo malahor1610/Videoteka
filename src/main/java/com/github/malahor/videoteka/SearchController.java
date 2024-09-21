@@ -33,4 +33,12 @@ public class SearchController {
     var details = mapper.mapSearchDetails(result, type);
     return Response.ok(details).build();
   }
+
+  @GET
+  @Path("/collection/{id}")
+  public Response searchCollectionDetails(@PathParam("id") long id) {
+    var result = service.collection(id);
+    var details = mapper.mapSearchCollectionDetails(result);
+    return Response.ok(details).build();
+  }
 }

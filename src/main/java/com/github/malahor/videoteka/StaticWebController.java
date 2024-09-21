@@ -52,6 +52,13 @@ public class StaticWebController {
     return getResource("META-INF/resources/random.html");
   }
 
+  @GET
+  @Path("/collection")
+  @Produces(MediaType.TEXT_HTML)
+  public Response collectionPage() {
+    return getResource("META-INF/resources/collection.html");
+  }
+
   private Response getResource(String name) {
     InputStream resource = getClass().getClassLoader().getResourceAsStream(name);
     return null == resource

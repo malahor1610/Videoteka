@@ -16,5 +16,6 @@ public class ShowDetails {
   private ShowType showType;
   private List<String> genres;
   private WatchProviders watchProviders;
+  private ShowCollection collection;
 
 }

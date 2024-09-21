@@ -1,9 +1,6 @@
 package com.github.malahor.videoteka.api;
 
-import com.github.malahor.videoteka.domain.Show;
-import com.github.malahor.videoteka.domain.ShowDetails;
-import com.github.malahor.videoteka.domain.ShowType;
-import com.github.malahor.videoteka.domain.WatchProviders;
+import com.github.malahor.videoteka.domain.*;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -46,8 +43,21 @@ public class DomainMapper {
     showDetails.setDuration(durationOf(details.getRuntime(), type));
     showDetails.setGenres(details.getGenres());
     showDetails.setWatchProviders(mapWatchProviders(details.getWatchProviders()));
+    showDetails.setCollection(mapCollection(details.getCollection()));
     showDetails.setShowType(type);
     return showDetails;
+  }
+
+  public ShowCollectionDetails mapSearchCollectionDetails(SearchCollectionDetails tmdbCollection) {
+    var collection = new ShowCollectionDetails();
+    collection.setId(tmdbCollection.getId());
+    collection.setName(tmdbCollection.getName());
+    collection.setParts(
+        tmdbCollection.getParts().stream()
+            .map(part -> mapToShow(part, ShowType.MOVIE))
+            .sorted(Comparator.comparing(Show::getReleaseDate))
+            .toList());
+    return collection;
   }
 
   private WatchProviders mapWatchProviders(SearchWatchProviders tmdbWatchProviders) {
@@ -57,6 +67,14 @@ public class DomainMapper {
     watchProviders.setRent(tmdbWatchProviders.getRent());
     watchProviders.setBuy(tmdbWatchProviders.getBuy());
     return watchProviders;
+  }
+
+  private ShowCollection mapCollection(SearchCollection tmdbCollection) {
+    if (tmdbCollection == null) return null;
+    var collection = new ShowCollection();
+    collection.setId(tmdbCollection.getId());
+    collection.setName(tmdbCollection.getName());
+    return collection;
   }
 
   private String durationOf(int duration, ShowType type) {
@@ -70,35 +88,46 @@ public class DomainMapper {
 
   private String yearOf(String releaseDate) {
     if (releaseDate == null || releaseDate.isEmpty()) return "";
-    else return String.valueOf(LocalDate.parse(releaseDate, DateTimeFormatter.ISO_DATE).getYear());
+    else return String.valueOf(localDateOf(releaseDate).getYear());
   }
 
   private String yearOf(SearchDetails details) {
-    var releaseDate =
-            Optional.ofNullable(details.getReleaseDate())
-                    .or(() -> Optional.ofNullable(details.getPredictDate()));
-    if (releaseDate.isEmpty() || releaseDate.get().isEmpty()) return "";
-    else
-      return String.valueOf(
-              LocalDate.parse(releaseDate.get(), DateTimeFormatter.ISO_DATE).getYear());
+    return yearOf(determineReleaseDate(details));
+  }
+
+  private String determineReleaseDate(SearchDetails details) {
+    return Optional.ofNullable(details.getReleaseDate())
+        .or(() -> Optional.ofNullable(details.getPredictDate()))
+        .orElse("");
   }
 
   private String predictionInfo(SearchDetails details, ShowType type) {
-    if (Boolean.FALSE.equals(details.getInProduction())) return "";
-    var releaseDate = details.getPredictDate();
-    if (releaseDate == null || releaseDate.isEmpty())
-      return type.equals(ShowType.SERIES) ? "Wraca wkrótce" : "Data premiery nieznana";
-    else {
-      var date = LocalDate.parse(releaseDate, DateTimeFormatter.ISO_DATE);
-      if (!date.isAfter(LocalDate.now())) return "";
-      else
-        return (type.equals(ShowType.SERIES) ? "Powraca " : "Premiera ")
-            + reformatDate(releaseDate);
-    }
+    return switch (type) {
+      case MOVIE -> predictionInfoMovie(details);
+      case SERIES -> predictionInfoSeries(details);
+    };
   }
 
-  private String reformatDate(String releaseDate) {
-    return LocalDate.parse(releaseDate, DateTimeFormatter.ISO_DATE)
-        .format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM));
+  private String predictionInfoMovie(SearchDetails details) {
+    var releaseDate = details.getPredictDate();
+    if (releaseDate == null || releaseDate.isEmpty()) return "Data premiery nieznana";
+    if (localDateOf(releaseDate).isAfter(LocalDate.now()))
+      return "Premiera " + accurateDate(releaseDate);
+    return "";
+  }
+
+  private String predictionInfoSeries(SearchDetails details) {
+    if (!Boolean.TRUE.equals(details.getInProduction())) return "";
+    var releaseDate = details.getPredictDate();
+    if (releaseDate == null || releaseDate.isEmpty()) return "Wraca wkrótce";
+    else return "Powraca " + accurateDate(releaseDate);
+  }
+
+  private String accurateDate(String releaseDate) {
+    return localDateOf(releaseDate).format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM));
+  }
+
+  private LocalDate localDateOf(String releaseDate) {
+    return LocalDate.parse(releaseDate, DateTimeFormatter.ISO_DATE);
   }
 }

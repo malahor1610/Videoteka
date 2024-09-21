@@ -120,6 +120,23 @@ export async function fetchDetails(show) {
   return await res.json();
 }
 
+export async function fetchSearchCollection(id) {
+  checkToken();
+  let res = await fetch(
+    process.env.NEXT_PUBLIC_HOST +
+      "/api/search/collection/" +
+      id,
+    {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("idToken"),
+      },
+    }
+  );
+  checkStatus(res);
+  return await res.json();
+}
+
 export async function exchangeCodeForToken() {
   console.log("Enter callback");
   const urlParams = new URLSearchParams(window.location.search);

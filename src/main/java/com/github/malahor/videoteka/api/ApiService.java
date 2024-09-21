@@ -30,6 +30,10 @@ public class ApiService {
     return this.get(uriResolver.details(id, type), SearchDetails.class);
   }
 
+  public SearchCollectionDetails collection(long id) {
+    return this.get(uriResolver.collection(id), SearchCollectionDetails.class);
+  }
+
   private <T> T get(URI uri, Class<T> resultType) {
     var request =
         HttpRequest.newBuilder()

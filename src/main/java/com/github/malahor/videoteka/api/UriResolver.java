@@ -27,6 +27,11 @@ public class UriResolver {
     return URI.create(query);
   }
 
+  public URI collection(long id) {
+    var query = String.format(API_URI + "/collection/%d", id);
+    return URI.create(query);
+  }
+
   private String typePath(ShowType type) {
     return switch (type) {
       case MOVIE -> "movie";
