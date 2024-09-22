@@ -7,7 +7,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 @ApplicationScoped
 public class DomainMapper {
@@ -25,7 +24,7 @@ public class DomainMapper {
     var show = new Show();
     show.setId(result.getId());
     show.setTitle(result.getTitle());
-    show.setReleaseDate(yearOf(result.getReleaseDate()));
+    show.setReleaseDate(mapReleaseDate(result.getReleaseDate()));
     show.setPoster(POSTER_URI + result.getPoster());
     show.setPopularity(result.getPopularity());
     show.setShowType(type);
@@ -38,8 +37,8 @@ public class DomainMapper {
     showDetails.setTitle(details.getTitle());
     showDetails.setOriginalTitle(details.getOriginalTitle());
     showDetails.setOverview(details.getOverview());
-    showDetails.setReleaseDate(yearOf(details));
-    showDetails.setPredictReleaseDate(predictionInfo(details, type));
+    showDetails.setReleaseDate(mapReleaseDate(details.getReleaseDate()));
+    showDetails.setContinuation(mapContinuation(details, type));
     showDetails.setDuration(durationOf(details.getRuntime(), type));
     showDetails.setGenres(details.getGenres());
     showDetails.setWatchProviders(mapWatchProviders(details.getWatchProviders()));
@@ -86,41 +85,25 @@ public class DomainMapper {
         };
   }
 
-  private String yearOf(String releaseDate) {
+  private String mapReleaseDate(String releaseDate) {
     if (releaseDate == null || releaseDate.isEmpty()) return "";
-    else return String.valueOf(localDateOf(releaseDate).getYear());
+    var localDate = localDateOf(releaseDate);
+    if (localDate.isAfter(LocalDate.now())) return accurateDate(releaseDate);
+    return String.valueOf(localDate.getYear());
   }
 
-  private String yearOf(SearchDetails details) {
-    return yearOf(determineReleaseDate(details));
+  private ShowContinuation mapContinuation(SearchDetails details, ShowType type) {
+    if (type.equals(ShowType.SERIES)) return mapContinuation(details);
+    return null;
   }
 
-  private String determineReleaseDate(SearchDetails details) {
-    return Optional.ofNullable(details.getReleaseDate())
-        .or(() -> Optional.ofNullable(details.getPredictDate()))
-        .orElse("");
-  }
-
-  private String predictionInfo(SearchDetails details, ShowType type) {
-    return switch (type) {
-      case MOVIE -> predictionInfoMovie(details);
-      case SERIES -> predictionInfoSeries(details);
-    };
-  }
-
-  private String predictionInfoMovie(SearchDetails details) {
-    var releaseDate = details.getPredictDate();
-    if (releaseDate == null || releaseDate.isEmpty()) return "Data premiery nieznana";
-    if (localDateOf(releaseDate).isAfter(LocalDate.now()))
-      return "Premiera " + accurateDate(releaseDate);
-    return "";
-  }
-
-  private String predictionInfoSeries(SearchDetails details) {
-    if (!Boolean.TRUE.equals(details.getInProduction())) return "";
-    var releaseDate = details.getPredictDate();
-    if (releaseDate == null || releaseDate.isEmpty()) return "Wraca wkrótce";
-    else return "Powraca " + accurateDate(releaseDate);
+  private ShowContinuation mapContinuation(SearchDetails details) {
+    var continuation = new ShowContinuation();
+    continuation.setInProduction(details.getInProduction());
+    if (!continuation.isInProduction() || details.getContinuation() == null) return continuation;
+    continuation.setReleaseDate(accurateDate(details.getContinuation().getReleaseDate()));
+    continuation.setSeason(details.getContinuation().getSeason());
+    return continuation;
   }
 
   private String accurateDate(String releaseDate) {

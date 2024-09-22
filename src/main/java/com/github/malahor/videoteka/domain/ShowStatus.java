@@ -12,8 +12,7 @@ public enum ShowStatus {
 
   public static ShowStatus lockByDetails(SearchDetails details) {
     if (!details.getInProduction()) return LOCKED_NOT_IN_PRODUCTION;
-    if (details.getPredictDate() == null || details.getPredictDate().isEmpty())
-      return LOCKED_IN_PRODUCTION;
+    if (details.getContinuation() == null) return LOCKED_IN_PRODUCTION;
     return LOCKED_DATE_CONFIRMED;
   }
 }

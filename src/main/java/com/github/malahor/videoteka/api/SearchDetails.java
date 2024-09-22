@@ -26,8 +26,8 @@ public class SearchDetails {
   @JsonAlias("in_production")
   private Boolean inProduction;
 
-  @JsonAlias({"next_episode_to_air", "release_date"})
-  private String predictDate;
+  @JsonAlias("next_episode_to_air")
+  private SearchContinuation continuation;
 
   @JsonAlias("number_of_episodes")
   private int runtime;
@@ -40,11 +40,6 @@ public class SearchDetails {
   @JsonAlias("belongs_to_collection")
   private SearchCollection collection;
 
-  public void setPredictDate(JsonNode episodeOrDate) {
-    if (episodeOrDate == null || episodeOrDate.isNull()) this.predictDate = null;
-    else if (episodeOrDate.isTextual()) this.predictDate = episodeOrDate.asText();
-    else this.predictDate = episodeOrDate.get("air_date").asText();
-  }
 
   public void setGenres(List<JsonNode> genres) {
     this.genres = genres.stream().map(genre -> genre.get("name").asText()).toList();

@@ -11,7 +11,8 @@ public class ShowDetails {
   private String title;
   private String overview;
   private String releaseDate;
-  private String predictReleaseDate;
+  private ShowContinuation continuation;
+  private ShowStatus status;
   private String duration;
   private ShowType showType;
   private List<String> genres;

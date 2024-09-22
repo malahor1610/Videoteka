@@ -8,8 +8,16 @@ import Loading from "./loading";
 import Title from "./title";
 import WatchProviders from "./watchProviders";
 import { redirect, useRouter, useSearchParams } from "next/navigation";
+import Continuation from "./continuation";
 
-export default function Details({ show, modal, setModal, button, buttons, collectionPart }) {
+export default function Details({
+  show,
+  modal,
+  setModal,
+  button,
+  buttons,
+  collectionPart,
+}) {
   const { loading, setLoading } = useContext(LoadingContext);
   const router = useRouter();
 
@@ -29,6 +37,7 @@ export default function Details({ show, modal, setModal, button, buttons, collec
         <Duration duration={show.duration} />
       </ModalHeader>
       <ModalBody>
+        <Continuation continuation={show.continuation} />
         {show.overview}
         <Genres genres={show.genres} />
         <WatchProviders
