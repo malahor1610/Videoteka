@@ -8,7 +8,7 @@ import {
   Container,
   Row,
 } from "reactstrap";
-import { deleteShow, fetchDetails } from "../lib/data";
+import { deleteShow, fetchDetails, lockShow, unlockShow } from "../lib/data";
 import Details from "./details";
 import Duration from "./duration";
 import Poster from "./poster";
@@ -19,7 +19,13 @@ import { CSS } from "@dnd-kit/utilities";
 import { success } from "./notification";
 import { LoadingContext } from "../layout";
 
-export default function TileWatchlist({ id, show, orderable, fetchShows, setMessage }) {
+export default function TileWatchlist({
+  id,
+  show,
+  orderable,
+  fetchShows,
+  setMessage,
+}) {
   const [modal, setModal] = useState(false);
   const [details, setDetails] = useState([]);
   const { loading, setLoading } = useContext(LoadingContext);
@@ -32,14 +38,48 @@ export default function TileWatchlist({ id, show, orderable, fetchShows, setMess
     setLoading(false);
   }
 
+  async function lockPosition() {
+    setLoading(true);
+    let result = await lockShow(show);
+    show.status = result.status;
+    setMessage(success("Włączono powiadomienia o kontynuacji"));
+    setModal(!modal);
+    setLoading(false);
+  }
+
+  async function unlockPosition() {
+    setLoading(true);
+    let result = await unlockShow(show);
+    show.status = result.status;
+    setMessage(success("Wyłączono powiadomienia"));
+    setModal(!modal);
+    setLoading(false);
+  }
+
   async function removeFromWatchlist() {
     setLoading(true);
     await deleteShow(show);
-    setMessage(success('Usunięto pozycję z listy'));
+    setMessage(success("Usunięto pozycję z listy"));
     setModal(!modal);
     fetchShows();
     setLoading(false);
   }
+
+  const lockButton =
+    show.showType === "SERIES" &&
+    (!show.status || show.status === "UNLOCKED") ? (
+      <Button color="secondary" onClick={lockPosition}>
+        Powiadom o kontynuacji
+      </Button>
+    ) : show.showType === "SERIES" &&
+      show.status &&
+      show.status !== "UNLOCKED" ? (
+      <Button color="secondary" onClick={unlockPosition}>
+        Wyłącz powiadomienia
+      </Button>
+    ) : (
+      <></>
+    );
 
   const removeButton = (
     <Button color="primary" onClick={removeFromWatchlist}>
@@ -57,7 +97,7 @@ export default function TileWatchlist({ id, show, orderable, fetchShows, setMess
 
   const draggable = (
     <Col
-      style={{touchAction: 'none'}}
+      style={{ touchAction: "none" }}
       {...listeners}
       {...attributes}
       xs="1"
@@ -72,7 +112,13 @@ export default function TileWatchlist({ id, show, orderable, fetchShows, setMess
     <div ref={setNodeRef} style={style}>
       <Container className="px-1 mt-2 mb-2" style={{ maxWidth: "666px" }}>
         <Card className="px-1" color="dark" inverse>
-          <Row className="px-1">
+          <Row
+            className={
+              !show.status || show.status === "UNLOCKED"
+                ? "opacity-100 px-1"
+                : "opacity-50 px-1"
+            }
+          >
             <Col xs="4" sm="3" className="p-0">
               <Poster image={show.poster} />
             </Col>
@@ -82,6 +128,13 @@ export default function TileWatchlist({ id, show, orderable, fetchShows, setMess
               onClick={openModal}
             >
               <CardBody className="p-0">
+                {!show.status || show.status === "UNLOCKED" ? (
+                  <></>
+                ) : (
+                  <CardSubtitle>
+                    <small>Włączono powiadomienia o kontynuacji</small>
+                  </CardSubtitle>
+                )}
                 <CardTitle className="d-block d-sm-none h6">
                   <Title show={show} />
                 </CardTitle>
@@ -101,7 +154,7 @@ export default function TileWatchlist({ id, show, orderable, fetchShows, setMess
         show={details}
         modal={modal}
         setModal={setModal}
-        button={removeButton}
+        buttons={[lockButton, removeButton]}
       />
     </div>
   );

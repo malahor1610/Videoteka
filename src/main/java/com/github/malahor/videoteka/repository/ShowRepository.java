@@ -60,4 +60,8 @@ public class ShowRepository {
         .sorted(Comparator.comparingInt(ShowEntity::getPosition))
         .toList();
   }
+
+  public ShowEntity findById(long id, String user) {
+    return showTable.getItem(r -> r.key(k -> k.partitionValue(id).sortValue(user)));
+  }
 }

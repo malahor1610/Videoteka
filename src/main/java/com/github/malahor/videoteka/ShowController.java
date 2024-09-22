@@ -1,6 +1,8 @@
 package com.github.malahor.videoteka;
 
+import com.github.malahor.videoteka.api.ApiService;
 import com.github.malahor.videoteka.domain.ShowEntity;
+import com.github.malahor.videoteka.domain.ShowStatus;
 import com.github.malahor.videoteka.domain.ShowType;
 import com.github.malahor.videoteka.exception.ShowPresentOnWatchlistException;
 import com.github.malahor.videoteka.repository.ShowRepository;
@@ -23,6 +25,8 @@ public class ShowController {
 
   @Inject private JsonWebToken jwt;
 
+  @Inject private ApiService apiService;
+
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   public Response save(ShowEntity show) {
@@ -35,6 +39,29 @@ public class ShowController {
     show.setPosition(maxPosition);
     show.setUserId(username);
     repository.save(show);
+    return Response.ok(show).build();
+  }
+
+  @PUT
+  @Path("/lock/{id}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response updateLock(@PathParam("id") long id) {
+    var username = getUserId();
+    var show = repository.findById(id, username);
+    var details = apiService.details(id, ShowType.SERIES);
+    show.setStatus(ShowStatus.lockByDetails(details));
+    repository.update(show);
+    return Response.ok(show).build();
+  }
+
+  @PUT
+  @Path("/unlock/{id}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response updateUnlock(@PathParam("id") long id) {
+    var username = getUserId();
+    var show = repository.findById(id, username);
+    show.setStatus(ShowStatus.UNLOCKED);
+    repository.update(show);
     return Response.ok(show).build();
   }
 

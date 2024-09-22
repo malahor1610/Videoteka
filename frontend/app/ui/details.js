@@ -9,7 +9,7 @@ import Title from "./title";
 import WatchProviders from "./watchProviders";
 import { redirect, useRouter, useSearchParams } from "next/navigation";
 
-export default function Details({ show, modal, setModal, button, collectionPart }) {
+export default function Details({ show, modal, setModal, button, buttons, collectionPart }) {
   const { loading, setLoading } = useContext(LoadingContext);
   const router = useRouter();
 
@@ -53,6 +53,7 @@ export default function Details({ show, modal, setModal, button, collectionPart 
           <></>
         )}
         {button}
+        {buttons}
       </ModalFooter>
       <Loading loading={loading} details />
     </Modal>

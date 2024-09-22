@@ -20,6 +20,38 @@ export async function postShow(details, poster) {
   return await res.json();
 }
 
+export async function lockShow(show) {
+  checkToken();
+  let res = await fetch(
+    process.env.NEXT_PUBLIC_HOST + "/api/shows/lock/" + show.id,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("idToken"),
+      },
+    }
+  );
+  checkStatus(res);
+  return await res.json();
+}
+
+export async function unlockShow(show) {
+  checkToken();
+  let res = await fetch(
+    process.env.NEXT_PUBLIC_HOST + "/api/shows/unlock/" + show.id,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("idToken"),
+      },
+    }
+  );
+  checkStatus(res);
+  return await res.json();
+}
+
 export async function updateShows(list) {
   checkToken();
   let res = await fetch(process.env.NEXT_PUBLIC_HOST + "/api/shows/positions", {
