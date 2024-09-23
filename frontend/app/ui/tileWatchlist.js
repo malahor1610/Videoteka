@@ -18,12 +18,14 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { success } from "./notification";
 import { LoadingContext } from "../layout";
+import TileWatchlistIcon from "./tileWatchlistIcon";
 
 export default function TileWatchlist({
   id,
   show,
   orderable,
   fetchShows,
+  moveShow,
   setMessage,
 }) {
   const [modal, setModal] = useState(false);
@@ -65,6 +67,14 @@ export default function TileWatchlist({
     setLoading(false);
   }
 
+  function moveTop() {
+    moveShow(show, true);
+  }
+
+  function moveBottom() {
+    moveShow(show, false);
+  }
+
   const lockButton =
     show.showType === "SERIES" &&
     (!show.status || show.status === "UNLOCKED") ? (
@@ -96,15 +106,31 @@ export default function TileWatchlist({
   };
 
   const draggable = (
-    <Col
-      style={{ touchAction: "none" }}
-      {...listeners}
-      {...attributes}
-      xs="1"
-      className="px-1 align-content-center border-start border-secondary border-2 rounded"
-    >
-      <i className="bi bi-grip-vertical d-flex d-sm-none justify-content-center fs-6 text-secondary"></i>
-      <i className="bi bi-grip-vertical d-none d-sm-flex justify-content-center fs-4 text-secondary"></i>
+    <Col xs="1" className="px-1 border-start border-secondary border-2 rounded">
+      <Row className="h-100">
+        <Col className="align-content-start ps-1">
+          <TileWatchlistIcon
+            icon="bi-chevron-bar-up"
+            isButton
+            onClick={moveTop}
+          />
+        </Col>
+        <Col
+          style={{ touchAction: "none" }}
+          {...listeners}
+          {...attributes}
+          className="align-content-center"
+        >
+          <TileWatchlistIcon icon="bi-grip-vertical" />
+        </Col>
+        <Col className="align-content-end ps-1">
+          <TileWatchlistIcon
+            icon="bi-chevron-bar-down"
+            isButton
+            onClick={moveBottom}
+          />
+        </Col>
+      </Row>
     </Col>
   );
 

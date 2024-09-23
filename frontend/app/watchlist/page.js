@@ -52,6 +52,17 @@ export default function Watchlist() {
     setLoading(false);
   }
 
+  function moveToTheEdge(show, up) {
+    let list = Array.from(shows);
+    if(up) list.unshift(list.splice(list.indexOf(show), 1)[0]);
+    else list.push(list.splice(list.indexOf(show), 1)[0]);
+    list.forEach((element) => {
+      element.position = list.indexOf(element) + 1;
+    });
+    setShows(list);
+    updatePositions();
+  }
+  
   function handleDragEnd(event) {
     const { active, over } = event;
     if (active.id !== over.id) {
@@ -87,6 +98,7 @@ export default function Watchlist() {
               show={show}
               orderable
               fetchShows={getShows}
+              moveShow={moveToTheEdge}
               setMessage={setMessage}
             />
           ))}
