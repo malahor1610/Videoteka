@@ -3,7 +3,6 @@ import {
   closestCorners,
   DndContext,
   PointerSensor,
-  TouchSensor,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
@@ -13,19 +12,31 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { useCallback, useContext, useEffect, useState } from "react";
-import { fetchAllShows, updateShows } from "../lib/data";
+import { LoadingContext } from "../layout";
+import { fetchAllShows, updateShowsPositions } from "../lib/data";
+import Changed from "../ui/changed";
 import Notification, { hide } from "../ui/notification";
 import TileWatchlist from "../ui/tileWatchlist";
-import { LoadingContext } from "../layout";
 
 export default function Watchlist() {
   const [shows, setShows] = useState([]);
   const [message, setMessage] = useState(hide());
+  const [modal, setModal] = useState(false);
+  const [lockedChanged, setLockedChanged] = useState([]);
   const { loading, setLoading } = useContext(LoadingContext);
+
+  function openModal(changed) {
+    if (changed.length > 0) {
+      setLockedChanged(changed);
+      setModal(!modal);
+    }
+  }
 
   const getShows = useCallback(async () => {
     setLoading(true);
     let res = await fetchAllShows();
+    let changed = res.filter((r) => r.status?.indexOf("CHANGED") >= 0);
+    openModal(changed);
     setShows(res);
     setLoading(false);
   }, []);
@@ -36,7 +47,7 @@ export default function Watchlist() {
 
   async function updatePositions() {
     setLoading(true);
-    let res = await updateShows(shows);
+    let res = await updateShowsPositions(shows);
     setShows(res);
     setLoading(false);
   }
@@ -81,6 +92,12 @@ export default function Watchlist() {
           ))}
         </SortableContext>
       </DndContext>
+      <Changed
+        shows={lockedChanged}
+        modal={modal}
+        setModal={setModal}
+        getShows={getShows}
+      />
       <Notification
         message={message.message}
         type={message.type}

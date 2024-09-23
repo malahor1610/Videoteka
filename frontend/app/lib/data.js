@@ -52,7 +52,21 @@ export async function unlockShow(show) {
   return await res.json();
 }
 
-export async function updateShows(list) {
+export async function updateShowsLocks(list) {
+  checkToken();
+  let res = await fetch(process.env.NEXT_PUBLIC_HOST + "/api/shows/locks", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem("idToken"),
+    },
+    body: JSON.stringify(list),
+  });
+  checkStatus(res);
+  return await res.json();
+}
+
+export async function updateShowsPositions(list) {
   checkToken();
   let res = await fetch(process.env.NEXT_PUBLIC_HOST + "/api/shows/positions", {
     method: "PUT",

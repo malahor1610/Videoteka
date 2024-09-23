@@ -38,7 +38,7 @@ export default function TileWatchlist({
     setLoading(false);
   }
 
-  async function lockPosition() {
+  async function lock() {
     setLoading(true);
     let result = await lockShow(show);
     show.status = result.status;
@@ -47,7 +47,7 @@ export default function TileWatchlist({
     setLoading(false);
   }
 
-  async function unlockPosition() {
+  async function unlock() {
     setLoading(true);
     let result = await unlockShow(show);
     show.status = result.status;
@@ -68,13 +68,13 @@ export default function TileWatchlist({
   const lockButton =
     show.showType === "SERIES" &&
     (!show.status || show.status === "UNLOCKED") ? (
-      <Button color="secondary" onClick={lockPosition}>
+      <Button color="secondary" onClick={lock}>
         Powiadom o kontynuacji
       </Button>
     ) : show.showType === "SERIES" &&
       show.status &&
       show.status !== "UNLOCKED" ? (
-      <Button color="secondary" onClick={unlockPosition}>
+      <Button color="secondary" onClick={unlock}>
         Wyłącz powiadomienia
       </Button>
     ) : (
