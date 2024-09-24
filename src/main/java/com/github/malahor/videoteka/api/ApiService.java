@@ -2,6 +2,7 @@ package com.github.malahor.videoteka.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.malahor.videoteka.domain.ShowType;
+import com.github.malahor.videoteka.exception.ShowsNotFoundException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import java.io.IOException;
@@ -47,7 +48,7 @@ public class ApiService {
       var response = client.send(request, HttpResponse.BodyHandlers.ofString());
       return mapper.readValue(response.body(), resultType);
     } catch (IOException | InterruptedException e) {
-      throw new RuntimeException(e);
+      throw new ShowsNotFoundException();
     }
   }
 }

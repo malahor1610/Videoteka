@@ -25,7 +25,7 @@ export function Collection() {
   const getCollection = useCallback(async () => {
     setLoading(true);
     let result = await fetchSearchCollection(id);
-    if (result.status === 400) setMessage(error(result.message));
+    if (result.error) setMessage(error(result.message));
     else setCollection(result);
     setLoading(false);
   }, []);

@@ -10,6 +10,8 @@ public class ShowPresentOnWatchlistExceptionMapper
 
   @Override
   public Response toResponse(ShowPresentOnWatchlistException exception) {
-    return Response.status(Response.Status.BAD_REQUEST).entity(exception.getMessage()).build();
+    return Response.status(Response.Status.CONFLICT)
+        .entity(new ErrorMessage(exception.getMessage()))
+        .build();
   }
 }

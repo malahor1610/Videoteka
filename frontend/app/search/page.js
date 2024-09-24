@@ -18,7 +18,7 @@ export default function Search() {
     e.preventDefault();
     setLoading(true);
     let result = await fetchSearch(title, type);
-    if (result.status === 400) setMessage(error(result.message));
+    if (result.error) setMessage(error(result.message));
     else setShows(result);
     setLoading(false);
   }

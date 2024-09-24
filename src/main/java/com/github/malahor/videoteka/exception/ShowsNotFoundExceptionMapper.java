@@ -9,6 +9,8 @@ public class ShowsNotFoundExceptionMapper implements ExceptionMapper<ShowsNotFou
 
   @Override
   public Response toResponse(ShowsNotFoundException exception) {
-    return Response.status(Response.Status.BAD_REQUEST).entity(exception.getMessage()).build();
+    return Response.status(Response.Status.NOT_FOUND)
+        .entity(new ErrorMessage(exception.getMessage()))
+        .build();
   }
 }

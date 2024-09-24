@@ -23,7 +23,7 @@ export default function TileCollection({ show, setMessage }) {
   async function addToWatchlist() {
     setLoading(true);
     let result = await postShow(details, show.poster);
-    if (result.status === 400) setMessage(error(result.message));
+    if (result.error) setMessage(error(result.message));
     else setMessage(success('Pomyślnie dodano do listy'))
     setModal(!modal);
     setLoading(false);

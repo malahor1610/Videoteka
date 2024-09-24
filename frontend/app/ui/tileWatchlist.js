@@ -119,7 +119,7 @@ export default function TileWatchlist({
           style={{ touchAction: "none" }}
           {...listeners}
           {...attributes}
-          className="align-content-center"
+          className="align-content-center ps-2"
         >
           <TileWatchlistIcon icon="bi-grip-vertical" />
         </Col>
