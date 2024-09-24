@@ -49,7 +49,7 @@ public class ShowController {
     var username = getUserId();
     var show = repository.findById(id, username);
     var details = apiService.details(id, ShowType.SERIES);
-    show.setStatus(ShowStatus.lockByDetails(details));
+    show.setShowStatus(ShowStatus.lockByDetails(details));
     repository.update(show);
     return Response.ok(show).build();
   }
@@ -60,7 +60,7 @@ public class ShowController {
   public Response updateUnlock(@PathParam("id") long id) {
     var username = getUserId();
     var show = repository.findById(id, username);
-    show.setStatus(ShowStatus.UNLOCKED);
+    show.setShowStatus(ShowStatus.UNLOCKED);
     repository.update(show);
     return Response.ok(show).build();
   }
@@ -70,11 +70,12 @@ public class ShowController {
   @Produces(MediaType.APPLICATION_JSON)
   public Response updateLocks(List<ShowEntity> shows) {
     var username = getUserId();
-    shows.forEach(show-> {
-      var dbShow = repository.findById(show.getId(), username);
-      dbShow.setStatus(show.getStatus().changed());
-      repository.update(dbShow);
-    });
+    shows.forEach(
+        show -> {
+          var dbShow = repository.findById(show.getId(), username);
+          dbShow.setShowStatus(show.getShowStatus().changed());
+          repository.update(dbShow);
+        });
     return Response.ok().build();
   }
 
@@ -116,7 +117,6 @@ public class ShowController {
   public Response getAll() {
     var username = getUserId();
     var dbShows = (List<ShowEntity>) repository.findAll(username);
-    updateStatuses(dbShows);
     return Response.ok(dbShows).build();
   }
 
@@ -127,31 +127,6 @@ public class ShowController {
     var username = getUserId();
     var dbShows = (List<ShowEntity>) repository.findByType(type, username);
     return Response.ok(dbShows).build();
-  }
-
-  private void updateStatuses(List<ShowEntity> shows) {
-    var futures =
-        shows.stream()
-            .filter(ShowStatus::isLocked)
-            .map(show -> Thread.ofVirtual().start(() -> updateStatus(show)))
-            .toList();
-    try {
-      for (var future : futures) future.join();
-    } catch (InterruptedException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  private void updateStatus(ShowEntity show) {
-    log.info("Start updateStatus show " + show.getTitle());
-    var details = apiService.details(show.getId(), show.getShowType());
-    var newStatus =
-        ShowStatus.lockByDetails(details); // mock to test changes + implement notifications
-    if (!newStatus.equals(show.getStatus())) {
-      show.setStatus(newStatus.changed());
-      repository.update(show);
-    }
-    log.info("End updateStatus show " + show.getTitle());
   }
 
   private String getUserId() {

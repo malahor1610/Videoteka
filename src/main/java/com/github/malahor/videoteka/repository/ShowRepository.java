@@ -64,4 +64,21 @@ public class ShowRepository {
   public ShowEntity findById(long id, String user) {
     return showTable.getItem(r -> r.key(k -> k.partitionValue(id).sortValue(user)));
   }
+
+  public List<ShowEntity> findLocked() {
+    var expression =
+        Expression.builder()
+            .expression(
+                "begins_with(showStatus, :locked) AND NOT contains(showStatus, :changed)")
+            .expressionValues(
+                Map.of(
+                    ":locked",
+                    AttributeValue.fromS("LOCKED"),
+                    ":changed",
+                    AttributeValue.fromS("CHANGED")))
+            .build();
+    return showTable.scan(s -> s.consistentRead(true).filterExpression(expression)).items().stream()
+        .sorted(Comparator.comparingInt(ShowEntity::getPosition))
+        .collect(Collectors.toList());
+  }
 }

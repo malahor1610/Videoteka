@@ -43,7 +43,7 @@ export default function TileWatchlist({
   async function lock() {
     setLoading(true);
     let result = await lockShow(show);
-    show.status = result.status;
+    show.showStatus = result.showStatus;
     setMessage(success("Włączono powiadomienia o kontynuacji"));
     setModal(!modal);
     setLoading(false);
@@ -52,7 +52,7 @@ export default function TileWatchlist({
   async function unlock() {
     setLoading(true);
     let result = await unlockShow(show);
-    show.status = result.status;
+    show.showStatus = result.showStatus;
     setMessage(success("Wyłączono powiadomienia"));
     setModal(!modal);
     setLoading(false);
@@ -77,13 +77,13 @@ export default function TileWatchlist({
 
   const lockButton =
     show.showType === "SERIES" &&
-    (!show.status || show.status === "UNLOCKED") ? (
+    (!show.showStatus || show.showStatus === "UNLOCKED") ? (
       <Button color="secondary" onClick={lock}>
         Powiadom o kontynuacji
       </Button>
     ) : show.showType === "SERIES" &&
-      show.status &&
-      show.status !== "UNLOCKED" ? (
+      show.showStatus &&
+      show.showStatus !== "UNLOCKED" ? (
       <Button color="secondary" onClick={unlock}>
         Wyłącz powiadomienia
       </Button>
@@ -140,7 +140,7 @@ export default function TileWatchlist({
         <Card className="px-1" color="dark" inverse>
           <Row
             className={
-              !show.status || show.status === "UNLOCKED"
+              !show.showStatus || show.showStatus === "UNLOCKED"
                 ? "opacity-100 px-1"
                 : "opacity-50 px-1"
             }
@@ -154,7 +154,7 @@ export default function TileWatchlist({
               onClick={openModal}
             >
               <CardBody className="p-0">
-                {!show.status || show.status === "UNLOCKED" ? (
+                {!show.showStatus || show.showStatus === "UNLOCKED" ? (
                   <></>
                 ) : (
                   <CardSubtitle>

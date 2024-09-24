@@ -15,7 +15,7 @@ public enum ShowStatus {
   LOCKED_CHANGED_RELEASED;
 
   public static boolean isLocked(ShowEntity show) {
-    return show.getStatus() != null && !show.getStatus().equals(UNLOCKED);
+    return show.getShowStatus() != null && !show.getShowStatus().equals(UNLOCKED);
   }
 
   public static ShowStatus lockByDetails(SearchDetails details) {

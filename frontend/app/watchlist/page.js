@@ -35,7 +35,7 @@ export default function Watchlist() {
   const getShows = useCallback(async () => {
     setLoading(true);
     let res = await fetchAllShows();
-    let changed = res.filter((r) => r.status?.indexOf("CHANGED") >= 0);
+    let changed = res.filter((r) => r.showStatus?.indexOf("CHANGED") >= 0);
     openModal(changed);
     setShows(res);
     setLoading(false);

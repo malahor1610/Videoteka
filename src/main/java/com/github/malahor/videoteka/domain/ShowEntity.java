@@ -23,6 +23,6 @@ public class ShowEntity {
   private String poster;
   private String duration;
   private ShowType showType;
-  private ShowStatus status;
+  private ShowStatus showStatus;
   private int position;
 }

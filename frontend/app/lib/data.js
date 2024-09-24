@@ -63,7 +63,6 @@ export async function updateShowsLocks(list) {
     body: JSON.stringify(list),
   });
   checkStatus(res);
-  return await res.json();
 }
 
 export async function updateShowsPositions(list) {
