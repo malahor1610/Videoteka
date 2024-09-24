@@ -18,7 +18,7 @@ export default function Random() {
     setShows(res);
     setExcluded([]);
     setLoading(false);
-  }, [type, setShows]);
+  }, [type, setShows, setLoading]);
 
   useEffect(() => {
     getShows();

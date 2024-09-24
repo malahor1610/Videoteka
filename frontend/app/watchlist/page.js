@@ -25,12 +25,12 @@ export default function Watchlist() {
   const [lockedChanged, setLockedChanged] = useState([]);
   const { loading, setLoading } = useContext(LoadingContext);
 
-  function openModal(changed) {
+  const openModal = useCallback(changed => {
     if (changed.length > 0) {
       setLockedChanged(changed);
       setModal(!modal);
     }
-  }
+  }, [modal]);
 
   const getShows = useCallback(async () => {
     setLoading(true);
@@ -39,7 +39,7 @@ export default function Watchlist() {
     openModal(changed);
     setShows(res);
     setLoading(false);
-  }, []);
+  }, [openModal, setLoading]);
 
   useEffect(() => {
     getShows();

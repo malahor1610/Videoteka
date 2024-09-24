@@ -15,7 +15,7 @@ export default function WatchlistFiltered({ type }) {
     let res = await fetchShows(type);
     setShows(res);
     setLoading(false);
-  }, [type, setShows]);
+  }, [type, setShows, setLoading]);
 
   useEffect(() => {
     getShows();

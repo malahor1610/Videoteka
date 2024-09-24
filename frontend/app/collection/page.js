@@ -28,7 +28,7 @@ export function Collection() {
     if (result.error) setMessage(error(result.message));
     else setCollection(result);
     setLoading(false);
-  }, []);
+  }, [id, setLoading]);
 
   useEffect(() => {
     getCollection();
