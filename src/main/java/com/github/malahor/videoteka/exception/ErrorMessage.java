@@ -1,6 +1,5 @@
 package com.github.malahor.videoteka.exception;
 
-import io.quarkus.arc.All;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ErrorMessage {
 
-    private String message;
-    private final boolean error = true;
+  private final boolean error = true;
+  private String message;
 }

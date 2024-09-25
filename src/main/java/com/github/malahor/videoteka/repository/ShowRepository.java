@@ -34,6 +34,11 @@ public class ShowRepository {
     showTable.deleteItem(r -> r.key(k -> k.partitionValue(id).sortValue(user)));
   }
 
+  public List<ShowEntity> findAll() {
+    return showTable.scan(s -> s.consistentRead(true)).items().stream()
+        .collect(Collectors.toList());
+  }
+
   public List<ShowEntity> findAll(String user) {
     var expression =
         Expression.builder()
@@ -68,8 +73,7 @@ public class ShowRepository {
   public List<ShowEntity> findLocked() {
     var expression =
         Expression.builder()
-            .expression(
-                "begins_with(showStatus, :locked) AND NOT contains(showStatus, :changed)")
+            .expression("begins_with(showStatus, :locked) AND NOT contains(showStatus, :changed)")
             .expressionValues(
                 Map.of(
                     ":locked",

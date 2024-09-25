@@ -1,6 +1,7 @@
 package com.github.malahor.videoteka.api;
 
 import com.github.malahor.videoteka.domain.*;
+import com.github.malahor.videoteka.util.DateHandler;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -87,8 +88,8 @@ public class DomainMapper {
 
   private String mapReleaseDate(String releaseDate) {
     if (releaseDate == null || releaseDate.isEmpty()) return "";
-    var localDate = localDateOf(releaseDate);
-    if (localDate.isAfter(LocalDate.now())) return accurateDate(releaseDate);
+    var localDate = DateHandler.localDateOf(releaseDate);
+    if (localDate.isAfter(LocalDate.now())) return DateHandler.accurateDate(releaseDate);
     return String.valueOf(localDate.getYear());
   }
 
@@ -101,16 +102,9 @@ public class DomainMapper {
     var continuation = new ShowContinuation();
     continuation.setInProduction(details.getInProduction());
     if (!continuation.isInProduction() || details.getContinuation() == null) return continuation;
-    continuation.setReleaseDate(accurateDate(details.getContinuation().getReleaseDate()));
+    continuation.setReleaseDate(DateHandler.accurateDate(details.getContinuation().getReleaseDate()));
     continuation.setSeason(details.getContinuation().getSeason());
     return continuation;
   }
 
-  private String accurateDate(String releaseDate) {
-    return localDateOf(releaseDate).format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM));
-  }
-
-  private LocalDate localDateOf(String releaseDate) {
-    return LocalDate.parse(releaseDate, DateTimeFormatter.ISO_DATE);
-  }
 }

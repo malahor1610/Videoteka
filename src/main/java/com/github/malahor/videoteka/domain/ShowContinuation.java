@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class ShowContinuation {
 
-    private boolean inProduction;
-    private String releaseDate;
-    private int season;
+  private boolean inProduction;
+  private String releaseDate;
+  private int season;
 }

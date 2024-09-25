@@ -18,5 +18,4 @@ public class ShowDetails {
   private List<String> genres;
   private WatchProviders watchProviders;
   private ShowCollection collection;
-
 }

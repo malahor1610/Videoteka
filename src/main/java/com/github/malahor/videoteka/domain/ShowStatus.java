@@ -1,6 +1,7 @@
 package com.github.malahor.videoteka.domain;
 
-import com.github.malahor.videoteka.api.SearchDetails;
+import com.github.malahor.videoteka.util.DateHandler;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -18,18 +19,15 @@ public enum ShowStatus {
     return show.getShowStatus() != null && !show.getShowStatus().equals(UNLOCKED);
   }
 
-  public static ShowStatus lockByDetails(SearchDetails details) {
-    if (!details.getInProduction()) return LOCKED_NOT_IN_PRODUCTION;
-    if (details.getContinuation() == null || details.getContinuation().getReleaseDate() == null)
-      return LOCKED_IN_PRODUCTION;
-    if (LocalDate.now().isBefore(localDateOf(details.getContinuation().getReleaseDate())))
+  public static ShowStatus lockByDetails(ShowDetails details) {
+    if (details.getContinuation() == null || !details.getContinuation().isInProduction())
+      return LOCKED_NOT_IN_PRODUCTION;
+    if (details.getContinuation().getReleaseDate() == null) return LOCKED_IN_PRODUCTION;
+    if (LocalDate.now().isBefore(DateHandler.localDateOf(details.getContinuation().getReleaseDate())))
       return LOCKED_DATE_CONFIRMED;
     return UNLOCKED;
   }
 
-  private static LocalDate localDateOf(String releaseDate) {
-    return LocalDate.parse(releaseDate, DateTimeFormatter.ISO_DATE);
-  }
 
   public ShowStatus changed() {
     return switch (this) {

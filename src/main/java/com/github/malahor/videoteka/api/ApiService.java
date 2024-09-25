@@ -1,6 +1,9 @@
 package com.github.malahor.videoteka.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.malahor.videoteka.domain.Show;
+import com.github.malahor.videoteka.domain.ShowCollectionDetails;
+import com.github.malahor.videoteka.domain.ShowDetails;
 import com.github.malahor.videoteka.domain.ShowType;
 import com.github.malahor.videoteka.exception.ShowsNotFoundException;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -10,29 +13,35 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 @ApplicationScoped
+@RequiredArgsConstructor
 public class ApiService {
 
-  @Inject private UriResolver uriResolver;
-
-  @Inject private ObjectMapper mapper;
+  private final UriResolver uriResolver;
+  private final ObjectMapper mapper;
+  private final DomainMapper domainMapper;
 
   @Inject
   @ConfigProperty(name = "api.key")
   private String apiKey;
 
-  public SearchResult search(String title, ShowType type) {
-    return this.get(uriResolver.search(title, type), SearchResult.class);
+  public List<Show> search(String title, ShowType type) {
+    var result = this.get(uriResolver.search(title, type), SearchResult.class);
+    return domainMapper.mapSearchResult(result, type);
   }
 
-  public SearchDetails details(long id, ShowType type) {
-    return this.get(uriResolver.details(id, type), SearchDetails.class);
+  public ShowDetails details(long id, ShowType type) {
+    var result = this.get(uriResolver.details(id, type), SearchDetails.class);
+    return domainMapper.mapSearchDetails(result, type);
   }
 
-  public SearchCollectionDetails collection(long id) {
-    return this.get(uriResolver.collection(id), SearchCollectionDetails.class);
+  public ShowCollectionDetails collection(long id) {
+    var result = this.get(uriResolver.collection(id), SearchCollectionDetails.class);
+    return domainMapper.mapSearchCollectionDetails(result);
   }
 
   private <T> T get(URI uri, Class<T> resultType) {

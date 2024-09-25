@@ -7,25 +7,24 @@ import com.github.malahor.videoteka.domain.ShowType;
 import com.github.malahor.videoteka.exception.ShowPresentOnWatchlistException;
 import com.github.malahor.videoteka.repository.ShowRepository;
 import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.Comparator;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
 @RequestScoped
 @Path("/api/shows")
 @Slf4j
+@RequiredArgsConstructor
 public class ShowController {
 
-  @Inject private ShowRepository repository;
-
-  @Inject private JsonWebToken jwt;
-
-  @Inject private ApiService apiService;
+  private final ShowRepository repository;
+  private final JsonWebToken jwt;
+  private final ApiService apiService;
 
   @POST
   @Produces(MediaType.APPLICATION_JSON)
@@ -34,12 +33,16 @@ public class ShowController {
     var shows = repository.findAll(username);
     if (shows.stream().map(ShowEntity::getId).anyMatch(s -> s.equals(show.getId())))
       throw new ShowPresentOnWatchlistException();
-    var maxPosition = shows.isEmpty() ? 0 : shows.getLast().getPosition();
-    maxPosition++;
-    show.setPosition(maxPosition);
+    show.setPosition(maxPosition(shows));
     show.setUserId(username);
     repository.save(show);
     return Response.ok(show).build();
+  }
+
+  private int maxPosition(List<ShowEntity> shows) {
+    var maxPosition = shows.isEmpty() ? 0 : shows.getLast().getPosition();
+    maxPosition++;
+    return maxPosition;
   }
 
   @PUT

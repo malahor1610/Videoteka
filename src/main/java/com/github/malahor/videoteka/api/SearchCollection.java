@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SearchCollection {
 
-    private long id;
-    private String name;
+  private long id;
+  private String name;
 }

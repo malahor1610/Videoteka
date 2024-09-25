@@ -60,9 +60,9 @@ public class StaticWebController {
   }
 
   private Response getResource(String name) {
-    InputStream resource = getClass().getClassLoader().getResourceAsStream(name);
-    return null == resource
-            ? Response.status(Response.Status.NOT_FOUND).build()
-            : Response.ok(resource).build();
+    var resource = getClass().getClassLoader().getResourceAsStream(name);
+    return resource == null
+        ? Response.status(Response.Status.NOT_FOUND).build()
+        : Response.ok(resource).build();
   }
 }
