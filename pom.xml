@@ -91,6 +91,15 @@
         </dependency>
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <dev>true</dev>
+            </properties>
+        </profile>
+    </profiles>
+
     <build>
         <plugins>
             <plugin>
@@ -109,6 +118,9 @@
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>${maven-resources-plugin.version}</version>
+                <configuration>
+                    <skip>${dev}</skip>
+                </configuration>
                 <executions>
                     <execution>
                         <id>copy-resources</id>
@@ -134,6 +146,7 @@
                 <version>${frontend-maven-plugin.version}</version>
                 <configuration>
                     <workingDirectory>frontend</workingDirectory>
+                    <skip>${dev}</skip>
                 </configuration>
                 <executions>
                     <execution>
