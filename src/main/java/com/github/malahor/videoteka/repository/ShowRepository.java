@@ -9,15 +9,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import software.amazon.awssdk.enhanced.dynamodb.*;
+import software.amazon.awssdk.enhanced.dynamodb.model.TransactUpdateItemEnhancedRequest;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 
 @ApplicationScoped
 public class ShowRepository {
 
+  private final DynamoDbEnhancedClient client;
   private final DynamoDbTable<ShowEntity> showTable;
 
   @Inject
   public ShowRepository(DynamoDbEnhancedClient dynamoDbEnhancedClient) {
+    this.client = dynamoDbEnhancedClient;
     this.showTable =
         dynamoDbEnhancedClient.table("ShowEntity", TableSchema.fromClass(ShowEntity.class));
   }
@@ -28,6 +31,18 @@ public class ShowRepository {
 
   public void update(ShowEntity show) {
     showTable.updateItem(show);
+  }
+
+  public void update(List<ShowEntity> shows) {
+    client.transactWriteItems(
+        b ->
+            shows.forEach(
+                show ->
+                    b.addUpdateItem(
+                        showTable,
+                        TransactUpdateItemEnhancedRequest.builder(ShowEntity.class)
+                            .item(show)
+                            .build())));
   }
 
   public void delete(long id, String user) {

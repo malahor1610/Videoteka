@@ -10,10 +10,12 @@ import jakarta.enterprise.context.RequestScoped;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.ListUtils;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
 @RequestScoped
@@ -88,23 +90,27 @@ public class ShowController {
   public Response updatePositions(List<ShowEntity> shows) {
     var username = getUserId();
     var dbShows = repository.findAll(username);
-    dbShows.forEach(dbShow -> updatePosition(dbShow, shows));
+    updatePositions(shows, dbShows);
     dbShows.sort(Comparator.comparingInt(ShowEntity::getPosition));
     return Response.ok(dbShows).build();
   }
 
-  private void updatePosition(ShowEntity dbShow, List<ShowEntity> shows) {
-    shows.stream()
-        .filter(show -> show.getId() == dbShow.getId())
-        .findFirst()
-        .map(ShowEntity::getPosition)
-        .ifPresent(
-            position -> {
-              if (dbShow.getPosition() != position) {
-                dbShow.setPosition(position);
-                repository.update(dbShow);
-              }
-            });
+  private void updatePositions(List<ShowEntity> shows, List<ShowEntity> dbShows) {
+    var changedShows = new ArrayList<ShowEntity>();
+    for (var dbShow : dbShows) {
+      int matchShowPosition =
+          shows.stream()
+              .filter(show -> show.getId() == dbShow.getId())
+              .findFirst()
+              .map(ShowEntity::getPosition)
+              .orElse(dbShow.getPosition());
+      if (matchShowPosition != dbShow.getPosition()) {
+        dbShow.setPosition(matchShowPosition);
+        changedShows.add(dbShow);
+      }
+    }
+    var partitions = ListUtils.partition(changedShows, 100);
+    partitions.forEach(repository::update);
   }
 
   @DELETE
