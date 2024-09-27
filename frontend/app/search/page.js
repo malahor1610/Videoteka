@@ -29,12 +29,20 @@ export default function Search() {
         <Row className="justify-content-center my-3">
           <Type type={type} setType={setType} />
           <Input
-            className="my-1 w-auto col-auto"
+            className="my-1 w-auto col-auto rounded-0 rounded-start"
             value={title}
             placeholder="Szukaj tytułu..."
             onChange={(e) => setTitle(e.target.value)}
           />
-          <Button color="primary" className="col-auto mx-3 my-1">
+          <Button
+            color="light"
+            type="button"
+            onClick={() => setTitle("")}
+            className="col-auto mx-0 my-1 p-0 rounded-0 rounded-end"
+          >
+            <i className="bi bi-eraser-fill dark p-2 fs-6"></i>
+          </Button>
+          <Button color="primary" type="submit" className="col-auto mx-3 my-1">
             Szukaj
           </Button>
         </Row>
