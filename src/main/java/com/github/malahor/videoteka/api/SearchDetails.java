@@ -40,6 +40,8 @@ public class SearchDetails {
   @JsonAlias("belongs_to_collection")
   private SearchCollection collection;
 
+  private List<SearchSeason> seasons;
+
   public void setGenres(List<JsonNode> genres) {
     this.genres = genres.stream().map(genre -> genre.get("name").asText()).toList();
   }

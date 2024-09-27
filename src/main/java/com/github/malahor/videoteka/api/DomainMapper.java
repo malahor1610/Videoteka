@@ -4,8 +4,6 @@ import com.github.malahor.videoteka.domain.*;
 import com.github.malahor.videoteka.util.DateHandler;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.util.Comparator;
 import java.util.List;
 
@@ -44,6 +42,7 @@ public class DomainMapper {
     showDetails.setGenres(details.getGenres());
     showDetails.setWatchProviders(mapWatchProviders(details.getWatchProviders()));
     showDetails.setCollection(mapCollection(details.getCollection()));
+    showDetails.setSeasons(mapSeasons(details.getSeasons()));
     showDetails.setShowType(type);
     return showDetails;
   }
@@ -77,6 +76,22 @@ public class DomainMapper {
     return collection;
   }
 
+  private List<ShowSeason> mapSeasons(List<SearchSeason> tmdbSeasons) {
+    if (tmdbSeasons == null) return null;
+    return tmdbSeasons.stream()
+        .filter(tmdbSeason -> tmdbSeason.getNumber() > 0)
+        .filter(tmdbSeason -> tmdbSeason.getEpisodes() > 0)
+        .map(
+            tmdbSeason -> {
+              var season = new ShowSeason();
+              season.setNumber(tmdbSeason.getNumber());
+              season.setName(tmdbSeason.getName());
+              season.setEpisodes(tmdbSeason.getEpisodes());
+              return season;
+            })
+        .toList();
+  }
+
   private String durationOf(int duration, ShowType type) {
     return duration
         + " "
@@ -102,9 +117,9 @@ public class DomainMapper {
     var continuation = new ShowContinuation();
     continuation.setInProduction(details.getInProduction());
     if (!continuation.isInProduction() || details.getContinuation() == null) return continuation;
-    continuation.setReleaseDate(DateHandler.accurateDate(details.getContinuation().getReleaseDate()));
+    continuation.setReleaseDate(
+        DateHandler.accurateDate(details.getContinuation().getReleaseDate()));
     continuation.setSeason(details.getContinuation().getSeason());
     return continuation;
   }
-
 }
