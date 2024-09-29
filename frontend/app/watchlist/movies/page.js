@@ -1,6 +1,6 @@
 "use client";
-import WatchlistFiltered from "@/app/ui/watchlist";
+import Shows from "@/app/ui/shows";
 
 export default function Movies() {
-  return <WatchlistFiltered type={"MOVIE"} />;
+  return <Shows type={"MOVIE"} />;
 }

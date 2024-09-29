@@ -14,6 +14,7 @@ export async function postShow(details, poster) {
       poster: poster,
       duration: details.duration,
       showType: details.showType,
+      genres: details.genres
     }),
   });
   checkStatus(res);

@@ -1,6 +1,6 @@
 "use client";
-import WatchlistFiltered from "@/app/ui/watchlist";
+import Shows from "@/app/ui/shows";
 
 export default function Series() {
-  return <WatchlistFiltered type={"SERIES"} />;
+  return <Shows type={"SERIES"} />;
 }

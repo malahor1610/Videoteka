@@ -5,18 +5,27 @@ import { fetchShows } from "../lib/data";
 import TileRandom from "../ui/tileRandom";
 import Type from "../ui/type";
 import { LoadingContext } from "../layout";
+import GenresFilters from "../ui/genresFilter";
 
 export default function Random() {
   const [shows, setShows] = useState([]);
+  const [allShows, setAllShows] = useState([]);
   const [excluded, setExcluded] = useState([]);
   const [type, setType] = useState("MOVIE");
+  const [genres, setGenres] = useState([]);
   const { loading, setLoading } = useContext(LoadingContext);
 
   const getShows = useCallback(async () => {
     setLoading(true);
     let res = await fetchShows(type);
     setShows(res);
+    setAllShows(res);
     setExcluded([]);
+    setGenres(
+      [...new Set(res.map((r) => r.genres).flat())]
+        .sort()
+        .map((genre) => ({ name: genre, active: false }))
+    );
     setLoading(false);
   }, [type, setShows, setLoading]);
 
@@ -108,6 +117,13 @@ export default function Random() {
   ) : (
     <>
       {pickBar}
+      <GenresFilters
+        allShows={allShows}
+        setShows={setShows}
+        setExcluded={setExcluded}
+        genres={genres}
+        setGenres={setGenres}
+      />
       {pickOptions}
     </>
   );

@@ -6,6 +6,8 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
 
+import java.util.List;
+
 @Getter
 @Setter
 @DynamoDbBean
@@ -25,4 +27,5 @@ public class ShowEntity {
   private ShowType showType;
   private ShowStatus showStatus;
   private int position;
+  private List<String> genres;
 }
