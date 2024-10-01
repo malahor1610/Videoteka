@@ -8,13 +8,13 @@ import {
   Row,
 } from "reactstrap";
 
-export default function Duration({ duration, seasons }) {
+export default function Duration({ duration, seasons, type }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const toggle = () => setDropdownOpen((prevState) => !prevState);
 
   const generalDuration = (
-    <small className="fs-6 fw-normal mb-0">{duration} </small>
+    <small className="fs-6 fw-normal mb-0">Czas trwania: {duration} {type === "MOVIE" ? "min." : "odc."} </small>
   );
 
   return !seasons ? (

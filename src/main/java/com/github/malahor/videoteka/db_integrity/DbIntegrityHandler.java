@@ -23,6 +23,7 @@ public class DbIntegrityHandler {
     log.info("Verifying database integrity");
     var shows = repository.findAll();
     updateGenres(shows);
+    updateDuration(shows);
     log.info("Finished verifying database integrity");
   }
 
@@ -35,6 +36,21 @@ public class DbIntegrityHandler {
         show -> {
           var details = apiService.details(show.getId(), show.getShowType());
           show.setGenres(details.getGenres());
+        });
+    var partitions = ListUtils.partition(toUpdate, 100);
+    partitions.forEach(repository::update);
+  }
+
+  void updateDuration(List<ShowEntity> shows) {
+    var toUpdate =
+        shows.stream()
+            .filter(show -> show.getDuration() != null && !show.getDuration().isEmpty())
+            .filter(show -> show.getDuration().contains("minutes") || show.getDuration().contains("episodes"))
+            .toList();
+    toUpdate.forEach(
+        show -> {
+          var details = apiService.details(show.getId(), show.getShowType());
+          show.setDuration(details.getDuration());
         });
     var partitions = ListUtils.partition(toUpdate, 100);
     partitions.forEach(repository::update);

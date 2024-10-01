@@ -168,7 +168,7 @@ export default function TileWatchlist({
                   <Title show={show} />
                 </CardTitle>
                 <CardSubtitle>
-                  <Duration duration={show.duration} />
+                  <Duration duration={show.duration} type={show.showType} />
                 </CardSubtitle>
               </CardBody>
             </Button>

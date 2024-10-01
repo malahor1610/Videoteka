@@ -34,7 +34,7 @@ export default function Details({
     >
       <ModalHeader toggle={() => setModal(!modal)}>
         <Title show={show} />
-        <Duration duration={show.duration} seasons={show.seasons} />
+        <Duration duration={show.duration} seasons={show.seasons} type={show.showType} />
       </ModalHeader>
       <ModalBody>
         <Continuation continuation={show.continuation} />

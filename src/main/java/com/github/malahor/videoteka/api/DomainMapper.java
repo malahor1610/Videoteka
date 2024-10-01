@@ -38,7 +38,7 @@ public class DomainMapper {
     showDetails.setOverview(details.getOverview());
     showDetails.setReleaseDate(mapReleaseDate(details.getReleaseDate()));
     showDetails.setContinuation(mapContinuation(details, type));
-    showDetails.setDuration(durationOf(details.getRuntime(), type));
+    showDetails.setDuration(String.valueOf(details.getRuntime()));
     showDetails.setGenres(details.getGenres());
     showDetails.setWatchProviders(mapWatchProviders(details.getWatchProviders()));
     showDetails.setCollection(mapCollection(details.getCollection()));
@@ -90,15 +90,6 @@ public class DomainMapper {
               return season;
             })
         .toList();
-  }
-
-  private String durationOf(int duration, ShowType type) {
-    return duration
-        + " "
-        + switch (type) {
-          case MOVIE -> "minutes";
-          case SERIES -> "episodes";
-        };
   }
 
   private String mapReleaseDate(String releaseDate) {
