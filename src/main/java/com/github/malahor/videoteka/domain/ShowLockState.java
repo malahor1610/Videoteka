@@ -3,9 +3,8 @@ package com.github.malahor.videoteka.domain;
 import com.github.malahor.videoteka.util.DateHandler;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
-public enum ShowStatus {
+public enum ShowLockState {
   UNLOCKED,
   LOCKED_CHANGED_CANCELED,
   LOCKED_NOT_IN_PRODUCTION,
@@ -16,10 +15,10 @@ public enum ShowStatus {
   LOCKED_CHANGED_RELEASED;
 
   public static boolean isLocked(ShowEntity show) {
-    return show.getShowStatus() != null && !show.getShowStatus().equals(UNLOCKED);
+    return show.getLockState() != null && !show.getLockState().equals(UNLOCKED);
   }
 
-  public static ShowStatus lockByDetails(ShowDetails details) {
+  public static ShowLockState lockByDetails(ShowDetails details) {
     if (details.getContinuation() == null || !details.getContinuation().isInProduction())
       return LOCKED_NOT_IN_PRODUCTION;
     if (details.getContinuation().getReleaseDate() == null) return LOCKED_IN_PRODUCTION;
@@ -29,7 +28,7 @@ public enum ShowStatus {
   }
 
 
-  public ShowStatus changed() {
+  public ShowLockState changed() {
     return switch (this) {
       case LOCKED_CHANGED_CANCELED -> LOCKED_NOT_IN_PRODUCTION;
       case LOCKED_NOT_IN_PRODUCTION -> LOCKED_CHANGED_CANCELED;

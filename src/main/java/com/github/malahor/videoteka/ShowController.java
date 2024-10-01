@@ -2,7 +2,7 @@ package com.github.malahor.videoteka;
 
 import com.github.malahor.videoteka.api.ApiService;
 import com.github.malahor.videoteka.domain.ShowEntity;
-import com.github.malahor.videoteka.domain.ShowStatus;
+import com.github.malahor.videoteka.domain.ShowLockState;
 import com.github.malahor.videoteka.domain.ShowType;
 import com.github.malahor.videoteka.exception.ShowPresentOnWatchlistException;
 import com.github.malahor.videoteka.repository.ShowRepository;
@@ -54,7 +54,7 @@ public class ShowController {
     var username = getUserId();
     var show = repository.findById(id, username);
     var details = apiService.details(id, ShowType.SERIES);
-    show.setShowStatus(ShowStatus.lockByDetails(details));
+    show.setLockState(ShowLockState.lockByDetails(details));
     repository.update(show);
     return Response.ok(show).build();
   }
@@ -65,7 +65,7 @@ public class ShowController {
   public Response updateUnlock(@PathParam("id") long id) {
     var username = getUserId();
     var show = repository.findById(id, username);
-    show.setShowStatus(ShowStatus.UNLOCKED);
+    show.setLockState(ShowLockState.UNLOCKED);
     repository.update(show);
     return Response.ok(show).build();
   }
@@ -78,7 +78,7 @@ public class ShowController {
     shows.forEach(
         show -> {
           var dbShow = repository.findById(show.getId(), username);
-          dbShow.setShowStatus(show.getShowStatus().changed());
+          dbShow.setLockState(show.getLockState().changed());
           repository.update(dbShow);
         });
     return Response.ok().build();

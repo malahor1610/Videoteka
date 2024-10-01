@@ -41,7 +41,7 @@ export default function Shows({ type }) {
   const getShows = useCallback(async () => {
     setLoading(true);
     let res = !type ? await fetchAllShows() : await fetchShows(type);
-    let changed = res.filter((r) => r.showStatus?.indexOf("CHANGED") >= 0);
+    let changed = res.filter((r) => r.lockState?.indexOf("CHANGED") >= 0);
     openModal(changed);
     setShows(res);
     setAllShows(res);

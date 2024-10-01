@@ -26,10 +26,10 @@ export default function Changed({ shows, modal, setModal, getShows }) {
         Info o serialach, które oglądasz
       </ModalHeader>
       <ModalBody>
-        <ChangedSet shows={shows.filter((show) => show.showStatus === "LOCKED_CHANGED_CANCELED")} text="Seriale anulowane: " />
-        <ChangedSet shows={shows.filter((show) => show.showStatus === "LOCKED_CHANGED_IN_PRODUCTION")} text="Seriale w produkcji: " />
-        <ChangedSet shows={shows.filter((show) => show.showStatus === "LOCKED_CHANGED_DATE")} text="Seriale z potwierdzoną datą: " />
-        <ChangedSet shows={shows.filter((show) => show.showStatus === "LOCKED_CHANGED_RELEASED")} text="Seriale już wydane: " />
+        <ChangedSet shows={shows.filter((show) => show.lockState === "LOCKED_CHANGED_CANCELED")} text="Seriale anulowane: " />
+        <ChangedSet shows={shows.filter((show) => show.lockState === "LOCKED_CHANGED_IN_PRODUCTION")} text="Seriale w produkcji: " />
+        <ChangedSet shows={shows.filter((show) => show.lockState === "LOCKED_CHANGED_DATE")} text="Seriale z potwierdzoną datą: " />
+        <ChangedSet shows={shows.filter((show) => show.lockState === "LOCKED_CHANGED_RELEASED")} text="Seriale już wydane: " />
       </ModalBody>
       <ModalFooter>
         <Button color="success" onClick={acknowledge}>

@@ -25,7 +25,7 @@ public class ShowEntity {
   private String poster;
   private String duration;
   private ShowType showType;
-  private ShowStatus showStatus;
+  private ShowLockState lockState;
   private int position;
   private List<String> genres;
 }

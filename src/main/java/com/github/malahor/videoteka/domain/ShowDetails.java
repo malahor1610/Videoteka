@@ -12,7 +12,7 @@ public class ShowDetails {
   private String overview;
   private String releaseDate;
   private ShowContinuation continuation;
-  private ShowStatus status;
+  private ShowLockState status;
   private String duration;
   private ShowType showType;
   private List<String> genres;

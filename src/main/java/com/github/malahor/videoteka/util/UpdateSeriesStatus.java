@@ -2,7 +2,7 @@ package com.github.malahor.videoteka.util;
 
 import com.github.malahor.videoteka.api.ApiService;
 import com.github.malahor.videoteka.domain.ShowEntity;
-import com.github.malahor.videoteka.domain.ShowStatus;
+import com.github.malahor.videoteka.domain.ShowLockState;
 import com.github.malahor.videoteka.domain.ShowType;
 import com.github.malahor.videoteka.repository.ShowRepository;
 import io.quarkus.scheduler.Scheduled;
@@ -39,10 +39,10 @@ public class UpdateSeriesStatus {
       show.setDuration(details.getDuration());
       applicableForUpdate = true;
     }
-    if (ShowStatus.isLocked(show)) {
-      var newStatus = ShowStatus.lockByDetails(details);
-      if (!newStatus.equals(show.getShowStatus())) {
-        show.setShowStatus(newStatus.changed());
+    if (ShowLockState.isLocked(show)) {
+      var newStatus = ShowLockState.lockByDetails(details);
+      if (!newStatus.equals(show.getLockState())) {
+        show.setLockState(newStatus.changed());
         applicableForUpdate = true;
       }
     }
