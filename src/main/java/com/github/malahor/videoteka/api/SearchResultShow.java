@@ -21,8 +21,8 @@ public class SearchResultShow {
   @JsonUnwrapped
   private SearchReleaseDate releaseDate;
 
-  @JsonAlias("poster_path")
-  private String poster;
+  @JsonUnwrapped
+  private SearchPoster poster;
 
   private double popularity;
 }

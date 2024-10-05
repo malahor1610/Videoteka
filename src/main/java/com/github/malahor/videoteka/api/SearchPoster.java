@@ -10,6 +10,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SearchPoster {
 
+    private static final String POSTER_URI = "http://image.tmdb.org/t/p/w342";
+
     @JsonAlias("poster_path")
-    private String poster;
+    private String path;
+
+    public String full() {
+        return POSTER_URI + path;
+    }
 }

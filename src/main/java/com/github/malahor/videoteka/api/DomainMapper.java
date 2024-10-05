@@ -9,30 +9,6 @@ import java.util.List;
 @ApplicationScoped
 public class DomainMapper {
 
-  private static final String POSTER_URI = "http://image.tmdb.org/t/p/w342";
-
-  public List<Show> mapSearchResult(SearchResult results, ShowType type) {
-    return results.getResults().stream()
-        .map(result -> mapToShow(result, type))
-        .sorted(Comparator.comparing(Show::getPopularity).reversed())
-        .toList();
-  }
-
-  private Show mapToShow(SearchResultShow result, ShowType type) {
-    var show = new Show();
-    show.setId(result.getId());
-    show.setTitle(result.getTitle());
-    show.setReleaseDate(result.getReleaseDate().formatted());
-    show.setPoster(POSTER_URI + result.getPoster());
-    show.setPopularity(result.getPopularity());
-    show.setShowType(type);
-    return show;
-  }
-
-  public String mapSearchPoster(SearchPoster result) {
-    return POSTER_URI + result.getPoster();
-  }
-
   public ShowDetails mapSearchDetails(SearchDetails details, ShowType type) {
     var showDetails = new ShowDetails();
     showDetails.setId(details.getId());
@@ -56,7 +32,7 @@ public class DomainMapper {
     collection.setName(tmdbCollection.getName());
     collection.setParts(
         tmdbCollection.getParts().stream()
-            .map(part -> mapToShow(part, ShowType.MOVIE))
+            .map(part -> Show.from(part, ShowType.MOVIE))
             .sorted(Comparator.comparing(Show::getReleaseDate))
             .toList());
     return collection;

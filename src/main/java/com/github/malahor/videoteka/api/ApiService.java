@@ -13,14 +13,13 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Comparator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 @ApplicationScoped
 @RequiredArgsConstructor
-@Slf4j
 public class ApiService {
 
   private final UriResolver uriResolver;
@@ -33,17 +32,19 @@ public class ApiService {
 
   public List<Show> search(String title, ShowType type) {
     var result = this.get(uriResolver.search(title, type), SearchResult.class);
-    return domainMapper.mapSearchResult(result, type);
+    return result.getResults().stream()
+        .map(r -> Show.from(r, type))
+        .sorted(Comparator.comparing(Show::getPopularity).reversed())
+        .toList();
   }
 
   public String poster(long id, ShowType type) {
     var result = this.get(uriResolver.poster(id, type), SearchPoster.class);
-    return domainMapper.mapSearchPoster(result);
+    return result.full();
   }
 
   public ShowDetails details(long id, ShowType type) {
     var result = this.get(uriResolver.details(id, type), SearchDetails.class);
-    log.info(String.valueOf(result.getReleaseDate().getValue()));
     return domainMapper.mapSearchDetails(result, type);
   }
 
