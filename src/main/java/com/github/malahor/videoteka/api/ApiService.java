@@ -15,10 +15,12 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 @ApplicationScoped
 @RequiredArgsConstructor
+@Slf4j
 public class ApiService {
 
   private final UriResolver uriResolver;
@@ -41,6 +43,7 @@ public class ApiService {
 
   public ShowDetails details(long id, ShowType type) {
     var result = this.get(uriResolver.details(id, type), SearchDetails.class);
+    log.info(String.valueOf(result.getReleaseDate().getValue()));
     return domainMapper.mapSearchDetails(result, type);
   }
 

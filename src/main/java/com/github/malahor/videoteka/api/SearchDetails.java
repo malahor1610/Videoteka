@@ -1,8 +1,10 @@
 package com.github.malahor.videoteka.api;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.util.List;
+
 import lombok.*;
 
 @NoArgsConstructor
@@ -20,8 +22,8 @@ public class SearchDetails {
 
   private String overview;
 
-  @JsonAlias({"first_air_date", "release_date"})
-  private String releaseDate;
+  @JsonUnwrapped
+  private SearchReleaseDate releaseDate;
 
   @JsonAlias("in_production")
   private Boolean inProduction;

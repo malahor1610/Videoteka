@@ -1,9 +1,8 @@
 package com.github.malahor.videoteka.api;
 
 import com.github.malahor.videoteka.domain.*;
-import com.github.malahor.videoteka.util.DateHandler;
 import jakarta.enterprise.context.ApplicationScoped;
-import java.time.LocalDate;
+
 import java.util.Comparator;
 import java.util.List;
 
@@ -23,7 +22,7 @@ public class DomainMapper {
     var show = new Show();
     show.setId(result.getId());
     show.setTitle(result.getTitle());
-    show.setReleaseDate(mapReleaseDate(result.getReleaseDate()));
+    show.setReleaseDate(result.getReleaseDate().formatted());
     show.setPoster(POSTER_URI + result.getPoster());
     show.setPopularity(result.getPopularity());
     show.setShowType(type);
@@ -40,7 +39,7 @@ public class DomainMapper {
     showDetails.setTitle(details.getTitle());
     showDetails.setOriginalTitle(details.getOriginalTitle());
     showDetails.setOverview(details.getOverview());
-    showDetails.setReleaseDate(mapReleaseDate(details.getReleaseDate()));
+    showDetails.setReleaseDate(details.getReleaseDate().formatted());
     showDetails.setContinuation(mapContinuation(details, type));
     showDetails.setDuration(String.valueOf(details.getRuntime()));
     showDetails.setGenres(details.getGenres());
@@ -96,13 +95,6 @@ public class DomainMapper {
         .toList();
   }
 
-  private String mapReleaseDate(String releaseDate) {
-    if (releaseDate == null || releaseDate.isEmpty()) return "";
-    var localDate = DateHandler.localDateOf(releaseDate);
-    if (localDate.isAfter(LocalDate.now())) return DateHandler.accurateDate(releaseDate);
-    return String.valueOf(localDate.getYear());
-  }
-
   private ShowContinuation mapContinuation(SearchDetails details, ShowType type) {
     if (type.equals(ShowType.SERIES)) return mapContinuation(details);
     return null;
@@ -112,8 +104,7 @@ public class DomainMapper {
     var continuation = new ShowContinuation();
     continuation.setInProduction(details.getInProduction());
     if (!continuation.isInProduction() || details.getContinuation() == null) return continuation;
-    continuation.setReleaseDate(
-        DateHandler.accurateDate(details.getContinuation().getReleaseDate()));
+    continuation.setReleaseDate(details.getContinuation().getReleaseDate().formatted());
     continuation.setSeason(details.getContinuation().getSeason());
     return continuation;
   }

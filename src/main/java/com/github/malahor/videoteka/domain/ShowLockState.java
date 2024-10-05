@@ -1,8 +1,6 @@
 package com.github.malahor.videoteka.domain;
 
-import com.github.malahor.videoteka.util.DateHandler;
-
-import java.time.LocalDate;
+import com.github.malahor.videoteka.api.SearchReleaseDate;
 
 public enum ShowLockState {
   UNLOCKED,
@@ -22,11 +20,10 @@ public enum ShowLockState {
     if (details.getContinuation() == null || !details.getContinuation().isInProduction())
       return LOCKED_NOT_IN_PRODUCTION;
     if (details.getContinuation().getReleaseDate() == null) return LOCKED_IN_PRODUCTION;
-    if (LocalDate.now().isBefore(DateHandler.localDateOf(details.getContinuation().getReleaseDate())))
+    if (new SearchReleaseDate(details.getContinuation().getReleaseDate()).isFuture())
       return LOCKED_DATE_CONFIRMED;
     return UNLOCKED;
   }
-
 
   public ShowLockState changed() {
     return switch (this) {
