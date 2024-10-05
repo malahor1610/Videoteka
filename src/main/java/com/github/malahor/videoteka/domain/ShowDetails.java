@@ -19,4 +19,5 @@ public class ShowDetails {
   private WatchProviders watchProviders;
   private ShowCollection collection;
   private List<ShowSeason> seasons;
+  private ShowWatchState watchState;
 }

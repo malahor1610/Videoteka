@@ -18,6 +18,11 @@ public class UriResolver {
     return URI.create(query);
   }
 
+  public URI poster(long id, ShowType type) {
+    var query = String.format(API_URI + "/%s/%d?language=en-US", typePath(type), id);
+    return URI.create(query);
+  }
+
   public URI details(long id, ShowType type) {
     var query =
         String.format(

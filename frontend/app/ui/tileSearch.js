@@ -7,7 +7,7 @@ import Poster from "./poster";
 import Title from "./title";
 import { LoadingContext } from "../layout";
 
-export default function TileSearch({ show, setMessage }) {
+export default function TileSearch({ show, setMessage, onCloseModal }) {
   const [modal, setModal] = useState(false);
   const [details, setDetails] = useState([]);
   const { loading, setLoading } = useContext(LoadingContext);
@@ -52,6 +52,7 @@ export default function TileSearch({ show, setMessage }) {
         modal={modal}
         setModal={setModal}
         button={addButton}
+        onClose={onCloseModal}
       />
     </>
   );

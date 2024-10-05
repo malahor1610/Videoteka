@@ -40,6 +40,9 @@ export function NavBar({ user }) {
         <Nav className="me-auto" navbar>
           <NavWatchlist />
           <NavItem>
+            <NavLink href="/watched">Obejrzane</NavLink>
+          </NavItem>
+          <NavItem>
             <NavLink href="/random">Losowe</NavLink>
           </NavItem>
           <NavItem>

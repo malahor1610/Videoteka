@@ -1,14 +1,15 @@
 "use client";
+import { useRouter } from "next/navigation";
 import { useContext } from "react";
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { LoadingContext } from "../layout";
+import { unwatchShow, watchShow } from "../lib/data";
+import Continuation from "./continuation";
 import Duration from "./duration";
 import Genres from "./genres";
 import Loading from "./loading";
 import Title from "./title";
 import WatchProviders from "./watchProviders";
-import { redirect, useRouter, useSearchParams } from "next/navigation";
-import Continuation from "./continuation";
 
 export default function Details({
   show,
@@ -17,9 +18,24 @@ export default function Details({
   button,
   buttons,
   collectionPart,
+  onClose
 }) {
   const { loading, setLoading } = useContext(LoadingContext);
   const router = useRouter();
+
+  async function markUnwatched() {
+    setLoading(true);
+    let result = await unwatchShow(show);
+    show.watchState = result.watchState;
+    setLoading(false);
+  }
+
+  async function markWatched() {
+    setLoading(true);
+    let result = await watchShow(show);
+    show.watchState = result.watchState;
+    setLoading(false);
+  }
 
   function goToCollection() {
     router.push(`/collection?id=${show.collection.id}`);
@@ -31,10 +47,15 @@ export default function Details({
       size="lg"
       isOpen={modal}
       toggle={() => setModal(!modal)}
+      onClosed={onClose}
     >
       <ModalHeader toggle={() => setModal(!modal)}>
         <Title show={show} />
-        <Duration duration={show.duration} seasons={show.seasons} type={show.showType} />
+        <Duration
+          duration={show.duration}
+          seasons={show.seasons}
+          type={show.showType}
+        />
       </ModalHeader>
       <ModalBody>
         <Continuation continuation={show.continuation} />
@@ -54,6 +75,15 @@ export default function Details({
         />
       </ModalBody>
       <ModalFooter>
+        {show.watchState?.indexOf("WATCHED") === 0 ? (
+          <Button color="secondary" onClick={markUnwatched}>
+            Nieobejrzane
+          </Button>
+        ) : (
+          <Button color="secondary" onClick={markWatched}>
+            Obejrzane
+          </Button>
+        )}
         {show.collection && !collectionPart ? (
           <Button color="success" onClick={goToCollection}>
             Zobacz {show.collection.name}

@@ -30,6 +30,10 @@ public class DomainMapper {
     return show;
   }
 
+  public String mapSearchPoster(SearchPoster result) {
+    return POSTER_URI + result.getPoster();
+  }
+
   public ShowDetails mapSearchDetails(SearchDetails details, ShowType type) {
     var showDetails = new ShowDetails();
     showDetails.setId(details.getId());

@@ -65,12 +65,30 @@ public class ShowRepository {
         .collect(Collectors.toList());
   }
 
+  public List<ShowEntity> findWatchlist(String user) {
+    var expression =
+        Expression.builder()
+            .expression("NOT watchState = :watched AND userId = :userId")
+            .expressionValues(
+                Map.of(
+                    ":watched",
+                    AttributeValue.fromS("WATCHED"),
+                    ":userId",
+                    AttributeValue.fromS(user)))
+            .build();
+    return showTable.scan(s -> s.consistentRead(true).filterExpression(expression)).items().stream()
+        .sorted(Comparator.comparingInt(ShowEntity::getPosition))
+        .collect(Collectors.toList());
+  }
+
   public List<ShowEntity> findByType(ShowType type, String user) {
     var expression =
         Expression.builder()
-            .expression("showType = :type AND userId = :userId")
+            .expression("NOT watchState = :watched AND showType = :type AND userId = :userId")
             .expressionValues(
                 Map.of(
+                    ":watched",
+                    AttributeValue.fromS("WATCHED"),
                     ":type",
                     AttributeValue.fromS(type.name()),
                     ":userId",
@@ -88,7 +106,7 @@ public class ShowRepository {
   public List<ShowEntity> findLocked() {
     var expression =
         Expression.builder()
-            .expression("begins_with(showStatus, :locked) AND NOT contains(showStatus, :changed)")
+            .expression("begins_with(lockState, :locked) AND NOT contains(showStatus, :changed)")
             .expressionValues(
                 Map.of(
                     ":locked",
@@ -99,5 +117,24 @@ public class ShowRepository {
     return showTable.scan(s -> s.consistentRead(true).filterExpression(expression)).items().stream()
         .sorted(Comparator.comparingInt(ShowEntity::getPosition))
         .collect(Collectors.toList());
+  }
+
+  public List<ShowEntity> findWatchedByType(ShowType type, String user) {
+    var expression =
+        Expression.builder()
+            .expression(
+                "begins_with(watchState, :watched) AND showType = :type AND userId = :userId")
+            .expressionValues(
+                Map.of(
+                    ":watched",
+                    AttributeValue.fromS("WATCHED"),
+                    ":type",
+                    AttributeValue.fromS(type.name()),
+                    ":userId",
+                    AttributeValue.fromS(user)))
+            .build();
+    return showTable.scan(s -> s.consistentRead(true).filterExpression(expression)).items().stream()
+        .sorted(Comparator.comparing(ShowEntity::getTitle))
+        .toList();
   }
 }

@@ -4,6 +4,7 @@ import com.github.malahor.videoteka.api.ApiService;
 import com.github.malahor.videoteka.domain.ShowEntity;
 import com.github.malahor.videoteka.domain.ShowLockState;
 import com.github.malahor.videoteka.domain.ShowType;
+import com.github.malahor.videoteka.domain.ShowWatchState;
 import com.github.malahor.videoteka.exception.ShowPresentOnWatchlistException;
 import com.github.malahor.videoteka.repository.ShowRepository;
 import jakarta.enterprise.context.RequestScoped;
@@ -33,11 +34,18 @@ public class ShowController {
   public Response save(ShowEntity show) {
     var username = getUserId();
     var shows = repository.findAll(username);
-    if (shows.stream().map(ShowEntity::getId).anyMatch(s -> s.equals(show.getId())))
-      throw new ShowPresentOnWatchlistException();
-    show.setPosition(maxPosition(shows));
-    show.setUserId(username);
-    repository.save(show);
+    var match = shows.stream().filter(s -> s.getId() == show.getId()).findFirst();
+    if (match.isPresent()) {
+      var toUpdate = match.get();
+      if (ShowWatchState.WATCHED.equals(match.get().getWatchState())) {
+        toUpdate.setWatchState(ShowWatchState.WATCHED_ON_LIST);
+        repository.update(toUpdate);
+      } else throw new ShowPresentOnWatchlistException();
+    } else {
+      show.setPosition(maxPosition(shows));
+      show.setUserId(username);
+      repository.save(show);
+    }
     return Response.ok(show).build();
   }
 
@@ -45,6 +53,39 @@ public class ShowController {
     var maxPosition = shows.isEmpty() ? 0 : shows.getLast().getPosition();
     maxPosition++;
     return maxPosition;
+  }
+
+  @PUT
+  @Path("/watched/{id}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response updateWatched(@PathParam("id") long id, @QueryParam("type") ShowType type) {
+    var username = getUserId();
+    var show = repository.findById(id, username);
+    if (show == null) {
+      show = findShow(id, type);
+      show.setUserId(username);
+      show.setWatchState(ShowWatchState.WATCHED);
+      repository.save(show);
+    } else {
+      show.setWatchState(ShowWatchState.WATCHED_ON_LIST);
+      repository.update(show);
+    }
+    return Response.ok(show).build();
+  }
+
+  @PUT
+  @Path("/unwatched/{id}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response updateUnwatched(@PathParam("id") long id) {
+    var username = getUserId();
+    var show = repository.findById(id, username);
+    if (ShowWatchState.WATCHED_ON_LIST.equals(show.getWatchState())) {
+      show.setWatchState(ShowWatchState.UNWATCHED);
+      repository.update(show);
+    } else if (ShowWatchState.WATCHED.equals(show.getWatchState()))
+      show.setWatchState(ShowWatchState.UNWATCHED);
+      repository.delete(show.getId(), username);
+    return Response.ok(show).build();
   }
 
   @PUT
@@ -89,7 +130,7 @@ public class ShowController {
   @Produces(MediaType.APPLICATION_JSON)
   public Response updatePositions(List<ShowEntity> shows) {
     var username = getUserId();
-    var dbShows = repository.findAll(username);
+    var dbShows = repository.findWatchlist(username);
     updatePositions(shows, dbShows);
     dbShows.sort(Comparator.comparingInt(ShowEntity::getPosition));
     return Response.ok(dbShows).build();
@@ -117,7 +158,11 @@ public class ShowController {
   @Path("/{id}")
   public Response delete(@PathParam("id") Long id) {
     var username = getUserId();
-    repository.delete(id, username);
+    var show = repository.findById(id, username);
+    if (ShowWatchState.WATCHED_ON_LIST.equals(show.getWatchState())) {
+      show.setWatchState(ShowWatchState.WATCHED);
+      repository.update(show);
+    } else repository.delete(show.getId(), username);
     return Response.ok().build();
   }
 
@@ -125,7 +170,7 @@ public class ShowController {
   @Produces(MediaType.APPLICATION_JSON)
   public Response getAll() {
     var username = getUserId();
-    var dbShows = (List<ShowEntity>) repository.findAll(username);
+    var dbShows = (List<ShowEntity>) repository.findWatchlist(username);
     return Response.ok(dbShows).build();
   }
 
@@ -136,6 +181,21 @@ public class ShowController {
     var username = getUserId();
     var dbShows = (List<ShowEntity>) repository.findByType(type, username);
     return Response.ok(dbShows).build();
+  }
+
+  @GET
+  @Path("/watched/{type}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getWatchedByType(@PathParam("type") ShowType type) {
+    var username = getUserId();
+    var dbShows = (List<ShowEntity>) repository.findWatchedByType(type, username);
+    return Response.ok(dbShows).build();
+  }
+
+  private ShowEntity findShow(long id, ShowType type) {
+    var poster = apiService.poster(id, type);
+    var details = apiService.details(id, type);
+    return ShowEntity.fromDetails(details, poster);
   }
 
   private String getUserId() {

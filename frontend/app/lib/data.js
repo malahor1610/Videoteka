@@ -21,6 +21,41 @@ export async function postShow(details, poster) {
   return await res.json();
 }
 
+export async function watchShow(show) {
+  checkToken();
+  const searchParams = new URLSearchParams({
+    type: show.showType,
+  }).toString();
+  let res = await fetch(
+    process.env.NEXT_PUBLIC_HOST + "/api/shows/watched/" + show.id + "?" + searchParams,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("idToken"),
+      },
+    }
+  );
+  checkStatus(res);
+  return await res.json();
+}
+
+export async function unwatchShow(show) {
+  checkToken();
+  let res = await fetch(
+    process.env.NEXT_PUBLIC_HOST + "/api/shows/unwatched/" + show.id,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("idToken"),
+      },
+    }
+  );
+  checkStatus(res);
+  return await res.json();
+}
+
 export async function lockShow(show) {
   checkToken();
   let res = await fetch(
@@ -114,6 +149,21 @@ export async function fetchShows(type) {
   checkToken();
   let res = await fetch(
     process.env.NEXT_PUBLIC_HOST + "/api/shows/type/" + type,
+    {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("idToken"),
+      },
+    }
+  );
+  checkStatus(res);
+  return await res.json();
+}
+
+export async function fetchWatched(type) {
+  checkToken();
+  let res = await fetch(
+    process.env.NEXT_PUBLIC_HOST + "/api/shows/watched/" + type,
     {
       method: "GET",
       headers: {

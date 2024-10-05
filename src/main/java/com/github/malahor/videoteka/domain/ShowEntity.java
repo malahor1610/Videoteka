@@ -1,12 +1,11 @@
 package com.github.malahor.videoteka.domain;
 
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
-
-import java.util.List;
 
 @Getter
 @Setter
@@ -28,4 +27,18 @@ public class ShowEntity {
   private ShowLockState lockState;
   private int position;
   private List<String> genres;
+  private ShowWatchState watchState;
+
+  public static ShowEntity fromDetails(ShowDetails details, String poster) {
+    var entity = new ShowEntity();
+    entity.setId(details.getId());
+    entity.setTitle(details.getTitle());
+    entity.setOriginalTitle(details.getOriginalTitle());
+    entity.setReleaseDate(details.getReleaseDate());
+    entity.setPoster(poster);
+    entity.setDuration(details.getDuration());
+    entity.setShowType(details.getShowType());
+    entity.setGenres(details.getGenres());
+    return entity;
+  }
 }

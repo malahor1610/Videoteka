@@ -59,6 +59,13 @@ public class StaticWebController {
     return getResource("META-INF/resources/collection.html");
   }
 
+  @GET
+  @Path("/watched")
+  @Produces(MediaType.TEXT_HTML)
+  public Response watchedPage() {
+    return getResource("META-INF/resources/watched.html");
+  }
+
   private Response getResource(String name) {
     var resource = getClass().getClassLoader().getResourceAsStream(name);
     return resource == null

@@ -34,6 +34,11 @@ public class ApiService {
     return domainMapper.mapSearchResult(result, type);
   }
 
+  public String poster(long id, ShowType type) {
+    var result = this.get(uriResolver.poster(id, type), SearchPoster.class);
+    return domainMapper.mapSearchPoster(result);
+  }
+
   public ShowDetails details(long id, ShowType type) {
     var result = this.get(uriResolver.details(id, type), SearchDetails.class);
     return domainMapper.mapSearchDetails(result, type);
