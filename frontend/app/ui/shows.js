@@ -51,7 +51,7 @@ export default function Shows({ type }) {
         .map((genre) => ({ name: genre, active: false }))
     );
     setLoading(false);
-  }, [openModal, setLoading]);
+  }, [setLoading]);
 
   useEffect(() => {
     getShows();
