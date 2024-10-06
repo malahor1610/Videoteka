@@ -39,7 +39,7 @@ export default function Watchlist() {
     openModal(changed);
     setShows(res);
     setLoading(false);
-  }, [openModal, setLoading]);
+  }, [setLoading]);
 
   useEffect(() => {
     getShows();
