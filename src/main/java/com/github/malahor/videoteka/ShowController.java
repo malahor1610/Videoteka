@@ -7,6 +7,7 @@ import com.github.malahor.videoteka.domain.ShowType;
 import com.github.malahor.videoteka.domain.ShowWatchState;
 import com.github.malahor.videoteka.exception.ShowPresentOnWatchlistException;
 import com.github.malahor.videoteka.repository.ShowRepository;
+import com.github.malahor.videoteka.util.UserProvider;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -17,7 +18,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.ListUtils;
-import org.eclipse.microprofile.jwt.JsonWebToken;
 
 @RequestScoped
 @Path("/api/shows")
@@ -26,13 +26,13 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 public class ShowController {
 
   private final ShowRepository repository;
-  private final JsonWebToken jwt;
   private final ApiService apiService;
+  private final UserProvider userProvider;
 
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   public Response save(ShowEntity show) {
-    var username = getUserId();
+    var username = userProvider.getUsername();
     var shows = repository.findAll(username);
     var match = shows.stream().filter(s -> s.getId() == show.getId()).findFirst();
     if (match.isPresent()) {
@@ -59,7 +59,7 @@ public class ShowController {
   @Path("/watched/{id}")
   @Produces(MediaType.APPLICATION_JSON)
   public Response updateWatched(@PathParam("id") long id, @QueryParam("type") ShowType type) {
-    var username = getUserId();
+    var username = userProvider.getUsername();
     var show = repository.findById(id, username);
     if (show == null) {
       show = findShow(id, type);
@@ -77,14 +77,14 @@ public class ShowController {
   @Path("/unwatched/{id}")
   @Produces(MediaType.APPLICATION_JSON)
   public Response updateUnwatched(@PathParam("id") long id) {
-    var username = getUserId();
+    var username = userProvider.getUsername();
     var show = repository.findById(id, username);
     if (ShowWatchState.WATCHED_ON_LIST.equals(show.getWatchState())) {
       show.setWatchState(ShowWatchState.UNWATCHED);
       repository.update(show);
     } else if (ShowWatchState.WATCHED.equals(show.getWatchState()))
       show.setWatchState(ShowWatchState.UNWATCHED);
-      repository.delete(show.getId(), username);
+    repository.delete(show.getId(), username);
     return Response.ok(show).build();
   }
 
@@ -92,7 +92,7 @@ public class ShowController {
   @Path("/lock/{id}")
   @Produces(MediaType.APPLICATION_JSON)
   public Response updateLock(@PathParam("id") long id) {
-    var username = getUserId();
+    var username = userProvider.getUsername();
     var show = repository.findById(id, username);
     var details = apiService.details(id, ShowType.SERIES);
     show.setLockState(ShowLockState.lockByDetails(details));
@@ -104,7 +104,7 @@ public class ShowController {
   @Path("/unlock/{id}")
   @Produces(MediaType.APPLICATION_JSON)
   public Response updateUnlock(@PathParam("id") long id) {
-    var username = getUserId();
+    var username = userProvider.getUsername();
     var show = repository.findById(id, username);
     show.setLockState(ShowLockState.UNLOCKED);
     repository.update(show);
@@ -115,7 +115,7 @@ public class ShowController {
   @Path("/locks")
   @Produces(MediaType.APPLICATION_JSON)
   public Response updateLocks(List<ShowEntity> shows) {
-    var username = getUserId();
+    var username = userProvider.getUsername();
     shows.forEach(
         show -> {
           var dbShow = repository.findById(show.getId(), username);
@@ -129,7 +129,7 @@ public class ShowController {
   @Path("/positions")
   @Produces(MediaType.APPLICATION_JSON)
   public Response updatePositions(List<ShowEntity> shows) {
-    var username = getUserId();
+    var username = userProvider.getUsername();
     var dbShows = repository.findWatchlist(username);
     updatePositions(shows, dbShows);
     dbShows.sort(Comparator.comparingInt(ShowEntity::getPosition));
@@ -157,7 +157,7 @@ public class ShowController {
   @DELETE
   @Path("/{id}")
   public Response delete(@PathParam("id") Long id) {
-    var username = getUserId();
+    var username = userProvider.getUsername();
     var show = repository.findById(id, username);
     if (ShowWatchState.WATCHED_ON_LIST.equals(show.getWatchState())) {
       show.setWatchState(ShowWatchState.WATCHED);
@@ -169,7 +169,7 @@ public class ShowController {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public Response getAll() {
-    var username = getUserId();
+    var username = userProvider.getUsername();
     var dbShows = (List<ShowEntity>) repository.findWatchlist(username);
     return Response.ok(dbShows).build();
   }
@@ -178,7 +178,7 @@ public class ShowController {
   @Path("/type/{type}")
   @Produces(MediaType.APPLICATION_JSON)
   public Response getByType(@PathParam("type") ShowType type) {
-    var username = getUserId();
+    var username = userProvider.getUsername();
     var dbShows = (List<ShowEntity>) repository.findByType(type, username);
     return Response.ok(dbShows).build();
   }
@@ -187,7 +187,7 @@ public class ShowController {
   @Path("/watched/{type}")
   @Produces(MediaType.APPLICATION_JSON)
   public Response getWatchedByType(@PathParam("type") ShowType type) {
-    var username = getUserId();
+    var username = userProvider.getUsername();
     var dbShows = (List<ShowEntity>) repository.findWatchedByType(type, username);
     return Response.ok(dbShows).build();
   }
@@ -196,9 +196,5 @@ public class ShowController {
     var poster = apiService.poster(id, type);
     var details = apiService.details(id, type);
     return ShowEntity.fromDetails(details, poster);
-  }
-
-  private String getUserId() {
-    return (String) jwt.claim("cognito:username").orElseGet(() -> jwt.getClaim("email"));
   }
 }

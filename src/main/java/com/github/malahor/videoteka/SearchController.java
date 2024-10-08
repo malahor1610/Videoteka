@@ -4,6 +4,7 @@ import com.github.malahor.videoteka.api.ApiService;
 import com.github.malahor.videoteka.domain.ShowType;
 import com.github.malahor.videoteka.exception.ShowsNotFoundException;
 import com.github.malahor.videoteka.repository.ShowRepository;
+import com.github.malahor.videoteka.util.UserProvider;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -11,7 +12,6 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
-import org.eclipse.microprofile.jwt.JsonWebToken;
 
 @RequestScoped
 @Path("/api/search")
@@ -20,7 +20,7 @@ public class SearchController {
 
   private final ApiService service;
   private final ShowRepository repository;
-  private final JsonWebToken jwt;
+  private final UserProvider userProvider;
 
   @GET
   public Response searchFor(@QueryParam("title") String title, @QueryParam("type") ShowType type) {
@@ -32,7 +32,7 @@ public class SearchController {
   @GET
   @Path("/{id}")
   public Response searchDetails(@PathParam("id") long id, @QueryParam("type") ShowType type) {
-    var username = getUserId();
+    var username = userProvider.getUsername();
     var details = service.details(id, type);
     var show = repository.findById(id, username);
     if(show != null) details.setWatchState(show.getWatchState());
@@ -46,7 +46,4 @@ public class SearchController {
     return Response.ok(details).build();
   }
 
-  private String getUserId() {
-    return (String) jwt.claim("cognito:username").orElseGet(() -> jwt.getClaim("email"));
-  }
 }
