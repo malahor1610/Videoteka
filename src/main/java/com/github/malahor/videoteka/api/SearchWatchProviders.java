@@ -7,7 +7,7 @@ import java.util.Optional;
 import lombok.Getter;
 
 @Getter
-class SearchWatchProviders {
+public class SearchWatchProviders {
   private List<String> flatrate;
   private List<String> rent;
   private List<String> buy;

@@ -24,7 +24,6 @@ public class ApiService {
 
   private final UriResolver uriResolver;
   private final ObjectMapper mapper;
-  private final DomainMapper domainMapper;
 
   @Inject
   @ConfigProperty(name = "api.key")
@@ -45,12 +44,12 @@ public class ApiService {
 
   public ShowDetails details(long id, ShowType type) {
     var result = this.get(uriResolver.details(id, type), SearchDetails.class);
-    return domainMapper.mapSearchDetails(result, type);
+    return ShowDetails.from(result, type);
   }
 
   public ShowCollectionDetails collection(long id) {
     var result = this.get(uriResolver.collection(id), SearchCollectionDetails.class);
-    return domainMapper.mapSearchCollectionDetails(result);
+    return ShowCollectionDetails.from(result);
   }
 
   private <T> T get(URI uri, Class<T> resultType) {

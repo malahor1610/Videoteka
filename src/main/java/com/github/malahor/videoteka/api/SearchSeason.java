@@ -16,4 +16,8 @@ public class SearchSeason {
 
   @JsonAlias("air_date")
   private String releaseDate;
+
+  public boolean isApplicable(){
+    return number > 0 && episodes > 0;
+  }
 }
