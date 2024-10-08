@@ -2,12 +2,8 @@ package com.github.malahor.videoteka.api;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
 public class SearchResultShow {
 
@@ -18,11 +14,9 @@ public class SearchResultShow {
 
   private String overview;
 
-  @JsonUnwrapped
-  private SearchReleaseDate releaseDate;
+  @JsonUnwrapped private SearchReleaseDate releaseDate;
 
-  @JsonUnwrapped
-  private SearchPoster poster;
+  @JsonUnwrapped private SearchPoster poster;
 
   private double popularity;
 }

@@ -4,11 +4,8 @@ import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.util.List;
-
 import lombok.*;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
 public class SearchDetails {
 
@@ -22,8 +19,7 @@ public class SearchDetails {
 
   private String overview;
 
-  @JsonUnwrapped
-  private SearchReleaseDate releaseDate;
+  @JsonUnwrapped private SearchReleaseDate releaseDate;
 
   @JsonAlias("in_production")
   private Boolean inProduction;
