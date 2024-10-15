@@ -1,5 +1,5 @@
 export async function postShow(details, poster) {
-  checkToken();
+  await checkToken();
   let res = await fetch(process.env.NEXT_PUBLIC_HOST + "/api/shows", {
     method: "POST",
     headers: {
@@ -14,7 +14,7 @@ export async function postShow(details, poster) {
       poster: poster,
       duration: details.duration,
       showType: details.showType,
-      genres: details.genres
+      genres: details.genres,
     }),
   });
   checkStatus(res);
@@ -22,12 +22,16 @@ export async function postShow(details, poster) {
 }
 
 export async function watchShow(show) {
-  checkToken();
+  await checkToken();
   const searchParams = new URLSearchParams({
     type: show.showType,
   }).toString();
   let res = await fetch(
-    process.env.NEXT_PUBLIC_HOST + "/api/shows/watched/" + show.id + "?" + searchParams,
+    process.env.NEXT_PUBLIC_HOST +
+      "/api/shows/watched/" +
+      show.id +
+      "?" +
+      searchParams,
     {
       method: "PUT",
       headers: {
@@ -41,7 +45,7 @@ export async function watchShow(show) {
 }
 
 export async function unwatchShow(show) {
-  checkToken();
+  await checkToken();
   let res = await fetch(
     process.env.NEXT_PUBLIC_HOST + "/api/shows/unwatched/" + show.id,
     {
@@ -57,7 +61,7 @@ export async function unwatchShow(show) {
 }
 
 export async function lockShow(show) {
-  checkToken();
+  await checkToken();
   let res = await fetch(
     process.env.NEXT_PUBLIC_HOST + "/api/shows/lock/" + show.id,
     {
@@ -73,7 +77,7 @@ export async function lockShow(show) {
 }
 
 export async function unlockShow(show) {
-  checkToken();
+  await checkToken();
   let res = await fetch(
     process.env.NEXT_PUBLIC_HOST + "/api/shows/unlock/" + show.id,
     {
@@ -89,7 +93,7 @@ export async function unlockShow(show) {
 }
 
 export async function updateShowsLocks(list) {
-  checkToken();
+  await checkToken();
   let res = await fetch(process.env.NEXT_PUBLIC_HOST + "/api/shows/locks", {
     method: "PUT",
     headers: {
@@ -102,7 +106,7 @@ export async function updateShowsLocks(list) {
 }
 
 export async function updateShowsPositions(list) {
-  checkToken();
+  await checkToken();
   let res = await fetch(process.env.NEXT_PUBLIC_HOST + "/api/shows/positions", {
     method: "PUT",
     headers: {
@@ -116,7 +120,7 @@ export async function updateShowsPositions(list) {
 }
 
 export async function deleteShow(show) {
-  checkToken();
+  await checkToken();
   let res = await fetch(
     process.env.NEXT_PUBLIC_HOST + "/api/shows/" + show.id,
     {
@@ -131,22 +135,19 @@ export async function deleteShow(show) {
 }
 
 export async function fetchAllShows() {
-  checkToken();
-  let res = await fetch(
-    process.env.NEXT_PUBLIC_HOST + "/api/shows",
-    {
-      method: "GET",
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("idToken"),
-      },
-    }
-  );
+  await checkToken();
+  let res = await fetch(process.env.NEXT_PUBLIC_HOST + "/api/shows", {
+    method: "GET",
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("idToken"),
+    },
+  });
   checkStatus(res);
   return await res.json();
 }
 
 export async function fetchShows(type) {
-  checkToken();
+  await checkToken();
   let res = await fetch(
     process.env.NEXT_PUBLIC_HOST + "/api/shows/type/" + type,
     {
@@ -161,7 +162,7 @@ export async function fetchShows(type) {
 }
 
 export async function fetchWatched(type) {
-  checkToken();
+  await checkToken();
   let res = await fetch(
     process.env.NEXT_PUBLIC_HOST + "/api/shows/watched/" + type,
     {
@@ -176,7 +177,7 @@ export async function fetchWatched(type) {
 }
 
 export async function fetchSearch(title, type) {
-  checkToken();
+  await checkToken();
   const searchParams = new URLSearchParams({
     title: title,
     type: type,
@@ -195,7 +196,7 @@ export async function fetchSearch(title, type) {
 }
 
 export async function fetchDetails(show) {
-  checkToken();
+  await checkToken();
   const searchParams = new URLSearchParams({
     type: show.showType,
   }).toString();
@@ -217,11 +218,9 @@ export async function fetchDetails(show) {
 }
 
 export async function fetchSearchCollection(id) {
-  checkToken();
+  await checkToken();
   let res = await fetch(
-    process.env.NEXT_PUBLIC_HOST +
-      "/api/search/collection/" +
-      id,
+    process.env.NEXT_PUBLIC_HOST + "/api/search/collection/" + id,
     {
       method: "GET",
       headers: {
@@ -260,6 +259,7 @@ export async function exchangeCodeForToken() {
     if (data.id_token) {
       console.log("Got the token");
       localStorage.setItem("idToken", data.id_token);
+      localStorage.setItem("refreshToken", data.refresh_token);
       return true;
     } else {
       console.error("Błąd przy wymianie kodu na token:", data);
@@ -279,28 +279,23 @@ export function logout() {
   window.location.href = logoutUrl;
 }
 
-function checkToken() {
+async function checkToken() {
   const idToken = localStorage.getItem("idToken");
   const refreshToken = localStorage.getItem("refreshToken");
-
-  const checkAndRefreshToken = async () => {
-    if (!idToken || isTokenExpired(idToken)) {
-      if (refreshToken) {
-        try {
-          await refreshTokens(refreshToken);
-        } catch (error) {
-          console.error(
-            "Odświeżenie tokena nie powiodło się, przekierowanie do logowania"
-          );
-          redirectToLogin();
-        }
-      } else {
+  if (!idToken || isTokenExpired(idToken)) {
+    if (refreshToken) {
+      try {
+        await refreshTokens(refreshToken);
+      } catch (error) {
+        console.error(
+          "Odświeżenie tokena nie powiodło się, przekierowanie do logowania"
+        );
         redirectToLogin();
       }
+    } else {
+      redirectToLogin();
     }
-  };
-
-  checkAndRefreshToken();
+  }
 }
 
 export function parseJwt(token) {
