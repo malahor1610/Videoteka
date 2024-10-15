@@ -34,6 +34,15 @@ The shows are provided by [TMDB API](https://developer.themoviedb.org/docs/getti
 - Turning on the notifications about tv series, to display information when the series has an "in production" status, or the release date is confirmed, also about new seasons,
 - Adding the excluded shows back to randomize pool.
 
+### 1.2
+
+- Clearing input button for searching functionality,
+- Displaying more details about a show - list tv series seasons with names and episodes count,
+- Filtering shows on the watchlist based on the genres,
+- Filtering shows in the randomize pool based on the genres,
+- Marking shows as watched/unwatched,
+- Displaying a list of shows marked as watched.
+
 ## Local run
 
 ### Prerequisites
