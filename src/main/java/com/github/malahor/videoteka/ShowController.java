@@ -195,6 +195,6 @@ public class ShowController {
   private ShowEntity findShow(long id, ShowType type) {
     var poster = apiService.poster(id, type);
     var details = apiService.details(id, type);
-    return ShowEntity.fromDetails(details, poster);
+    return ShowEntity.from(details, poster);
   }
 }

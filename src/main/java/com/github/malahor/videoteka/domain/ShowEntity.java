@@ -29,7 +29,7 @@ public class ShowEntity {
   private List<String> genres;
   private ShowWatchState watchState;
 
-  public static ShowEntity fromDetails(ShowDetails details, String poster) {
+  public static ShowEntity from(ShowDetails details, String poster) {
     var entity = new ShowEntity();
     entity.setId(details.getId());
     entity.setTitle(details.getTitle());

@@ -23,7 +23,7 @@ export function NavBar({ user }) {
     if (token) {
       const decodedToken = parseJwt(token);
       if (decodedToken) {
-        setUsername(decodedToken["cognito:username"] || decodedToken["email"]);
+        setUsername(decodedToken["cognito:username"]);
       }
     }
   }, []);
