@@ -1,22 +1,22 @@
-export async function postShow(details, poster) {
+export async function postShow(details) {
   await checkToken();
-  let res = await fetch(process.env.NEXT_PUBLIC_HOST + "/api/shows", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + localStorage.getItem("idToken"),
-    },
-    body: JSON.stringify({
-      id: details.id,
-      title: details.title,
-      originalTitle: details.originalTitle,
-      releaseDate: details.releaseDate,
-      poster: poster,
-      duration: details.duration,
-      showType: details.showType,
-      genres: details.genres,
-    }),
-  });
+  const searchParams = new URLSearchParams({
+    type: details.showType,
+  }).toString();
+  let res = await fetch(
+    process.env.NEXT_PUBLIC_HOST +
+      "/api/shows/" +
+      details.id +
+      "?" +
+      searchParams,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("idToken"),
+      },
+    }
+  );
   checkStatus(res);
   return await res.json();
 }

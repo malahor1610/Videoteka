@@ -1,10 +1,13 @@
 package com.github.malahor.videoteka;
 
+import static com.github.malahor.videoteka.domain.ShowLockState.UNLOCKED;
+import static com.github.malahor.videoteka.domain.ShowType.SERIES;
+import static com.github.malahor.videoteka.domain.ShowWatchState.*;
+
 import com.github.malahor.videoteka.api.ApiService;
 import com.github.malahor.videoteka.domain.ShowEntity;
 import com.github.malahor.videoteka.domain.ShowLockState;
 import com.github.malahor.videoteka.domain.ShowType;
-import com.github.malahor.videoteka.domain.ShowWatchState;
 import com.github.malahor.videoteka.exception.ShowPresentOnWatchlistException;
 import com.github.malahor.videoteka.repository.ShowRepository;
 import com.github.malahor.videoteka.util.UserProvider;
@@ -30,29 +33,22 @@ public class ShowController {
   private final UserProvider userProvider;
 
   @POST
+  @Path("/{id}")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response save(ShowEntity show) {
+  public Response save(@PathParam("id") long id, @QueryParam("type") ShowType type) {
+    ShowEntity show;
     var username = userProvider.getUsername();
     var shows = repository.findAll(username);
-    var match = shows.stream().filter(s -> s.getId() == show.getId()).findFirst();
+    var match = shows.stream().filter(s -> s.getId() == id).findFirst();
     if (match.isPresent()) {
-      var toUpdate = match.get();
-      if (ShowWatchState.WATCHED.equals(match.get().getWatchState())) {
-        toUpdate.setWatchState(ShowWatchState.WATCHED_ON_LIST);
-        repository.update(toUpdate);
-      } else throw new ShowPresentOnWatchlistException();
+      show = match.get();
+      if (!show.isWatchedNotOnList()) throw new ShowPresentOnWatchlistException();
+      else repository.update(show.withMaxPositionOf(shows).withWatchState(WATCHED_ON_LIST));
     } else {
-      show.setPosition(maxPosition(shows));
-      show.setUserId(username);
+      show = createShow(id, type, username).withMaxPositionOf(shows);
       repository.save(show);
     }
     return Response.ok(show).build();
-  }
-
-  private int maxPosition(List<ShowEntity> shows) {
-    var maxPosition = shows.isEmpty() ? 0 : shows.getLast().getPosition();
-    maxPosition++;
-    return maxPosition;
   }
 
   @PUT
@@ -62,13 +58,10 @@ public class ShowController {
     var username = userProvider.getUsername();
     var show = repository.findById(id, username);
     if (show == null) {
-      show = findShow(id, type);
-      show.setUserId(username);
-      show.setWatchState(ShowWatchState.WATCHED);
+      show = createShow(id, type, username).withWatchState(WATCHED);
       repository.save(show);
     } else {
-      show.setWatchState(ShowWatchState.WATCHED_ON_LIST);
-      repository.update(show);
+      repository.update(show.withWatchState(WATCHED_ON_LIST));
     }
     return Response.ok(show).build();
   }
@@ -79,12 +72,8 @@ public class ShowController {
   public Response updateUnwatched(@PathParam("id") long id) {
     var username = userProvider.getUsername();
     var show = repository.findById(id, username);
-    if (ShowWatchState.WATCHED_ON_LIST.equals(show.getWatchState())) {
-      show.setWatchState(ShowWatchState.UNWATCHED);
-      repository.update(show);
-    } else if (ShowWatchState.WATCHED.equals(show.getWatchState()))
-      show.setWatchState(ShowWatchState.UNWATCHED);
-    repository.delete(show.getId(), username);
+    if (show.isWatchedOnList()) repository.update(show.withWatchState(UNWATCHED));
+    if (show.isWatchedNotOnList()) repository.delete(show.getId(), username);
     return Response.ok(show).build();
   }
 
@@ -94,9 +83,8 @@ public class ShowController {
   public Response updateLock(@PathParam("id") long id) {
     var username = userProvider.getUsername();
     var show = repository.findById(id, username);
-    var details = apiService.details(id, ShowType.SERIES);
-    show.setLockState(ShowLockState.lockByDetails(details));
-    repository.update(show);
+    var details = apiService.details(id, SERIES);
+    repository.update(show.withLockState(ShowLockState.lockByDetails(details)));
     return Response.ok(show).build();
   }
 
@@ -106,8 +94,7 @@ public class ShowController {
   public Response updateUnlock(@PathParam("id") long id) {
     var username = userProvider.getUsername();
     var show = repository.findById(id, username);
-    show.setLockState(ShowLockState.UNLOCKED);
-    repository.update(show);
+    repository.update(show.withLockState(UNLOCKED));
     return Response.ok(show).build();
   }
 
@@ -119,8 +106,7 @@ public class ShowController {
     shows.forEach(
         show -> {
           var dbShow = repository.findById(show.getId(), username);
-          dbShow.setLockState(show.getLockState().changed());
-          repository.update(dbShow);
+          repository.update(dbShow.withLockState(show.getLockState().changed()));
         });
     return Response.ok().build();
   }
@@ -131,27 +117,27 @@ public class ShowController {
   public Response updatePositions(List<ShowEntity> shows) {
     var username = userProvider.getUsername();
     var dbShows = repository.findWatchlist(username);
-    updatePositions(shows, dbShows);
+    updatePositions(dbShows, shows);
     dbShows.sort(Comparator.comparingInt(ShowEntity::getPosition));
     return Response.ok(dbShows).build();
   }
 
-  private void updatePositions(List<ShowEntity> shows, List<ShowEntity> dbShows) {
-    var changedShows = new ArrayList<ShowEntity>();
+  private void updatePositions(List<ShowEntity> dbShows, List<ShowEntity> shows) {
+    var showsToUpdate = new ArrayList<ShowEntity>();
     for (var dbShow : dbShows) {
-      int matchShowPosition =
-          shows.stream()
-              .filter(show -> show.getId() == dbShow.getId())
-              .findFirst()
-              .map(ShowEntity::getPosition)
-              .orElse(dbShow.getPosition());
-      if (matchShowPosition != dbShow.getPosition()) {
-        dbShow.setPosition(matchShowPosition);
-        changedShows.add(dbShow);
-      }
+      int newPosition = findMatchingShowPosition(shows, dbShow);
+      if (newPosition != dbShow.getPosition()) showsToUpdate.add(dbShow.withPosition(newPosition));
     }
-    var partitions = ListUtils.partition(changedShows, 100);
+    var partitions = ListUtils.partition(showsToUpdate, 100);
     partitions.forEach(repository::update);
+  }
+
+  private int findMatchingShowPosition(List<ShowEntity> shows, ShowEntity dbShow) {
+    return shows.stream()
+        .filter(show -> show.getId() == dbShow.getId())
+        .findFirst()
+        .map(ShowEntity::getPosition)
+        .orElse(dbShow.getPosition());
   }
 
   @DELETE
@@ -159,10 +145,8 @@ public class ShowController {
   public Response delete(@PathParam("id") Long id) {
     var username = userProvider.getUsername();
     var show = repository.findById(id, username);
-    if (ShowWatchState.WATCHED_ON_LIST.equals(show.getWatchState())) {
-      show.setWatchState(ShowWatchState.WATCHED);
-      repository.update(show);
-    } else repository.delete(show.getId(), username);
+    if (show.isWatchedOnList()) repository.update(show.withWatchState(WATCHED));
+    else repository.delete(show.getId(), username);
     return Response.ok().build();
   }
 
@@ -192,9 +176,9 @@ public class ShowController {
     return Response.ok(dbShows).build();
   }
 
-  private ShowEntity findShow(long id, ShowType type) {
+  private ShowEntity createShow(long id, ShowType type, String username) {
     var poster = apiService.poster(id, type);
     var details = apiService.details(id, type);
-    return ShowEntity.from(details, poster);
+    return ShowEntity.from(details, poster, username);
   }
 }

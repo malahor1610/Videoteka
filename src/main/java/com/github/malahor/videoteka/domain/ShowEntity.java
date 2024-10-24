@@ -29,7 +29,7 @@ public class ShowEntity {
   private List<String> genres;
   private ShowWatchState watchState;
 
-  public static ShowEntity from(ShowDetails details, String poster) {
+  public static ShowEntity from(ShowDetails details, String poster, String user) {
     var entity = new ShowEntity();
     entity.setId(details.getId());
     entity.setTitle(details.getTitle());
@@ -39,6 +39,42 @@ public class ShowEntity {
     entity.setDuration(details.getDuration());
     entity.setShowType(details.getShowType());
     entity.setGenres(details.getGenres());
+    entity.setUserId(user);
     return entity;
+  }
+
+  public ShowEntity withUser(String user) {
+    this.userId = user;
+    return this;
+  }
+
+  public ShowEntity withMaxPositionOf(List<ShowEntity> shows) {
+    var maxPosition = shows.isEmpty() ? 0 : shows.getLast().getPosition();
+    maxPosition++;
+    this.position = maxPosition;
+    return this;
+  }
+
+  public ShowEntity withPosition(int position) {
+    this.position = position;
+    return this;
+  }
+
+  public boolean isWatchedOnList() {
+    return ShowWatchState.WATCHED_ON_LIST.equals(watchState);
+  }
+
+  public boolean isWatchedNotOnList() {
+    return ShowWatchState.WATCHED.equals(watchState);
+  }
+
+  public ShowEntity withWatchState(ShowWatchState watchState) {
+    this.watchState = watchState;
+    return this;
+  }
+
+  public ShowEntity withLockState(ShowLockState lockState) {
+    this.lockState = lockState;
+    return this;
   }
 }
