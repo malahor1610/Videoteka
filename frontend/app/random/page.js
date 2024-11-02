@@ -24,7 +24,7 @@ export default function Random() {
     setGenres(
       [...new Set(res.map((r) => r.genres).flat())]
         .sort()
-        .map((genre) => ({ name: genre, active: false }))
+        .map((genre) => ({ name: genre, active: false, excluded: false }))
     );
     setLoading(false);
   }, [type, setShows, setLoading]);
