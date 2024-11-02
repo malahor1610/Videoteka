@@ -2,6 +2,7 @@ package com.github.malahor.videoteka;
 
 import com.github.malahor.videoteka.api.ApiService;
 import com.github.malahor.videoteka.domain.ShowType;
+import com.github.malahor.videoteka.domain.ShowWatchState;
 import com.github.malahor.videoteka.exception.ShowsNotFoundException;
 import com.github.malahor.videoteka.repository.ShowRepository;
 import com.github.malahor.videoteka.util.UserProvider;
@@ -35,7 +36,7 @@ public class SearchController {
     var username = userProvider.getUsername();
     var details = service.details(id, type);
     var show = repository.findById(id, username);
-    if(show != null) details.setWatchState(show.getWatchState());
+    if (show != null) details.withWatchState(show.getWatchState());
     return Response.ok(details).build();
   }
 
@@ -45,5 +46,4 @@ public class SearchController {
     var details = service.collection(id);
     return Response.ok(details).build();
   }
-
 }

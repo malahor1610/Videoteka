@@ -49,4 +49,8 @@ public class ShowDetails {
                 .orElse(null))
         .build();
   }
+
+  public void withWatchState(ShowWatchState watchState) {
+    this.watchState = Optional.ofNullable(watchState).orElse(ShowWatchState.UNWATCHED);
+  }
 }

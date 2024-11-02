@@ -30,8 +30,8 @@ export default function TileSearch({ show, setMessage, onCloseModal }) {
   }
 
   const addButton = (
-    <Button color="primary" onClick={addToWatchlist}>
-      Dodaj do listy
+    <Button color="primary" onClick={addToWatchlist} disabled={details.watchState === "WATCHED_ON_LIST" || details.watchState === "UNWATCHED"}>
+      {details.watchState === "WATCHED_ON_LIST" || details.watchState === "UNWATCHED" ? "Pozycja na liście" : "Dodaj do listy"}
     </Button>
   );
 
