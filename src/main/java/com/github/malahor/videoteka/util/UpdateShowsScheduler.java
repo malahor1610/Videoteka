@@ -14,25 +14,25 @@ import lombok.extern.slf4j.Slf4j;
 @ApplicationScoped
 @RequiredArgsConstructor
 @Slf4j
-public class UpdateSeriesStatus {
+public class UpdateShowsScheduler {
 
   private final ShowRepository repository;
   private final ApiService apiService;
 
   @Scheduled(cron = "0 33 3 * * ?")
   void cronJob() {
-    log.info("Rozpoczęto aktualizację stanu seriali");
-    updateStatuses(repository.findAll());
-    log.info("Zakończono aktualizację stanu seriali");
+    log.info("Started updating the shows");
+    updateShows(repository.findAll());
+    log.info("Finished updating the shows");
   }
 
-  private void updateStatuses(List<ShowEntity> shows) {
+  private void updateShows(List<ShowEntity> shows) {
     shows.stream()
         .filter(show -> ShowType.SERIES.equals(show.getShowType()))
-        .forEach(this::updateStatus);
+        .forEach(this::updateShow);
   }
 
-  private void updateStatus(ShowEntity show) {
+  private void updateShow(ShowEntity show) {
     var applicableForUpdate = false;
     var details = apiService.details(show.getId(), show.getShowType());
     if (!show.getDuration().equals(details.getDuration())) {
@@ -48,7 +48,7 @@ public class UpdateSeriesStatus {
     }
     if (applicableForUpdate) {
       repository.update(show);
-      log.info("Zaktualizowano " + show.getTitle() + " użytkownika " + show.getUserId());
+      log.info("Updated " + show.getTitle() + " of user " + show.getUserId());
     }
   }
 }
