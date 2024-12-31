@@ -5,6 +5,7 @@ import com.github.malahor.videoteka.domain.ShowType;
 import com.github.malahor.videoteka.domain.ShowWatchState;
 import com.github.malahor.videoteka.exception.ShowsNotFoundException;
 import com.github.malahor.videoteka.repository.ShowRepository;
+import com.github.malahor.videoteka.util.MemoryLog;
 import com.github.malahor.videoteka.util.UserProvider;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.ws.rs.GET;
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RequestScoped
 @Path("/api/search")
 @RequiredArgsConstructor
+@MemoryLog
 public class SearchController {
 
   private final ApiService service;

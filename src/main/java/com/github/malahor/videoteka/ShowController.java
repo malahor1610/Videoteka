@@ -10,6 +10,7 @@ import com.github.malahor.videoteka.domain.ShowLockState;
 import com.github.malahor.videoteka.domain.ShowType;
 import com.github.malahor.videoteka.exception.ShowPresentOnWatchlistException;
 import com.github.malahor.videoteka.repository.ShowRepository;
+import com.github.malahor.videoteka.util.MemoryLog;
 import com.github.malahor.videoteka.util.UserProvider;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.ws.rs.*;
@@ -26,6 +27,7 @@ import org.apache.commons.collections4.ListUtils;
 @Path("/api/shows")
 @Slf4j
 @RequiredArgsConstructor
+@MemoryLog
 public class ShowController {
 
   private final ShowRepository repository;

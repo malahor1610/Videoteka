@@ -19,6 +19,7 @@ public class UpdateShowsScheduler {
   private final ShowRepository repository;
   private final ApiService apiService;
 
+  @MemoryLog
   @Scheduled(cron = "0 33 3 * * ?")
   void cronJob() {
     log.info("Started updating the shows");
