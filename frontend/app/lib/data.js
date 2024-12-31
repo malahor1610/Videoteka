@@ -161,6 +161,21 @@ export async function fetchShows(type) {
   return await res.json();
 }
 
+export async function fetchReleased(type) {
+  await checkToken();
+  let res = await fetch(
+    process.env.NEXT_PUBLIC_HOST + "/api/shows/released/" + type,
+    {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("idToken"),
+      },
+    }
+  );
+  checkStatus(res);
+  return await res.json();
+}
+
 export async function fetchWatched(type) {
   await checkToken();
   let res = await fetch(

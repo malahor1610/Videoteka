@@ -99,6 +99,27 @@ public class ShowRepository {
         .toList();
   }
 
+  public List<ShowEntity> findReleasedByType(ShowType type, String user) {
+    var expression =
+        Expression.builder()
+            .expression(
+                "NOT watchState = :watched AND showType = :type AND size(releaseDate) = :yearSize AND userId = :userId")
+            .expressionValues(
+                Map.of(
+                    ":watched",
+                    AttributeValue.fromS("WATCHED"),
+                    ":type",
+                    AttributeValue.fromS(type.name()),
+                    ":yearSize",
+                    AttributeValue.fromN("4"),
+                    ":userId",
+                    AttributeValue.fromS(user)))
+            .build();
+    return showTable.scan(s -> s.consistentRead(true).filterExpression(expression)).items().stream()
+        .sorted(Comparator.comparingInt(ShowEntity::getPosition))
+        .toList();
+  }
+
   public ShowEntity findById(long id, String user) {
     return showTable.getItem(r -> r.key(k -> k.partitionValue(id).sortValue(user)));
   }

@@ -170,6 +170,15 @@ public class ShowController {
   }
 
   @GET
+  @Path("/released/{type}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getReleasedByType(@PathParam("type") ShowType type) {
+    var username = userProvider.getUsername();
+    var dbShows = repository.findReleasedByType(type, username);
+    return Response.ok(dbShows).build();
+  }
+
+  @GET
   @Path("/watched/{type}")
   @Produces(MediaType.APPLICATION_JSON)
   public Response getWatchedByType(@PathParam("type") ShowType type) {

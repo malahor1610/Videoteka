@@ -1,11 +1,11 @@
 "use client";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { Button, Col, Row } from "reactstrap";
-import { fetchShows } from "../lib/data";
+import { LoadingContext } from "../layout";
+import { fetchReleased } from "../lib/data";
+import GenresFilters from "../ui/genresFilter";
 import TileRandom from "../ui/tileRandom";
 import Type from "../ui/type";
-import { LoadingContext } from "../layout";
-import GenresFilters from "../ui/genresFilter";
 
 export default function Random() {
   const [shows, setShows] = useState([]);
@@ -17,7 +17,7 @@ export default function Random() {
 
   const getShows = useCallback(async () => {
     setLoading(true);
-    let res = await fetchShows(type);
+    let res = await fetchReleased(type);
     setShows(res);
     setAllShows(res);
     setExcluded([]);
