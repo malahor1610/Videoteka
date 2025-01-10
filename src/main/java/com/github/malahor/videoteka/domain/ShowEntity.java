@@ -77,4 +77,15 @@ public class ShowEntity {
     this.lockState = lockState;
     return this;
   }
+
+  public void updateWithNewData(ShowDetails details, String poster) {
+    this.title = details.getTitle();
+    this.originalTitle = details.getOriginalTitle();
+    this.releaseDate = details.getReleaseDate();
+    this.poster = poster;
+    this.duration = details.getDuration();
+    if (ShowType.SERIES.equals(showType))
+      this.lockState = ShowLockState.lockByDetails(details).changed();
+    this.genres = details.getGenres();
+  }
 }
