@@ -18,6 +18,7 @@ import Changed from "../ui/changed";
 import GenresFilters from "../ui/genresFilter";
 import Notification, { hide } from "../ui/notification";
 import TileWatchlist from "../ui/tileWatchlist";
+import TitleFilter from "./titleFilter";
 
 export default function Shows({ type }) {
   const [shows, setShows] = useState([]);
@@ -97,6 +98,7 @@ export default function Shows({ type }) {
 
   return (
     <>
+      <TitleFilter allShows={allShows} setShows={setShows} />
       <GenresFilters
         allShows={allShows}
         setShows={setShows}
@@ -114,7 +116,7 @@ export default function Shows({ type }) {
               key={show.id}
               id={show.id}
               show={show}
-              orderable={!genres.some((genre) => genre.active) && !type}
+              orderable={allShows.every((s) => shows.includes(s)) && !type}
               fetchShows={getShows}
               moveShow={moveToTheEdge}
               setMessage={setMessage}
