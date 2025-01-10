@@ -34,7 +34,7 @@ public class SearchReleaseDate {
   }
 
   private boolean isFuture(LocalDate localDate) {
-    return localDate.isAfter(LocalDate.now());
+    return localDate.isEqual(LocalDate.now()) || localDate.isAfter(LocalDate.now());
   }
 
   private LocalDate localDate() {
