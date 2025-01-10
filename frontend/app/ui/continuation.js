@@ -5,7 +5,11 @@ export default function Continuation({ continuation }) {
     <h5>
       {!continuation.releaseDate
         ? "Nowy sezon już wkrótce"
-        : "Sezon " + continuation.season + " już " + continuation.releaseDate}
+        : (continuation.season > 0
+            ? "Sezon " + continuation.season
+            : "Nowy odcinek ") +
+          " już " +
+          continuation.releaseDate}
     </h5>
   );
 }

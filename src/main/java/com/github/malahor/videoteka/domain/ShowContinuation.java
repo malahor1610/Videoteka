@@ -27,6 +27,7 @@ public class ShowContinuation {
         .season(
             Optional.ofNullable(details.getContinuation())
                 .map(SearchContinuation::getSeason)
+                .filter(season -> season != details.getLastSeason())
                 .orElse(0))
         .build();
   }

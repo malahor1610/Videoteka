@@ -24,6 +24,9 @@ public class SearchDetails {
   @JsonAlias("in_production")
   private Boolean inProduction;
 
+  @JsonAlias("last_episode_to_air")
+  private int lastSeason;
+
   @JsonAlias("next_episode_to_air")
   private SearchContinuation continuation;
 
@@ -42,5 +45,9 @@ public class SearchDetails {
 
   public void setGenres(List<JsonNode> genres) {
     this.genres = genres.stream().map(genre -> genre.get("name").asText()).toList();
+  }
+
+  public void setLastSeason(JsonNode lastEpisode) {
+    this.lastSeason = lastEpisode.get("season_number").asInt();
   }
 }
