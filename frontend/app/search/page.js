@@ -30,19 +30,12 @@ export default function Search() {
           <Type type={type} setType={setType} />
           <Row className="my-0 w-auto col-auto">
             <Input
-              className="my-1 w-auto col-auto rounded-0 rounded-start"
+              type="search"
+              className="my-1 w-auto col-auto"
               value={title}
               placeholder="Szukaj tytułu..."
               onChange={(e) => setTitle(e.target.value)}
             />
-            <Button
-              color="light"
-              type="button"
-              onClick={() => setTitle("")}
-              className="col-auto mx-0 my-1 p-0 rounded-0 rounded-end"
-            >
-              <i className="bi bi-eraser-fill dark p-2 fs-6"></i>
-            </Button>
           </Row>
           <Button color="primary" type="submit" className="col-auto mx-3 my-1">
             Szukaj
