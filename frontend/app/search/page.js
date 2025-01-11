@@ -1,27 +1,48 @@
 "use client";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button, Col, Container, Form, Input, Row } from "reactstrap";
 import Type from "../ui/type";
 import { fetchSearch } from "../lib/data";
 import TileSearch from "../ui/tileSearch";
 import Notification, { error, hide } from "../ui/notification";
 import { LoadingContext } from "../layout";
+import usePersistState from "../lib/persistentState";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Search() {
+  const searchParams = useSearchParams();
+  const queryFromUrl = searchParams.get("query") || "";
+  const typeFromUrl = searchParams.get("type") || "MOVIE";
+  const [title, setTitle] = useState(queryFromUrl);
   const [shows, setShows] = useState([]);
-  const [title, setTitle] = useState("");
-  const [type, setType] = useState("MOVIE");
+  const [type, setType] = useState(typeFromUrl);
   const [message, setMessage] = useState(hide());
   const { loading, setLoading } = useContext(LoadingContext);
+  const router = useRouter();
 
   async function search(e) {
     e.preventDefault();
+    router.push(`?query=${title}&type=${type}`);
+    fetchShows(title, type);
+  }
+
+  async function fetchShows(queryFromUrl, typeFromUrl) {
     setLoading(true);
-    let result = await fetchSearch(title, type);
+    let result = await fetchSearch(queryFromUrl, typeFromUrl);
     if (result.error) setMessage(error(result.message));
     else setShows(result);
     setLoading(false);
   }
+
+  useEffect(() => {
+    setTitle(queryFromUrl);
+    setType(typeFromUrl);
+    if (queryFromUrl) {
+      fetchShows(queryFromUrl, typeFromUrl);
+    } else {
+      setShows([]);
+    }
+  }, [queryFromUrl, typeFromUrl]);
 
   return (
     <>
