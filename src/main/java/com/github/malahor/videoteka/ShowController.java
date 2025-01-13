@@ -82,10 +82,10 @@ public class ShowController {
   @PUT
   @Path("/lock/{id}")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response updateLock(@PathParam("id") long id) {
+  public Response updateLock(@PathParam("id") long id, @QueryParam("type") ShowType type) {
     var username = userProvider.getUsername();
     var show = repository.findById(id, username);
-    var details = apiService.details(id, SERIES);
+    var details = apiService.details(id, type);
     repository.update(show.withLockState(ShowLockState.lockByDetails(details)));
     return Response.ok(show).build();
   }

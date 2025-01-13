@@ -84,7 +84,7 @@ public class ShowEntity {
     this.releaseDate = details.getReleaseDate();
     this.poster = poster;
     this.duration = details.getDuration();
-    if (ShowType.SERIES.equals(showType))
+    if (ShowLockState.isLocked(this) && !ShowLockState.lockByDetails(details).equals(lockState))
       this.lockState = ShowLockState.lockByDetails(details).changed();
     this.genres = details.getGenres();
   }

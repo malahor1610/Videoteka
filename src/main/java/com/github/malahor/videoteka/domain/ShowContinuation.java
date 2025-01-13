@@ -16,7 +16,23 @@ public class ShowContinuation {
   private int season;
 
   public static ShowContinuation from(SearchDetails details, ShowType type) {
-    if (ShowType.MOVIE.equals(type)) return null;
+    if (ShowType.MOVIE.equals(type)) return movieContinuation(details);
+    return seriesContinuation(details);
+  }
+
+  private static ShowContinuation movieContinuation(SearchDetails details) {
+    return ShowContinuation.builder()
+        .inProduction(Optional.ofNullable(details.getReleaseDate())
+                .map(SearchReleaseDate::isFuture)
+                .orElse(false))
+        .releaseDate(
+            Optional.ofNullable(details.getReleaseDate())
+                .map(SearchReleaseDate::formatted)
+                .orElse(null))
+        .build();
+  }
+
+  private static ShowContinuation seriesContinuation(SearchDetails details) {
     return ShowContinuation.builder()
         .inProduction(details.getInProduction())
         .releaseDate(

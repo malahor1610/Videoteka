@@ -76,14 +76,11 @@ export default function TileWatchlist({
   }
 
   const lockButton =
-    show.showType === "SERIES" &&
-    (!show.lockState || show.lockState === "UNLOCKED") ? (
+    !show.lockState || show.lockState === "UNLOCKED" ? (
       <Button color="secondary" onClick={lock}>
-        Powiadom o kontynuacji
+        Włącz powiadomienia
       </Button>
-    ) : show.showType === "SERIES" &&
-      show.lockState &&
-      show.lockState !== "UNLOCKED" ? (
+    ) : show.lockState && show.lockState !== "UNLOCKED" ? (
       <Button color="secondary" onClick={unlock}>
         Wyłącz powiadomienia
       </Button>

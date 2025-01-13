@@ -58,7 +58,7 @@ export default function Details({
         />
       </ModalHeader>
       <ModalBody>
-        <Continuation continuation={show.continuation} />
+        <Continuation continuation={show.continuation} showType={show.showType} />
         {show.overview}
         <Genres genres={show.genres} />
         <WatchProviders

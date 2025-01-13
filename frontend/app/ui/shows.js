@@ -62,6 +62,7 @@ export default function Shows({ type }) {
     setLoading(true);
     let res = await updateShowsPositions(shows);
     setShows(res);
+    setAllShows(res);
     setLoading(false);
   }
 

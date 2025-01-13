@@ -62,8 +62,15 @@ export async function unwatchShow(show) {
 
 export async function lockShow(show) {
   await checkToken();
+  const searchParams = new URLSearchParams({
+    type: show.showType,
+  }).toString();
   let res = await fetch(
-    process.env.NEXT_PUBLIC_HOST + "/api/shows/lock/" + show.id,
+    process.env.NEXT_PUBLIC_HOST +
+      "/api/shows/lock/" +
+      show.id +
+      "?" +
+      searchParams,
     {
       method: "PUT",
       headers: {

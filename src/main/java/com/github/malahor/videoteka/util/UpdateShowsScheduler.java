@@ -70,7 +70,7 @@ public class UpdateShowsScheduler {
   }
 
   private boolean isLockStateUpdated(ShowEntity show, ShowDetails details) {
-    if (ShowType.SERIES.equals(show.getShowType()) && ShowLockState.isLocked(show)) {
+    if (ShowLockState.isLocked(show)) {
       return !ShowLockState.lockByDetails(details).equals(show.getLockState());
     }
     return false;

@@ -30,7 +30,7 @@ public class SearchReleaseDate {
   }
 
   public boolean isFuture() {
-    return isFuture(localDate());
+    return value.isEmpty() || isFuture(localDate());
   }
 
   private boolean isFuture(LocalDate localDate) {
@@ -38,6 +38,7 @@ public class SearchReleaseDate {
   }
 
   private LocalDate localDate() {
+    if (value.length() == 4) return LocalDate.ofYearDay(Integer.parseInt(value), 1);
     try {
       return LocalDate.parse(value, DateTimeFormatter.ISO_DATE);
     } catch (DateTimeParseException e) {

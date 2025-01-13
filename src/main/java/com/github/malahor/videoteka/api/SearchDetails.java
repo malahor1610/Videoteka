@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.util.List;
+import java.util.Optional;
+
 import lombok.*;
 
 @Data
@@ -48,6 +50,6 @@ public class SearchDetails {
   }
 
   public void setLastSeason(JsonNode lastEpisode) {
-    this.lastSeason = lastEpisode.get("season_number").asInt();
+    this.lastSeason = Optional.ofNullable(lastEpisode).map(e->e.get("season_number")).map(JsonNode::asInt).orElse(0);
   }
 }

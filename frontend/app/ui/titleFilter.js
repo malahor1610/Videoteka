@@ -8,7 +8,11 @@ export default function TitleFilter({ allShows, setShows }) {
 
   function filterShows() {
     let filtered = Array.from(allShows);
-    filtered = filtered.filter((show) => show.title.toLowerCase().startsWith(title.toLowerCase()));
+    filtered = filtered.filter(
+      (show) =>
+        show.title.toLowerCase().indexOf(title.toLowerCase()) !== -1 ||
+        show.originalTitle.toLowerCase().indexOf(title.toLowerCase()) !== -1
+    );
     setShows(filtered);
   }
 

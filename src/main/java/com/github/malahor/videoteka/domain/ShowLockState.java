@@ -4,7 +4,6 @@ import com.github.malahor.videoteka.api.SearchReleaseDate;
 
 public enum ShowLockState {
   UNLOCKED,
-  LOCKED_CHANGED_CANCELED,
   LOCKED_NOT_IN_PRODUCTION,
   LOCKED_CHANGED_IN_PRODUCTION,
   LOCKED_IN_PRODUCTION,
@@ -19,7 +18,8 @@ public enum ShowLockState {
   public static ShowLockState lockByDetails(ShowDetails details) {
     if (details.getContinuation() == null || !details.getContinuation().isInProduction())
       return LOCKED_NOT_IN_PRODUCTION;
-    if (details.getContinuation().getReleaseDate() == null) return LOCKED_IN_PRODUCTION;
+    if (details.getContinuation().getReleaseDate() == null
+        || details.getContinuation().getReleaseDate().isEmpty()) return LOCKED_IN_PRODUCTION;
     if (new SearchReleaseDate(details.getContinuation().getReleaseDate()).isFuture())
       return LOCKED_DATE_CONFIRMED;
     return UNLOCKED;
@@ -27,14 +27,12 @@ public enum ShowLockState {
 
   public ShowLockState changed() {
     return switch (this) {
-      case LOCKED_CHANGED_CANCELED -> LOCKED_NOT_IN_PRODUCTION;
-      case LOCKED_NOT_IN_PRODUCTION -> LOCKED_CHANGED_CANCELED;
       case LOCKED_CHANGED_IN_PRODUCTION -> LOCKED_IN_PRODUCTION;
       case LOCKED_IN_PRODUCTION -> LOCKED_CHANGED_IN_PRODUCTION;
       case LOCKED_CHANGED_DATE -> LOCKED_DATE_CONFIRMED;
       case LOCKED_DATE_CONFIRMED -> LOCKED_CHANGED_DATE;
       case LOCKED_CHANGED_RELEASED -> UNLOCKED;
-      case UNLOCKED -> LOCKED_CHANGED_RELEASED;
+      case LOCKED_NOT_IN_PRODUCTION, UNLOCKED -> LOCKED_CHANGED_RELEASED;
     };
   }
 }
