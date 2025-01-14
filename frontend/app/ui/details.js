@@ -1,7 +1,14 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import {
+  Button,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  UncontrolledTooltip,
+} from "reactstrap";
 import { LoadingContext } from "../layout";
 import { unwatchShow, watchShow } from "../lib/data";
 import Continuation from "./continuation";
@@ -10,6 +17,9 @@ import Genres from "./genres";
 import Loading from "./loading";
 import Title from "./title";
 import WatchProviders from "./watchProviders";
+import DescriptiveIcon from "./icon/descriptiveIcon";
+import ActionIcon from "./icon/actionIcon";
+import InfoIcon from "./icon/infoIcon";
 
 export default function Details({
   show,
@@ -18,7 +28,7 @@ export default function Details({
   button,
   buttons,
   collectionPart,
-  onClose
+  onClose,
 }) {
   const { loading, setLoading } = useContext(LoadingContext);
   const router = useRouter();
@@ -58,7 +68,10 @@ export default function Details({
         />
       </ModalHeader>
       <ModalBody>
-        <Continuation continuation={show.continuation} showType={show.showType} />
+        <Continuation
+          continuation={show.continuation}
+          showType={show.showType}
+        />
         {show.overview}
         <Genres genres={show.genres} />
         <WatchProviders
@@ -75,19 +88,18 @@ export default function Details({
         />
       </ModalBody>
       <ModalFooter>
+        <InfoIcon/>
         {show.watchState?.indexOf("WATCHED") === 0 ? (
-          <Button color="secondary" onClick={markUnwatched}>
-            Nieobejrzane
-          </Button>
+          <ActionIcon onClick={markUnwatched} type="unwatch" />
         ) : (
-          <Button color="secondary" onClick={markWatched}>
-            Obejrzane
-          </Button>
+          <ActionIcon onClick={markWatched} type="watch" />
         )}
         {show.collection && !collectionPart ? (
-          <Button color="success" onClick={goToCollection}>
-            Zobacz {show.collection.name}
-          </Button>
+          <ActionIcon
+            onClick={goToCollection}
+            tooltipData={show.collection.name}
+            type="collection"
+          />
         ) : (
           <></>
         )}

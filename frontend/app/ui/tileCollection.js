@@ -1,11 +1,12 @@
 import { useContext, useState } from "react";
 import { Button, Card, CardBody, CardTitle } from "reactstrap";
+import { LoadingContext } from "../layout";
 import { fetchDetails, postShow } from "../lib/data";
 import Details from "./details";
+import ActionIcon from "./icon/actionIcon";
 import { error, success } from "./notification";
 import Poster from "./poster";
 import Title from "./title";
-import { LoadingContext } from "../layout";
 
 export default function TileCollection({ show, setMessage }) {
   const [modal, setModal] = useState(false);
@@ -24,16 +25,18 @@ export default function TileCollection({ show, setMessage }) {
     setLoading(true);
     let result = await postShow(details);
     if (result.error) setMessage(error(result.message));
-    else setMessage(success('Pomyślnie dodano do listy'))
+    else setMessage(success("Pomyślnie dodano do listy"));
     setModal(!modal);
     setLoading(false);
   }
 
-  const addButton = (
-    <Button color="primary" onClick={addToWatchlist}>
-      Dodaj do listy
-    </Button>
-  );
+  const addButton =
+    details.watchState === "WATCHED_ON_LIST" ||
+    details.watchState === "UNWATCHED" ? (
+      <ActionIcon type="disabledAdd" />
+    ) : (
+      <ActionIcon onClick={addToWatchlist} type="add" />
+    );
 
   return (
     <>

@@ -1,3 +1,6 @@
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { useContext, useState } from "react";
 import {
   Button,
   Card,
@@ -8,17 +11,15 @@ import {
   Container,
   Row,
 } from "reactstrap";
+import { LoadingContext } from "../layout";
 import { deleteShow, fetchDetails, lockShow, unlockShow } from "../lib/data";
 import Details from "./details";
 import Duration from "./duration";
-import Poster from "./poster";
-import Title from "./title";
-import { useContext, useState } from "react";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import ActionIcon from "./icon/actionIcon";
 import { success } from "./notification";
-import { LoadingContext } from "../layout";
+import Poster from "./poster";
 import TileWatchlistIcon from "./tileWatchlistIcon";
+import Title from "./title";
 
 export default function TileWatchlist({
   id,
@@ -77,21 +78,15 @@ export default function TileWatchlist({
 
   const lockButton =
     !show.lockState || show.lockState === "UNLOCKED" ? (
-      <Button color="secondary" onClick={lock}>
-        Włącz powiadomienia
-      </Button>
+      <ActionIcon onClick={lock} type="lock" />
     ) : show.lockState && show.lockState !== "UNLOCKED" ? (
-      <Button color="secondary" onClick={unlock}>
-        Wyłącz powiadomienia
-      </Button>
+      <ActionIcon onClick={unlock} type="unlock" />
     ) : (
       <></>
     );
 
   const removeButton = (
-    <Button color="primary" onClick={removeFromWatchlist}>
-      Usuń z listy
-    </Button>
+    <ActionIcon onClick={removeFromWatchlist} type="remove" />
   );
 
   const { attributes, listeners, setNodeRef, transform, transition } =

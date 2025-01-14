@@ -75,7 +75,7 @@ public class ShowController {
     var username = userProvider.getUsername();
     var show = repository.findById(id, username);
     if (show.isWatchedOnList()) repository.update(show.withWatchState(UNWATCHED));
-    if (show.isWatchedNotOnList()) repository.delete(show.getId(), username);
+    if (show.isWatchedNotOnList()) repository.delete(show.withWatchState(null).getId(), username);
     return Response.ok(show).build();
   }
 
