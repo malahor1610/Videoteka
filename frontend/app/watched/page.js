@@ -6,23 +6,33 @@ import { fetchWatched } from "../lib/data";
 import Type from "../ui/type";
 import TileSearch from "../ui/tileSearch";
 import Notification, { hide } from "../ui/notification";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Watched() {
+  const searchParams = useSearchParams();
+  const typeFromUrl = searchParams.get("type") || "MOVIE";
   const [shows, setShows] = useState([]);
-  const [type, setType] = useState("MOVIE");
+  const [type, setType] = useState(typeFromUrl);
   const [message, setMessage] = useState(hide());
   const { loading, setLoading } = useContext(LoadingContext);
+  const router = useRouter();
 
-  const getShows = useCallback(async () => {
+  const getShows = useCallback(async (typeFromUrl) => {
     setLoading(true);
-    let res = await fetchWatched(type);
+    router.push(`?type=${typeFromUrl}`);
+    let res = await fetchWatched(typeFromUrl);
     setShows(res);
     setLoading(false);
-  }, [type, setShows, setLoading]);
+  }, [setShows, setLoading]);
 
   useEffect(() => {
-    getShows();
-  }, [getShows]);
+    setType(typeFromUrl);
+    getShows(typeFromUrl);
+  }, [getShows, typeFromUrl]);
+
+  useEffect(() => {
+    getShows(type);
+  }, [type]);
 
   async function onCloseModal() {
     await getShows();

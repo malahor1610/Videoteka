@@ -6,18 +6,23 @@ import { fetchReleased } from "../lib/data";
 import GenresFilters from "../ui/genresFilter";
 import TileRandom from "../ui/tileRandom";
 import Type from "../ui/type";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Random() {
+  const searchParams = useSearchParams();
+  const typeFromUrl = searchParams.get("type") || "MOVIE";
   const [shows, setShows] = useState([]);
   const [allShows, setAllShows] = useState([]);
   const [excluded, setExcluded] = useState([]);
-  const [type, setType] = useState("MOVIE");
+  const [type, setType] = useState(typeFromUrl);
   const [genres, setGenres] = useState([]);
   const { loading, setLoading } = useContext(LoadingContext);
+  const router = useRouter();
 
-  const getShows = useCallback(async () => {
+  const getShows = useCallback(async (typeFromUrl) => {
     setLoading(true);
-    let res = await fetchReleased(type);
+    router.push(`?type=${typeFromUrl}`);
+    let res = await fetchReleased(typeFromUrl);
     setShows(res);
     setAllShows(res);
     setExcluded([]);
@@ -27,11 +32,16 @@ export default function Random() {
         .map((genre) => ({ name: genre, active: false, excluded: false }))
     );
     setLoading(false);
-  }, [type, setShows, setLoading]);
+  }, [setShows, setLoading]);
 
   useEffect(() => {
-    getShows();
-  }, [getShows]);
+    setType(typeFromUrl);
+    getShows(typeFromUrl);
+  }, [getShows, typeFromUrl]);
+
+  useEffect(() => {
+    getShows(type);
+  }, [type]);
 
   function handleSubmit() {
     const result = Array.from(shows);
