@@ -59,6 +59,11 @@ export default function TileWatchlist({
     setLoading(false);
   }
 
+  async function updateLock(lockState) {
+    show.lockState = lockState;
+    setMessage(success("Włączono powiadomienia"));
+  }
+
   async function removeFromWatchlist() {
     setLoading(true);
     await deleteShow(show);
@@ -173,6 +178,7 @@ export default function TileWatchlist({
         modal={modal}
         setModal={setModal}
         buttons={[lockButton, removeButton]}
+        updateLock={updateLock}
       />
     </div>
   );

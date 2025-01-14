@@ -35,7 +35,7 @@ export default function Watched() {
   }, [type]);
 
   async function onCloseModal() {
-    await getShows();
+    await getShows(typeFromUrl);
   }
 
 

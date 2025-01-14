@@ -29,6 +29,7 @@ export default function Details({
   buttons,
   collectionPart,
   onClose,
+  updateLock,
 }) {
   const { loading, setLoading } = useContext(LoadingContext);
   const router = useRouter();
@@ -44,6 +45,7 @@ export default function Details({
     setLoading(true);
     let result = await watchShow(show);
     show.watchState = result.watchState;
+    if(updateLock) updateLock(result.lockState);
     setLoading(false);
   }
 

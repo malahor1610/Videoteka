@@ -1,7 +1,6 @@
 package com.github.malahor.videoteka;
 
 import static com.github.malahor.videoteka.domain.ShowLockState.UNLOCKED;
-import static com.github.malahor.videoteka.domain.ShowType.SERIES;
 import static com.github.malahor.videoteka.domain.ShowWatchState.*;
 
 import com.github.malahor.videoteka.api.ApiService;
@@ -59,11 +58,17 @@ public class ShowController {
   public Response updateWatched(@PathParam("id") long id, @QueryParam("type") ShowType type) {
     var username = userProvider.getUsername();
     var show = repository.findById(id, username);
+    var details = apiService.details(id, type);
     if (show == null) {
-      show = createShow(id, type, username).withWatchState(WATCHED);
+      var poster = apiService.poster(id, type);
+      show =
+          ShowEntity.from(details, poster, username)
+              .withWatchState(WATCHED)
+              .withLockState(ShowLockState.lockByDetails(details));
       repository.save(show);
     } else {
-      repository.update(show.withWatchState(WATCHED_ON_LIST));
+      repository.update(
+          show.withWatchState(WATCHED_ON_LIST).withLockState(ShowLockState.lockByDetails(details)));
     }
     return Response.ok(show).build();
   }
