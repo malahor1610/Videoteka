@@ -19,20 +19,23 @@ export default function Random() {
   const { loading, setLoading } = useContext(LoadingContext);
   const router = useRouter();
 
-  const getShows = useCallback(async (typeFromUrl) => {
-    setLoading(true);
-    router.push(`?type=${typeFromUrl}`);
-    let res = await fetchReleased(typeFromUrl);
-    setShows(res);
-    setAllShows(res);
-    setExcluded([]);
-    setGenres(
-      [...new Set(res.map((r) => r.genres).flat())]
-        .sort()
-        .map((genre) => ({ name: genre, active: false, excluded: false }))
-    );
-    setLoading(false);
-  }, [setShows, setLoading]);
+  const getShows = useCallback(
+    async (typeFromUrl) => {
+      setLoading(true);
+      router.push(`?type=${typeFromUrl}`);
+      let res = await fetchReleased(typeFromUrl);
+      setShows(res);
+      setAllShows(res);
+      setExcluded([]);
+      setGenres(
+        [...new Set(res.map((r) => r.genres).flat())]
+          .sort()
+          .map((genre) => ({ name: genre, active: false, excluded: false }))
+      );
+      setLoading(false);
+    },
+    [setShows, setLoading]
+  );
 
   useEffect(() => {
     setType(typeFromUrl);
@@ -76,7 +79,11 @@ export default function Random() {
       >
         Wylosuj
       </Button>
-      <Button color="danger" className="col-auto mx-3 my-1" onClick={getShows}>
+      <Button
+        color="danger"
+        className="col-auto mx-3 my-1"
+        onClick={() => getShows(type)}
+      >
         Resetuj
       </Button>
     </Row>

@@ -83,15 +83,15 @@ export default function TileWatchlist({
 
   const lockButton =
     !show.lockState || show.lockState === "UNLOCKED" ? (
-      <ActionIcon onClick={lock} type="lock" />
+      <ActionIcon key="lockButton" onClick={lock} type="lock" />
     ) : show.lockState && show.lockState !== "UNLOCKED" ? (
-      <ActionIcon onClick={unlock} type="unlock" />
+      <ActionIcon key="unlockButton" onClick={unlock} type="unlock" />
     ) : (
       <></>
     );
 
   const removeButton = (
-    <ActionIcon onClick={removeFromWatchlist} type="remove" />
+    <ActionIcon key="removeButton" onClick={removeFromWatchlist} type="remove" />
   );
 
   const { attributes, listeners, setNodeRef, transform, transition } =

@@ -1,12 +1,12 @@
 "use client";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { Col, Row } from "reactstrap";
 import { LoadingContext } from "../layout";
 import { fetchWatched } from "../lib/data";
-import Type from "../ui/type";
-import TileSearch from "../ui/tileSearch";
 import Notification, { hide } from "../ui/notification";
-import { useRouter, useSearchParams } from "next/navigation";
+import TileWatched from "../ui/tileWatched";
+import Type from "../ui/type";
 
 export default function Watched() {
   const searchParams = useSearchParams();
@@ -55,7 +55,7 @@ export default function Watched() {
             className="my-2"
             key={show.id}
           >
-            <TileSearch show={show} setMessage={setMessage} onCloseModal={onCloseModal} />
+            <TileWatched show={show} setMessage={setMessage} onCloseModal={onCloseModal} />
           </Col>
         ))}
       </Row>

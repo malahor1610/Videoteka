@@ -1,7 +1,9 @@
 package com.github.malahor.videoteka.repository;
 
 import com.github.malahor.videoteka.domain.ShowEntity;
+import com.github.malahor.videoteka.domain.ShowLockState;
 import com.github.malahor.videoteka.domain.ShowType;
+import com.github.malahor.videoteka.domain.ShowWatchState;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import java.util.Comparator;
@@ -103,11 +105,13 @@ public class ShowRepository {
     var expression =
         Expression.builder()
             .expression(
-                "NOT watchState = :watched AND showType = :type AND size(releaseDate) = :yearSize AND userId = :userId")
+                "(attribute_not_exists(lockState) OR lockState = :unlocked) AND NOT watchState = :watched AND showType = :type AND size(releaseDate) = :yearSize AND userId = :userId")
             .expressionValues(
                 Map.of(
+                    ":unlocked",
+                    AttributeValue.fromS(ShowLockState.UNLOCKED.name()),
                     ":watched",
-                    AttributeValue.fromS("WATCHED"),
+                    AttributeValue.fromS(ShowWatchState.WATCHED.name()),
                     ":type",
                     AttributeValue.fromS(type.name()),
                     ":yearSize",
