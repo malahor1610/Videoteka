@@ -43,6 +43,19 @@ The shows are provided by [TMDB API](https://developer.themoviedb.org/docs/getti
 - Marking shows as watched/unwatched,
 - Displaying a list of shows marked as watched.
 
+### 1.3.0
+
+- Searching for the shows by title (PL and Original) on the watchlist,
+- Displaying information about new upcoming episode of ongoing series,
+- Displaying notification for the movies about the release date,
+- Turning on notifications by default for the series marked as watched (so they can be removed from watchlist and still be applicable for notifications),
+- Filtering out the shows in the randomize pool which are not yet released,
+- Filtering out the shows in the randomize pool which notifications are turned on for, so that the "waiting for continuation series" are not included within the pool,
+- Supporting browser's back button to not lose the context:
+     - within searching (title, show type, results),
+     - within random (show type),
+     - within watched (show type),
+
 ## Local run
 
 ### Prerequisites
