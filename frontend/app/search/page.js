@@ -1,13 +1,12 @@
 "use client";
-import { useContext, useEffect, useState } from "react";
-import { Button, Col, Container, Form, Input, Row } from "reactstrap";
-import Type from "../ui/type";
-import { fetchSearch } from "../lib/data";
-import TileSearch from "../ui/tileSearch";
-import Notification, { error, hide } from "../ui/notification";
-import { LoadingContext } from "../layout";
-import usePersistState from "../lib/persistentState";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useContext, useEffect, useState } from "react";
+import { Button, Col, Form, Input, Row } from "reactstrap";
+import { LoadingContext } from "../layout";
+import { fetchSearch } from "../lib/data";
+import Notification, { error, hide } from "../ui/notification";
+import TileSearch from "../ui/tileSearch";
+import Type from "../ui/type";
 
 export default function Search() {
   const searchParams = useSearchParams();
