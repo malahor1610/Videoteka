@@ -9,8 +9,11 @@ import com.github.malahor.videoteka.repository.ShowRepository;
 import io.quarkus.scheduler.Scheduled;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.util.HashSet;
+import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.ListUtils;
 
 @ApplicationScoped
 @RequiredArgsConstructor
@@ -24,19 +27,22 @@ public class UpdateShowsScheduler {
   @Scheduled(cron = "0 33 3 * * ?")
   void cronJob() {
     log.info("Started updating the shows");
-    repository.findAll().forEach(this::updateShow);
+    var showsToUpdate = repository.findAll().stream().map(this::updateShow).filter(Optional::isPresent).map(Optional::get).toList();
+    var partitions = ListUtils.partition(showsToUpdate, 100);
+    partitions.forEach(repository::update);
     log.info("Finished updating the shows");
   }
 
-  private void updateShow(ShowEntity show) {
+  private Optional<ShowEntity> updateShow(ShowEntity show) {
     var details = apiService.details(show.getId(), show.getShowType());
     var poster = apiService.poster(show.getId(), show.getShowType());
-
     if (isApplicableForUpdate(show, details, poster)) {
+      details.setTitle(details.getTitle() + " test");
       show.updateWithNewData(details, poster);
-      repository.update(show);
-      log.info("Updated " + show.getTitle() + " of user " + show.getUserId());
+      log.info("Updating {} of user {}", show.getTitle(), show.getUserId());
+      return Optional.of(show);
     }
+    return Optional.empty();
   }
 
   private boolean isApplicableForUpdate(ShowEntity show, ShowDetails details, String poster) {
